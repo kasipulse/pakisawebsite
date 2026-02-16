@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pakisa Express Logistics | Your Trusted Courier Partner</title>
+  <meta name="description" content="Pakisa Express Logistics – Same Day, Next Day, Township & Chainstore Deliveries across South Africa. Your trusted courier partner.">
+  
+  <!-- Tailwind CSS CDN for fast styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+    .gold { color: #C6A75E; }
+    .gold-bg { background-color: #C6A75E; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- NAVIGATION -->
+  <header class="bg-white shadow-md fixed w-full z-50">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html" class="flex items-center">
+        <img src="images/logo-pakisa.png" alt="Pakisa Express Logo" class="h-12">
+      </a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold">Track</a>
+        <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
+        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
+        <a href="#contact" class="hover:text-gold">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pt-24">
+
+    <!-- HERO SECTION -->
+    <section class="bg-white py-20 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-navy">Your Trusted Courier Partner</h1>
+      <p class="mt-4 text-lg md:text-xl text-gray-700">Premium same-day, next-day, township, chainstore & outlying area deliveries across South Africa.</p>
+      <div class="mt-8 flex flex-col md:flex-row justify-center gap-4">
+        <a href="https://pakisalogistics.pperfect.com" class="bg-navy text-white px-6 py-3 rounded-lg hover:bg-gold hover:text-white transition">Track Your Parcels</a>
+        <a href="https://www.pakisafloor.site" class="bg-navy text-white px-6 py-3 rounded-lg hover:bg-gold hover:text-white transition">View Pakisa Floor</a>
+        <a href="#contact" class="bg-gold text-white px-6 py-3 rounded-lg hover:bg-navy hover:text-white transition">Contact Us</a>
+      </div>
+    </section>
+
+    <!-- CLIENT LOGOS -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto text-center">
+        <p class="text-gray-600 mb-6 font-semibold">Trusted by Leading Logistics Partners</p>
+        <div class="flex flex-wrap justify-center items-center gap-6">
+          <img src="images/client-logos/act.png" alt="Client Logo" class="h-12">
+          <img src="images/client-logos/first-freight.png" alt="Client Logo" class="h-12">
+          <img src="images/client-logos/brima.png" alt="Client Logo" class="h-12">
+          <img src="images/client-logos/fedex.png" alt="Client Logo" class="h-12">
+          <img src="images/client-logos/seabourne.png" alt="Client Logo" class="h-12">
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="py-16 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-8 text-center">
+        <div class="p-6 border rounded-lg hover:shadow-lg transition">
+          <h3 class="font-semibold mb-2">Same Day Deliveries</h3>
+        </div>
+        <div class="p-6 border rounded-lg hover:shadow-lg transition">
+          <h3 class="font-semibold mb-2">Next Day Deliveries</h3>
+        </div>
+        <div class="p-6 border rounded-lg hover:shadow-lg transition">
+          <h3 class="font-semibold mb-2">Township Deliveries</h3>
+        </div>
+        <div class="p-6 border rounded-lg hover:shadow-lg transition">
+          <h3 class="font-semibold mb-2">Chainstore Deliveries</h3>
+        </div>
+        <div class="p-6 border rounded-lg hover:shadow-lg transition">
+          <h3 class="font-semibold mb-2">Early Bird</h3>
+        </div>
+        <div class="p-6 border rounded-lg hover:shadow-lg transition">
+          <h3 class="font-semibold mb-2">Outlying Areas</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALCULATOR -->
+    <section class="py-16 bg-gray-50 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Delivery Cost Estimator</h2>
+      <p class="text-center text-gray-600 mb-6">Estimate the cost to send your parcel. These are just estimates.</p>
+      
+      <form id="calculator-form" class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg space-y-4">
+        <div>
+          <label for="toAddress" class="font-semibold">To Address</label>
+          <input type="text" id="toAddress" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="parcelDesc" class="font-semibold">Parcel Description</label>
+          <input type="text" id="parcelDesc" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="name" class="font-semibold">Your Name</label>
+          <input type="text" id="name" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="email" class="font-semibold">Email</label>
+          <input type="email" id="email" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="phone" class="font-semibold">Phone Number</label>
+          <input type="text" id="phone" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Is this an outlying area?</label>
+          <select id="outlying" class="w-full border rounded p-2">
+            <option value="no">No</option>
+            <option value="yes">Yes (+R850)</option>
+          </select>
+        </div>
+        <button type="button" onclick="calculateCost()" class="bg-navy text-white px-6 py-3 rounded hover:bg-gold transition w-full">Calculate</button>
+        <p id="result" class="mt-4 font-semibold text-lg"></p>
+      </form>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-16 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Contact Pakisa Express Logistics</h2>
+      <p class="text-center text-gray-700 mb-6">Ready to streamline your logistics experience? Contact us today and let our experts provide personalized solutions for your business.</p>
+      <form class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg space-y-4">
+        <div>
+          <label class="font-semibold">First Name</label>
+          <input type="text" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Last Name</label>
+          <input type="text" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Email</label>
+          <input type="email" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Subject</label>
+          <input type="text" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Message</label>
+          <textarea class="w-full border rounded p-2" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="bg-gold text-white px-6 py-3 rounded hover:bg-navy transition w-full">Send Message</button>
+      </form>
+      <div class="text-center mt-8">
+        <p>Call Us: 011 397 1151 / 011 397 1061</p>
+        <p>Email: ops1@pakisalogistics.co.za</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-navy text-white py-8 mt-12">
+    <div class="container mx-auto px-6 text-center space-y-4">
+      <img src="images/logo-pakisa.png" alt="Pakisa Logo" class="h-12 mx-auto">
+      <div class="flex flex-wrap justify-center gap-6 mt-2">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold">Track</a>
+        <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
+        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
+        <a href="#contact" class="hover:text-gold">Contact</a>
+      </div>
+      <p class="mt-4 text-sm">Website Designed & Developed by Mpho Mahlaba</p>
+    </div>
+  </footer>
+
+  <!-- CALCULATOR JS -->
+  <script>
+    function calculateCost() {
+      const base = 51;
+      const fuel = 14.34;
+      const vat = 0.15;
+      const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
+      const total = (base + fuel) * (1 + vat) + outlyingFee;
+      document.getElementById('result').innerText = `Estimated Cost: R${total.toFixed(2)}`;
+    }
+  </script>
+
+</body>
+</html>
