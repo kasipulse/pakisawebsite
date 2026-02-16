@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Hub | Pakisa Express Logistics</title>
+  <meta name="description" content="Explore the Pakisa Express Logistics Knowledge Hub for tips, updates, and resources on logistics, same day deliveries, township and chainstore deliveries, and more.">
+  <meta name="keywords" content="knowledge hub, logistics tips, Pakisa Express Logistics, same day delivery, township delivery, chainstore delivery">
+  <meta name="robots" content="index, follow">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+    .gold { color: #C6A75E; }
+    .gold-bg { background-color: #C6A75E; }
+    .navy { color: #0B1F3B; background-color: #0B1F3B; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- NAVIGATION -->
+  <header class="bg-white fixed w-full z-50 shadow">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html" class="flex items-center">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Express Logistics Logo" class="h-12">
+      </a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold">Track</a>
+        <a href="knowledge-hub.html" class="hover:text-gold font-semibold">Knowledge Hub</a>
+        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
+        <a href="#contact" class="hover:text-gold">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pt-28">
+
+    <!-- HERO SECTION -->
+    <section class="bg-white py-20 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold">
+        Pakisa Express Logistics Knowledge Hub
+      </h1>
+      <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+        Stay informed with our tips, updates, and resources on logistics, same day deliveries, township and chainstore logistics, and more.
+      </p>
+      <div class="mt-8 flex justify-center">
+        <a href="https://pakisalogistics.co.za/knowledge-hub/" target="_blank" class="gold-bg text-white px-6 py-3 rounded-lg hover:bg-navy transition" title="Visit Pakisa Knowledge Hub">
+          Visit Knowledge Hub
+        </a>
+      </div>
+    </section>
+
+    <!-- LINKS SECTION -->
+    <section class="py-16 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Important Links</h2>
+      <div class="max-w-xl mx-auto flex flex-col gap-4 text-center">
+        <a href="assets/terms_and_conditions.pdf" target="_blank" class="navy text-white px-6 py-3 rounded-lg hover:bg-gold transition">
+          Terms & Conditions
+        </a>
+        <a href="disclaimer.html" class="gold-bg text-white px-6 py-3 rounded-lg hover:bg-navy transition">
+          Email Disclaimer
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="navy text-white py-8 mt-12">
+    <div class="container mx-auto px-6 text-center space-y-4">
+      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-12 mx-auto">
+      <div class="flex flex-wrap justify-center gap-6 mt-2">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold">Track</a>
+        <a href="knowledge-hub.html" class="hover:text-gold font-semibold">Knowledge Hub</a>
+        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
+        <a href="#contact" class="hover:text-gold">Contact</a>
+      </div>
+      <p class="mt-4 text-sm">Website Designed & Developed by Mpho Mahlaba</p>
+    </div>
+  </footer>
+
+</body>
+</html>
