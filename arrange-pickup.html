@@ -3,11 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Arrange a Pickup | Same Day Courier Collection South Africa | Pakisa Express Logistics</title>
-  <meta name="description" content="Book a same day courier pickup before 13:00 with Pakisa Express Logistics. Reliable collections, township coverage, and nationwide lastmile delivery solutions.">
-  <meta name="keywords" content="same day courier pickup South Africa, courier collection service, logistics pickup booking, township courier collection">
-  <meta name="robots" content="index, follow">
+  <title>Arrange a Pickup | Pakisa Express Logistics</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -18,161 +14,127 @@
     .navy { color: #0B1F3B; background-color: #0B1F3B; }
   </style>
 </head>
+
 <body class="bg-white text-gray-900">
 
-  <!-- NAVIGATION -->
-  <header class="bg-white fixed w-full z-50 shadow-sm">
-    <div class="container mx-auto flex items-center justify-between py-4 px-6">
-      <a href="index.html">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" 
-             alt="Pakisa Express Logistics Logo" class="h-12">
-      </a>
-      <nav class="hidden md:flex space-x-6">
-        <a href="index.html" class="hover:text-gold">Home</a>
-        <a href="about.html" class="hover:text-gold">About</a>
-        <a href="arrange-pickup.html" class="gold font-semibold">Arrange Pickup</a>
-        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
-        <a href="tracking.html" class="hover:text-gold">Track</a>
-        <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
-        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
-      </nav>
+<header class="bg-white fixed w-full z-50 shadow-sm">
+  <div class="container mx-auto flex items-center justify-between py-4 px-6">
+    <a href="index.html">
+      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png"
+           alt="Pakisa Logo" class="h-12">
+    </a>
+    <nav class="hidden md:flex space-x-6">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="arrange-pickup.html" class="gold font-semibold">Arrange Pickup</a>
+    </nav>
+  </div>
+</header>
+
+<main class="pt-28">
+
+<section class="py-28 text-center bg-gray-50">
+  <h1 class="text-4xl md:text-5xl font-bold mb-6">
+    Same Day Courier Pickups Before 13:00
+  </h1>
+  <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+    Book your courier collection before 13:00 to qualify for same day dispatch.
+  </p>
+</section>
+
+<!-- CALCULATOR -->
+<section class="py-16 container mx-auto px-6">
+  <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg space-y-4">
+
+    <h2 class="text-2xl font-bold text-center mb-4">
+      Advanced Pickup Cost Estimator
+    </h2>
+
+    <!-- Dimensions -->
+    <div class="grid grid-cols-3 gap-3">
+      <div>
+        <label class="text-sm font-semibold">Length (cm)</label>
+        <input type="number" id="length" class="w-full border rounded-lg p-2">
+      </div>
+      <div>
+        <label class="text-sm font-semibold">Width (cm)</label>
+        <input type="number" id="width" class="w-full border rounded-lg p-2">
+      </div>
+      <div>
+        <label class="text-sm font-semibold">Height (cm)</label>
+        <input type="number" id="height" class="w-full border rounded-lg p-2">
+      </div>
     </div>
-  </header>
 
-  <main class="pt-28">
-
-    <!-- HERO -->
-    <section class="py-28 text-center bg-gray-50">
-      <h1 class="text-4xl md:text-5xl font-bold mb-6">
-        Same Day Courier Pickups Before 13:00
-      </h1>
-      <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-        Book your courier collection before 13:00 to qualify for same day dispatch. 
-        Pakisa Express Logistics provides reliable pickup services, township coverage, 
-        chainstore distribution support, and nationwide lastmile logistics solutions.
-      </p>
-    </section>
-
-    <!-- PICKUP RATE CALCULATOR -->
-    <section class="py-16 container mx-auto px-6">
-      <div class="max-w-xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-4">
-        <h2 class="text-2xl font-bold text-center mb-4">Pickup Cost Estimator</h2>
-        <p class="text-center text-gray-600 text-sm">
-          Estimate your collection cost. Final pricing may vary depending on location and parcel details.
-        </p>
-
-        <button type="button" onclick="calculatePickup()" 
-          class="navy text-white px-6 py-3 rounded-lg hover:bg-[#09182e] transition w-full mt-4">
-          Calculate Pickup Cost
-        </button>
-
-        <p id="pickupResult" class="mt-4 font-semibold text-lg text-center"></p>
-      </div>
-    </section>
-
-    <!-- BOOKING FORM -->
-    <section class="py-16 bg-gray-50">
-      <div class="container mx-auto px-6">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">
-          Book a Courier Pickup
-        </h2>
-
-        <form class="max-w-xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-4">
-
-          <div>
-            <label class="font-semibold">Business Name (Optional)</label>
-            <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold">
-          </div>
-
-          <div>
-            <label class="font-semibold">Contact Name</label>
-            <input type="text" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold">
-          </div>
-
-          <div>
-            <label class="font-semibold">Phone Number</label>
-            <input type="text" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold">
-          </div>
-
-          <div>
-            <label class="font-semibold">Email</label>
-            <input type="email" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold">
-          </div>
-
-          <div>
-            <label class="font-semibold">Collection Address</label>
-            <textarea required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold"></textarea>
-          </div>
-
-          <div>
-            <label class="font-semibold">Preferred Collection Time</label>
-            <input type="time" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold">
-          </div>
-
-          <div>
-            <label class="font-semibold">Parcel Description</label>
-            <textarea required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gold"></textarea>
-          </div>
-
-          <button type="submit" 
-            class="gold-bg text-white px-6 py-3 rounded-lg hover:bg-[#b8954d] transition w-full">
-            Submit Pickup Request
-          </button>
-
-        </form>
-      </div>
-    </section>
-
-    <!-- WHY CHOOSE PAKISA -->
-    <section class="py-20 container mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-12">Why Choose Pakisa for Your Collections?</h2>
-
-      <div class="grid md:grid-cols-4 gap-8">
-        <div class="p-6 border rounded-lg hover:shadow-lg transition">
-          <h3 class="font-semibold mb-2">Before 13:00 = Same Day Dispatch</h3>
-        </div>
-        <div class="p-6 border rounded-lg hover:shadow-lg transition">
-          <h3 class="font-semibold mb-2">Township Coverage</h3>
-        </div>
-        <div class="p-6 border rounded-lg hover:shadow-lg transition">
-          <h3 class="font-semibold mb-2">Chainstore Logistics Specialists</h3>
-        </div>
-        <div class="p-6 border rounded-lg hover:shadow-lg transition">
-          <h3 class="font-semibold mb-2">Nationwide Lastmile Network</h3>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="navy text-white py-12 mt-16">
-    <div class="container mx-auto px-6 text-center space-y-6">
-      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" 
-           alt="Pakisa Logo" class="h-12 mx-auto">
-      <div class="flex flex-wrap justify-center gap-6 mt-2">
-        <a href="index.html" class="hover:text-gold">Home</a>
-        <a href="about.html" class="hover:text-gold">About</a>
-        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
-        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
-        <a href="tracking.html" class="hover:text-gold">Track</a>
-        <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
-        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
-      </div>
-      <p class="mt-4 text-sm">Website Designed & Developed by Mpho Mahlaba</p>
+    <!-- Weight -->
+    <div>
+      <label class="text-sm font-semibold">Actual Weight (kg)</label>
+      <input type="number" id="weight" class="w-full border rounded-lg p-2 mt-1">
     </div>
-  </footer>
 
-  <!-- PICKUP CALCULATOR JS -->
-  <script>
-    function calculatePickup() {
-      const base = 61;
-      const fuel = 14.50;
-      const vat = 0.15;
-      const total = (base + fuel) * (1 + vat);
-      document.getElementById('pickupResult').innerText = `Estimated Pickup Cost: R${total.toFixed(2)}`;
-    }
-  </script>
+    <button onclick="calculatePickup()"
+      class="navy text-white px-6 py-3 rounded-lg w-full mt-4">
+      Calculate Pickup Cost
+    </button>
+
+    <div id="pickupResult" class="mt-6 text-sm space-y-2"></div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="navy text-white py-8 text-center">
+  Pakisa Express Logistics © 2026
+</footer>
+
+<script>
+function calculatePickup() {
+
+  const base = 61;
+  const fuel = 14.50;
+  const vatRate = 0.15;
+
+  let handling = 0;
+  let weightCharge = 0;
+
+  const length = parseFloat(document.getElementById("length").value) || 0;
+  const width = parseFloat(document.getElementById("width").value) || 0;
+  const height = parseFloat(document.getElementById("height").value) || 0;
+  const actualWeight = parseFloat(document.getElementById("weight").value) || 0;
+
+  // Volumetric Weight
+  let volumetricWeight = 0;
+  if (length && width && height) {
+    volumetricWeight = (length * width * height) / 5000;
+    handling = 10; // R10 handling if dimensions provided
+  }
+
+  // Chargeable weight is higher of actual or volumetric
+  const chargeableWeight = Math.max(actualWeight, volumetricWeight);
+
+  // R1.60 per kg above 10kg
+  if (chargeableWeight > 10) {
+    weightCharge = (chargeableWeight - 10) * 1.60;
+  }
+
+  const subtotal = base + fuel + handling + weightCharge;
+  const vat = subtotal * vatRate;
+  const total = subtotal + vat;
+
+  document.getElementById("pickupResult").innerHTML = `
+    <div class="border-t pt-4">
+      <p><strong>Base:</strong> R${base.toFixed(2)}</p>
+      <p><strong>Fuel:</strong> R${fuel.toFixed(2)}</p>
+      <p><strong>Handling:</strong> R${handling.toFixed(2)}</p>
+      <p><strong>Chargeable Weight:</strong> ${chargeableWeight.toFixed(2)} kg</p>
+      <p><strong>Weight Charge:</strong> R${weightCharge.toFixed(2)}</p>
+      <p><strong>VAT (15%):</strong> R${vat.toFixed(2)}</p>
+      <p class="text-lg font-bold mt-2">Total: R${total.toFixed(2)}</p>
+    </div>
+  `;
+}
+</script>
 
 </body>
 </html>
