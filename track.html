@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Your Parcel | Pakisa Express Logistics</title>
+  <meta name="description" content="Track your parcel with Pakisa Express Logistics. Get real-time updates on same day, next day, township, and chainstore deliveries across South Africa.">
+  <meta name="keywords" content="track parcel, parcel tracking, courier tracking, Pakisa Express Logistics, same day delivery tracking, township delivery tracking, chainstore delivery tracking">
+  <meta name="robots" content="index, follow">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+    .gold { color: #C6A75E; }
+    .gold-bg { background-color: #C6A75E; }
+    .navy { color: #0B1F3B; background-color: #0B1F3B; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- NAVIGATION -->
+  <header class="bg-white fixed w-full z-50 shadow">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html" class="flex items-center">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Express Logistics Logo" class="h-12">
+      </a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold font-semibold">Track</a>
+        <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
+        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
+        <a href="#contact" class="hover:text-gold">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pt-28">
+
+    <!-- HERO SECTION -->
+    <section class="bg-white py-20 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold">
+        Track Your Parcel
+      </h1>
+      <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+        Quickly check the status of your parcel with Pakisa Express Logistics. Enter your tracking number or click below to be redirected to our tracking system.
+      </p>
+      <div class="mt-8 flex flex-col md:flex-row justify-center gap-4">
+        <a href="https://pakisalogistics.pperfect.com" target="_blank" class="gold-bg text-white px-6 py-3 rounded-lg hover:bg-navy transition" 
+           title="Track your parcels with Pakisa Express Logistics">Go to Tracking System</a>
+      </div>
+    </section>
+
+    <!-- CONTACT FORM -->
+    <section id="contact" class="py-16 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Need Assistance?</h2>
+      <p class="text-center text-gray-700 mb-6">If you encounter any issues with tracking, contact us and our support team will assist you promptly.</p>
+      <form action="mailto:csd@pakisalogistics.co.za" method="post" enctype="text/plain" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
+        <div>
+          <label class="font-semibold">First Name</label>
+          <input type="text" name="firstName" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Last Name</label>
+          <input type="text" name="lastName" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Email</label>
+          <input type="email" name="email" class="w-full border rounded p-2" required>
+        </div>
+        <div>
+          <label class="font-semibold">Tracking Number (optional)</label>
+          <input type="text" name="trackingNumber" class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Message</label>
+          <textarea name="message" rows="4" class="w-full border rounded p-2"></textarea>
+        </div>
+        <button type="submit" class="navy text-white px-6 py-3 rounded hover:bg-gold transition w-full">Send Message</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="navy text-white py-8 mt-12">
+    <div class="container mx-auto px-6 text-center space-y-4">
+      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-12 mx-auto">
+      <div class="flex flex-wrap justify-center gap-6 mt-2">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold font-semibold">Track</a>
+        <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
+        <a href="disclaimer.html" class="hover:text-gold">Disclaimer</a>
+        <a href="#contact" class="hover:text-gold">Contact</a>
+      </div>
+      <p class="mt-4 text-sm">Website Designed & Developed by Mpho Mahlaba</p>
+    </div>
+  </footer>
+
+</body>
+</html>
