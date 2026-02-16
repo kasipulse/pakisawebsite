@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Arrange Pickup | Pakisa Express Logistics</title>
-  <meta name="description" content="Arrange a pickup with Pakisa Express Logistics. Estimate delivery cost and send your request directly to our team.">
-  <meta name="keywords" content="arrange pickup, same day delivery, township deliveries, chainstore deliveries, courier South Africa">
+  <meta name="description" content="Arrange a parcel pickup with Pakisa Express Logistics. Calculate estimated delivery cost for same day, next day, and township deliveries.">
+  <meta name="keywords" content="arrange pickup, parcel pickup, delivery cost, same day deliveries, township deliveries, chainstore deliveries">
+  <meta name="robots" content="index, follow">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +22,7 @@
 <body class="bg-white text-gray-900">
 
   <!-- NAVIGATION -->
-  <header class="bg-white fixed w-full z-50 shadow">
+  <header class="bg-white fixed w-full z-50 shadow-sm">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
       <a href="index.html" class="flex items-center">
         <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Express Logistics Logo" class="h-12">
@@ -28,7 +30,7 @@
       <nav class="hidden md:flex space-x-6">
         <a href="index.html" class="hover:text-gold">Home</a>
         <a href="about.html" class="hover:text-gold">About</a>
-        <a href="arrange-pickup.html" class="hover:text-gold font-bold">Arrange Pickup</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
         <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
         <a href="tracking.html" class="hover:text-gold">Track</a>
         <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
@@ -38,101 +40,96 @@
     </div>
   </header>
 
-  <main class="pt-28">
+  <main class="pt-24">
 
     <!-- HERO SECTION -->
     <section class="bg-white py-20 text-center">
       <h1 class="text-4xl md:text-5xl font-bold">
-        Arrange Your Pickup with Pakisa Express Logistics
+        Arrange Your Parcel Pickup
       </h1>
-      <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
-        Request a pickup from your location, estimate delivery cost, and have your parcel delivered reliably across South Africa. Enter your parcel details below and our team will handle the rest.
+      <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+        Schedule a convenient pickup for your parcels with Pakisa Express Logistics. Use our delivery cost estimator to plan ahead for same day, next day, and township deliveries.
       </p>
     </section>
 
-    <!-- PICKUP CALCULATOR -->
-    <section class="py-12 bg-gray-50">
-      <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center mb-6">Delivery Cost Estimator</h2>
-        <p class="text-center text-gray-600 mb-6">This is just an estimate. Final pricing may vary.</p>
-
-        <form id="calculator-form" class="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-4">
-          <div>
-            <label class="font-semibold">To Address</label>
-            <input type="text" id="toAddress" class="w-full border rounded p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Parcel Description</label>
-            <input type="text" id="parcelDesc" class="w-full border rounded p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Length (cm)</label>
-            <input type="number" id="length" class="w-full border rounded p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Width (cm)</label>
-            <input type="number" id="width" class="w-full border rounded p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Height (cm)</label>
-            <input type="number" id="height" class="w-full border rounded p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Weight (kg)</label>
-            <input type="number" id="weight" class="w-full border rounded p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Is this an outlying area?</label>
-            <select id="outlying" class="w-full border rounded p-2">
-              <option value="no">No</option>
-              <option value="yes">Yes (+R850)</option>
-            </select>
-          </div>
-          <button type="button" onclick="calculatePickup()" class="navy text-white px-6 py-3 rounded hover:bg-gold transition w-full">Calculate</button>
-          <p id="pickupResult" class="mt-4 font-semibold text-lg text-center"></p>
-        </form>
-      </div>
+    <!-- ESTIMATOR -->
+    <section class="py-16 bg-gray-50 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Pickup Cost Estimator</h2>
+      <p class="text-center text-gray-600 mb-6">These are just estimates.</p>
+      
+      <form id="pickup-calculator-form" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-lg space-y-4">
+        <div>
+          <label for="toAddress" class="font-semibold">To Address</label>
+          <input type="text" id="toAddress" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="parcelDesc" class="font-semibold">Parcel Description</label>
+          <input type="text" id="parcelDesc" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="weight" class="font-semibold">Parcel Weight (kg)</label>
+          <input type="number" id="weight" min="0" value="1" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label for="dimensions" class="font-semibold">Parcel Dimensions (L x W x H cm)</label>
+          <input type="text" id="dimensions" placeholder="e.g., 30x20x15" class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Is this an outlying area?</label>
+          <select id="outlying" class="w-full border rounded p-2">
+            <option value="no">No</option>
+            <option value="yes">Yes (+R850)</option>
+          </select>
+        </div>
+        <button type="button" onclick="calculatePickupCost()" class="navy text-white px-6 py-2 rounded hover:bg-gold transition w-full">Calculate Estimated Cost</button>
+        <p id="pickup-result" class="mt-4 font-semibold text-lg text-center"></p>
+      </form>
     </section>
 
     <!-- CONTACT FORM -->
-    <section class="py-12">
-      <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center mb-6">Request Pickup</h2>
-
-        <form id="contact-form" action="https://formsubmit.co/csd@pakisalogistics.co.za" method="POST" 
-              class="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-4">
-
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_next" value="https://pakisalogistics.co.za/thank-you.html">
-          <input type="hidden" id="emailTotal" name="Estimated Total">
-          <input type="hidden" id="emailAddress" name="To Address">
-          <input type="hidden" id="emailParcel" name="Parcel Description">
-
-          <div>
-            <label class="font-semibold">Full Name</label>
-            <input type="text" name="name" class="w-full border rounded-lg p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Phone Number</label>
-            <input type="text" name="phone" class="w-full border rounded-lg p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Email</label>
-            <input type="email" name="email" class="w-full border rounded-lg p-2" required>
-          </div>
-          <div>
-            <label class="font-semibold">Collection Address</label>
-            <textarea name="address" rows="3" class="w-full border rounded-lg p-2" required></textarea>
-          </div>
-          <div>
-            <label class="font-semibold">Parcel Details</label>
-            <textarea name="parcel" rows="3" class="w-full border rounded-lg p-2"></textarea>
-          </div>
-          <button type="submit" class="gold-bg text-white px-6 py-3 rounded-lg hover:bg-[#b8954d] transition w-full">
-            Request Pickup
-          </button>
-        </form>
-      </div>
+    <section id="contact" class="py-16 container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Request Pickup</h2>
+      <p class="text-center text-gray-700 mb-6">Provide your details below and we will contact you to arrange the pickup.</p>
+      
+      <form action="mailto:csd@pakisalogistics.co.za" method="post" enctype="text/plain" class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-lg space-y-4">
+        <div>
+          <label class="font-semibold">First Name</label>
+          <input type="text" name="firstName" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Last Name</label>
+          <input type="text" name="lastName" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Email</label>
+          <input type="email" name="email" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Phone Number</label>
+          <input type="text" name="phone" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">To Address</label>
+          <input type="text" name="toAddress" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Parcel Description</label>
+          <input type="text" name="parcelDesc" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Parcel Weight (kg)</label>
+          <input type="number" name="weight" min="0" required class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Parcel Dimensions (L x W x H cm)</label>
+          <input type="text" name="dimensions" class="w-full border rounded p-2">
+        </div>
+        <div>
+          <label class="font-semibold">Estimated Cost</label>
+          <input type="text" name="estimatedCost" id="emailCost" readonly class="w-full border rounded p-2 bg-gray-100">
+        </div>
+        <button type="submit" class="gold-bg text-white px-6 py-2 rounded hover:bg-navy transition w-full">Send Request</button>
+      </form>
     </section>
 
   </main>
@@ -144,7 +141,7 @@
       <div class="flex flex-wrap justify-center gap-6 mt-2">
         <a href="index.html" class="hover:text-gold">Home</a>
         <a href="about.html" class="hover:text-gold">About</a>
-        <a href="arrange-pickup.html" class="hover:text-gold font-bold">Arrange Pickup</a>
+        <a href="arrange-pickup.html" class="hover:text-gold">Arrange Pickup</a>
         <a href="rate-calculator.html" class="hover:text-gold">Rate Calculator</a>
         <a href="tracking.html" class="hover:text-gold">Track</a>
         <a href="knowledge-hub.html" class="hover:text-gold">Knowledge Hub</a>
@@ -157,52 +154,17 @@
 
   <!-- CALCULATOR JS -->
   <script>
-    function calculatePickup() {
+    function calculatePickupCost() {
       const base = 61;
-      const fuel = 14.50;
-      const vatRate = 0.15;
+      const fuel = 14.5;
+      const vat = 0.15;
+      const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
+      const weight = parseFloat(document.getElementById('weight').value) || 0;
+      const extraWeight = weight > 10 ? (weight - 10) * 1.6 : 0;
+      const total = (base + fuel + extraWeight) * (1 + vat) + outlyingFee;
 
-      let handling = 0;
-      let weightCharge = 0;
-
-      const length = parseFloat(document.getElementById("length").value) || 0;
-      const width = parseFloat(document.getElementById("width").value) || 0;
-      const height = parseFloat(document.getElementById("height").value) || 0;
-      const actualWeight = parseFloat(document.getElementById("weight").value) || 0;
-
-      // Volumetric Weight
-      let volumetricWeight = 0;
-      if (length && width && height) {
-        volumetricWeight = (length * width * height) / 5000;
-        handling = 10;
-      }
-
-      // Chargeable weight
-      const chargeableWeight = Math.max(actualWeight, volumetricWeight);
-
-      // R1.60 per kg above 10kg
-      if (chargeableWeight > 10) {
-        weightCharge = (chargeableWeight - 10) * 1.60;
-      }
-
-      const subtotal = base + fuel + handling + weightCharge;
-      const total = subtotal * (1 + vatRate);
-
-      // Display result
-      document.getElementById("pickupResult").innerHTML = `
-        <div class="border-t pt-4 text-center">
-          <p class="text-2xl font-bold">Estimated Total: R${total.toFixed(2)}</p>
-          <p class="text-sm text-gray-500 mt-2">
-            * This is an estimate only. Final pricing may vary based on location, 
-            service type, parcel verification, and operational factors.
-          </p>
-        </div>
-      `;
-
-      // Populate hidden form fields
-      document.getElementById("emailTotal").value = `R${total.toFixed(2)}`;
-      document.getElementById("emailAddress").value = document.getElementById("toAddress").value;
-      document.getElementById("emailParcel").value = document.getElementById("parcelDesc").value;
+      document.getElementById('pickup-result').innerText = `Estimated Total: R${total.toFixed(2)} (Estimate only)`;
+      document.getElementById('emailCost').value = `R${total.toFixed(2)}`;
     }
   </script>
 
