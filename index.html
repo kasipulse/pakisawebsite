@@ -167,7 +167,7 @@
       <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
         <div class="lg:w-1/2">
           <h2 class="text-3xl md:text-5xl font-bold mb-6">Transparent <br><span class="gold">Delivery Estimates</span></h2>
-          <p class="text-slate-300 mb-8 text-lg">Estimate the cost to send your parcel instantly. Our pricing is competitive and built for business scaling.</p>
+          <p class="text-slate-300 mb-8 text-lg">Estimate the cost to send your parcel instantly. Please provide the weight and dimensions for a more accurate logistical assessment.</p>
           <div class="space-y-4">
             <div class="flex items-center gap-4">
               <div class="w-6 h-6 rounded-full gold-bg flex items-center justify-center text-xs">✓</div>
@@ -175,7 +175,7 @@
             </div>
             <div class="flex items-center gap-4">
               <div class="w-6 h-6 rounded-full gold-bg flex items-center justify-center text-xs">✓</div>
-              <p>Outlying Area Premium Adjustments</p>
+              <p>Volumetric & Physical Dimension Fields</p>
             </div>
           </div>
         </div>
@@ -192,6 +192,29 @@
                 <input type="text" id="parcelDesc" required class="w-full bg-slate-100 border-none rounded-lg p-3 focus:ring-2 focus:ring-gold outline-none">
               </div>
             </div>
+
+            <div class="mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <p class="text-[10px] font-black uppercase text-gold mb-3 tracking-widest">Parcel Dimensions & Weight</p>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Length (cm)</label>
+                  <input type="number" placeholder="0" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none focus:border-gold">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Width (cm)</label>
+                  <input type="number" placeholder="0" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none focus:border-gold">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Height (cm)</label>
+                  <input type="number" placeholder="0" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none focus:border-gold">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Weight (kg)</label>
+                  <input type="number" id="parcelWeight" placeholder="0.0" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none focus:border-gold">
+                </div>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <label for="name" class="text-xs font-bold uppercase text-slate-500 mb-1 block">Name</label>
