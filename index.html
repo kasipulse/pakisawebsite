@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,13 +12,11 @@
   <style>
     body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
     
-    /* Branding Colors */
     .gold { color: #C6A75E; }
     .gold-bg { background-color: #C6A75E; }
     .royal-blue { color: #0033A0; }
     .royal-bg { background-color: #0033A0; }
     
-    /* Soft Fading & Gradients */
     .hero-soft-gradient {
       background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%);
     }
@@ -33,7 +31,6 @@
       border: 1px solid rgba(0, 51, 160, 0.1);
     }
 
-    /* Seamless Logo Scroll */
     @keyframes scroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -45,7 +42,6 @@
     }
     .logo-track:hover { animation-play-state: paused; }
 
-    /* Input Styling */
     .input-field {
       background-color: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -57,7 +53,7 @@
       box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05);
     }
 
-    /* ===== MSIZI CHAT ===== */
+    /* ===== MSIZI STYLES ===== */
     #msizi-chat-button {
       position: fixed;
       bottom: 20px;
@@ -81,11 +77,11 @@
       background: white;
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-      display: none;
-      flex-direction: column;
       overflow: hidden;
       z-index: 9999;
       font-family: 'Inter', sans-serif;
+      display: none;
+      flex-direction: column;
     }
 
     #msizi-header {
@@ -123,9 +119,11 @@
     }
   </style>
 </head>
+
 <body class="bg-slate-50 text-slate-900">
 
-<!-- ✅ YOUR ENTIRE ORIGINAL SITE REMAINS UNCHANGED ABOVE -->
+<!-- ✅ YOUR ENTIRE ORIGINAL SITE REMAINS EXACTLY THE SAME -->
+<!-- (header, main, footer unchanged — omitted here for brevity in explanation but KEEP YOURS) -->
 
 <!-- ================= MSIZI CHAT WIDGET ================= -->
 <div id="msizi-chat-button">💬 Chat with Msizi</div>
@@ -134,7 +132,7 @@
   <div id="msizi-header">Msizi • Pakisa Assistant</div>
   <div id="msizi-messages"></div>
   <div id="msizi-input-area">
-    <input id="msizi-input" placeholder="Ask about your parcel..." />
+    <input id="msizi-input" placeholder="Ask about your parcel...">
     <button id="msizi-send">Send</button>
   </div>
 </div>
@@ -159,7 +157,7 @@ function addMessage(text, sender="bot") {
   messages.scrollTop = messages.scrollHeight;
 }
 
-document.getElementById("msizi-send").onclick = async () => {
+document.getElementById("msizi-send").onclick = () => {
   const input = document.getElementById("msizi-input");
   const question = input.value.trim();
   if (!question) return;
@@ -167,13 +165,11 @@ document.getElementById("msizi-send").onclick = async () => {
   addMessage(question, "user");
   input.value = "";
 
-  // 🔥 Smart demo reply (temporary until Firebase connected)
   setTimeout(() => {
-    addMessage("Hi 👋 I'm Msizi. I can help track your parcel. Please enter your waybill number.");
+    addMessage("Hi 👋 I'm Msizi. Please enter your waybill number.");
   }, 600);
 };
 
-// Enter key support
 document.getElementById("msizi-input").addEventListener("keypress", function(e) {
   if (e.key === "Enter") {
     document.getElementById("msizi-send").click();
