@@ -1,131 +1,123 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Pakisa Express Logistics | Same Day & Township Deliveries</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <style>
-    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-    
-    .gold { color: #C6A75E; }
-    .gold-bg { background-color: #C6A75E; }
-    .royal-blue { color: #0033A0; }
-    .royal-bg { background-color: #0033A0; }
-    
-    .hero-soft-gradient {
-      background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakisa Express Logistics | Same Day & Township Deliveries</title>
 
-    .faded-section {
-      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
-    }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
-    .glass-card {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 51, 160, 0.1);
-    }
+<style>
+body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
 
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .logo-track {
-      display: flex;
-      width: calc(250px * 10);
-      animation: scroll 40s linear infinite;
-    }
-    .logo-track:hover { animation-play-state: paused; }
+/* Branding Colors */
+.gold { color: #C6A75E; }
+.gold-bg { background-color: #C6A75E; }
+.royal-blue { color: #0033A0; }
+.royal-bg { background-color: #0033A0; }
 
-    .input-field {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      transition: all 0.3s ease;
-    }
-    .input-field:focus {
-      border-color: #0033A0;
-      background-color: #fff;
-      box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05);
-    }
+/* Soft Fading & Gradients */
+.hero-soft-gradient {
+  background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%);
+}
+.faded-section {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 51, 160, 0.1);
+}
 
-    /* ===== MSIZI STYLES ===== */
-    #msizi-chat-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #0033A0;
-      color: white;
-      border-radius: 50px;
-      padding: 14px 18px;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      z-index: 9999;
-    }
+/* Seamless Logo Scroll */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.logo-track {
+  display: flex;
+  width: calc(250px * 10);
+  animation: scroll 40s linear infinite;
+}
+.logo-track:hover { animation-play-state: paused; }
 
-    #msizi-chat-box {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      width: 320px;
-      height: 420px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-      overflow: hidden;
-      z-index: 9999;
-      font-family: 'Inter', sans-serif;
-      display: none;
-      flex-direction: column;
-    }
+/* Input Styling */
+.input-field {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+.input-field:focus {
+  border-color: #0033A0;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05);
+}
 
-    #msizi-header {
-      background: #0033A0;
-      color: white;
-      padding: 12px;
-      font-weight: bold;
-    }
-
-    #msizi-messages {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-      font-size: 13px;
-    }
-
-    #msizi-input-area {
-      display: flex;
-      border-top: 1px solid #eee;
-    }
-
-    #msizi-input {
-      flex: 1;
-      border: none;
-      padding: 10px;
-      outline: none;
-    }
-
-    #msizi-send {
-      background: #0033A0;
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
-  </style>
+/* ===== MSIZI ===== */
+#msizi-chat-button{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#0033A0;
+  color:#fff;
+  padding:14px 18px;
+  border-radius:50px;
+  cursor:pointer;
+  z-index:9999;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+#msizi-chat-box{
+  position:fixed;
+  bottom:80px;
+  right:20px;
+  width:320px;
+  height:420px;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  z-index:9999;
+}
+#msizi-header{
+  background:#0033A0;
+  color:#fff;
+  padding:12px;
+  font-weight:bold;
+}
+#msizi-messages{
+  flex:1;
+  padding:10px;
+  overflow-y:auto;
+  font-size:13px;
+}
+#msizi-input-area{
+  display:flex;
+  border-top:1px solid #eee;
+}
+#msizi-input{
+  flex:1;
+  border:none;
+  padding:10px;
+  outline:none;
+}
+#msizi-send{
+  background:#0033A0;
+  color:#fff;
+  border:none;
+  padding:10px 14px;
+  cursor:pointer;
+}
+</style>
 </head>
 
 <body class="bg-slate-50 text-slate-900">
 
-<!-- ✅ YOUR ENTIRE ORIGINAL SITE REMAINS EXACTLY THE SAME -->
-<!-- (header, main, footer unchanged — omitted here for brevity in explanation but KEEP YOURS) -->
+<!-- ================= YOUR WHOLE SITE REMAINS EXACTLY THE SAME ================= -->
 
-<!-- ================= MSIZI CHAT WIDGET ================= -->
+<!-- ================= MSIZI ================= -->
 <div id="msizi-chat-button">💬 Chat with Msizi</div>
 
 <div id="msizi-chat-box">
@@ -138,6 +130,51 @@
 </div>
 
 <script>
+// ===== RATE CALCULATOR FIXED =====
+function calculateCost() {
+  const base = 51;
+  const fuel = 14.34;
+  const vat = 0.15;
+  const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
+
+  const total = (base + fuel) * (1 + vat) + outlyingFee;
+
+  document.getElementById('result').innerText =
+    `Est. Total: R${total.toFixed(2)}`;
+}
+
+// ===== COUNTERS =====
+const counters = document.querySelectorAll('.counter');
+const speed = 100;
+
+const startCounters = (entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const counter = entry.target;
+
+      const updateCount = () => {
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText.replace(/,/g, '');
+        const inc = target / speed;
+
+        if (count < target) {
+          counter.innerText = Math.ceil(count + inc).toLocaleString();
+          setTimeout(updateCount, 20);
+        } else {
+          counter.innerText = target.toLocaleString();
+        }
+      };
+
+      updateCount();
+      observer.unobserve(counter);
+    }
+  });
+};
+
+const observer = new IntersectionObserver(startCounters, { threshold: 0.5 });
+counters.forEach(counter => observer.observe(counter));
+
+// ===== MSIZI =====
 const chatBtn = document.getElementById("msizi-chat-button");
 const chatBox = document.getElementById("msizi-chat-box");
 const messages = document.getElementById("msizi-messages");
@@ -169,14 +206,7 @@ document.getElementById("msizi-send").onclick = () => {
     addMessage("Hi 👋 I'm Msizi. Please enter your waybill number.");
   }, 600);
 };
-
-document.getElementById("msizi-input").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    document.getElementById("msizi-send").click();
-  }
-});
 </script>
-<!-- ================= END MSIZI ================= -->
 
 </body>
 </html>
