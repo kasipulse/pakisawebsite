@@ -1,44 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Pakisa Express Logistics | Same Day, Township & Chainstore Deliveries South Africa</title>
-  <meta name="description" content="Pakisa Express Logistics is your trusted courier partner in South Africa, offering same day, next day, township, chainstore, and lastmile deliveries. Reliable, fast, and efficient logistics services.">
-  <meta name="keywords" content="same day deliveries, next day deliveries, township deliveries, chainstore deliveries, lastmile deliveries, courier partner South Africa">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://pakisalogistics.co.za/">
+<title>Pakisa Express Logistics | Your Trusted Courier Partner</title>
 
-  <!-- ✅ GOOGLE SEARCH LOGO (CRITICAL) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
-  <link rel="apple-touch-icon" href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
+<meta name="description" content="Pakisa Express Logistics offers township deliveries, chainstore deliveries, same day courier, last mile delivery and reliable courier partner services across Johannesburg and South Africa.">
 
-  <!-- ✅ SOCIAL SHARING BOOST -->
-  <meta property="og:title" content="Pakisa Express Logistics">
-  <meta property="og:description" content="Reliable same day, township and chainstore deliveries across South Africa.">
-  <meta property="og:image" content="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
-  <meta property="og:url" content="https://pakisalogistics.co.za/">
-  <meta name="twitter:card" content="summary_large_image">
+<meta name="keywords" content="township deliveries, chainstore deliveries, courier partner, last mile deliveries, same day deliveries Johannesburg, Pakisa Express Logistics">
 
-  <!-- ✅ SCHEMA -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Pakisa Express Logistics",
-    "url": "https://pakisalogistics.co.za/",
-    "logo": "https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+27-11-397-1151",
-      "contactType": "customer service",
-      "areaServed": "ZA",
-      "availableLanguage": "English"
-    }
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://www.pakisalogistics.co.za/">
+
+<!-- ✅ Favicon for Google search logo -->
+<link rel="icon" type="image/png" sizes="32x32"
+href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
+
+<link rel="apple-touch-icon"
+href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
+
+<style>
+:root{
+  --navy:#0b1f3a;
+  --gold:#caa64b;
+  --light:#f7f9fc;
+}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#fff;
+  color:#222;
+}
+
+/* NAVBAR */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 40px;
+  background:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
+}
+
+.logo img{
+  height:48px;
+}
+
+.menu a{
+  margin-left:24px;
+  text-decoration:none;
+  color:var(--navy);
+  font-weight:600;
+}
+
+/* HERO */
+.hero{
+  padding:80px 20px;
+  text-align:center;
+  background:linear-gradient(180deg,#ffffff,#f5f8ff);
+}
+
+.hero h1{
+  font-size:42px;
+  color:var(--navy);
+  margin-bottom:16px;
+}
+
+.hero p{
+  font-size:18px;
+  max-width:720px;
+  margin:auto;
+  margin-bottom:30px;
+}
+
+.cta-buttons{
+  display:flex;
+  gap:16px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:14px 28px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
+  display:inline-block;
+}
+
+.btn-primary{
+  background:var(--navy);
+  color:white;
+}
+
+.btn-gold{
+  background:var(--gold);
+  color:white;
+}
+
+/* CLIENT LOGOS */
+.clients{
+  padding:50px 20px;
+  text-align:center;
+  background:#fff;
+}
+
+.client-logos{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:40px;
+  align-items:center;
+}
+
+.client-logos img{
+  height:50px;
+  opacity:0.9;
+}
+
+/* CALCULATOR */
+.calculator{
+  background:var(--light);
+  padding:60px 20px;
+  text-align:center;
+}
+
+.calc-box{
+  max-width:520px;
+  margin:auto;
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.calc-box select,
+.calc-box input,
+.calc-box textarea{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  margin-bottom:18px;
+  border-radius:6px;
+  border:1px solid #ddd;
+}
+
+.result{
+  font-size:22px;
+  font-weight:bold;
+  color:var(--navy);
+  margin-top:10px;
+}
+
+.disclaimer{
+  font-size:12px;
+  color:#666;
+  margin-top:10px;
+}
+
+/* FOOTER */
+.footer{
+  background:var(--navy);
+  color:white;
+  padding:40px 20px;
+  text-align:center;
+}
+
+.footer a{
+  color:#fff;
+  text-decoration:none;
+  margin:0 10px;
+}
+
+.credit{
+  margin-top:20px;
+  font-size:13px;
+  opacity:0.8;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero h1{
+    font-size:32px;
   }
-  </script>
+}
+</style>
+</head>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
+  </div>
+  <div class="menu">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="arrange-pickup.html">Arrange Pickup</a>
+    <a href="tracking.html">Track</a>
+    <a href="knowledge-hub.html">Knowledge Hub</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Your Trusted Courier Partner</h1>
+  <p>
+    Specialists in township deliveries, chainstore deliveries, last-mile courier
+    and same day delivery solutions across Johannesburg and South Africa.
+  </p>
+
+  <div class="cta-buttons">
+    <a class="btn btn-primary" href="https://pakisalogistics.pperfect.com" target="_blank">
+      Track Your Parcel
+    </a>
+    <a class="btn btn-gold" href="https://www.pakisafloor.site" target="_blank">
+      View Pakisa Floor
+    </a>
+    <a class="btn btn-primary" href="#contact">
+      Contact Us
+    </a>
+  </div>
+</section>
+
+<!-- CLIENT LOGOS -->
+<section class="clients">
+  <h2>Trusted By Leading Logistics Partners</h2>
+  <div class="client-logos">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png">
+  </div>
+</section>
+
+<!-- CALCULATOR + CONTACT -->
+<section class="calculator" id="contact">
+  <h2>Estimate Your Delivery</h2>
+
+  <div class="calc-box">
+
+    <label>Outlying Area?</label>
+    <select id="outlying">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calculateCost()">
+      Calculate Estimate
+    </button>
+
+    <div id="result" class="result"></div>
+    <div class="disclaimer">
+      *This is just an estimate. Final pricing may vary.
+    </div>
+
+    <hr style="margin:30px 0">
+
+    <h3>Send Us Message</h3>
+
+    <form action="mailto:csd@pakisalogistics.co.za" method="POST" enctype="text/plain">
+      <input type="text" name="Name" placeholder="Full Name" required>
+      <input type="tel" name="Phone" placeholder="Phone Number" required>
+      <input type="email" name="Email" placeholder="Email Address" required>
+      <textarea name="Description" placeholder="Parcel Description" rows="4"></textarea>
+      <button class="btn btn-gold" type="submit">Send Message</button>
+    </form>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>
+    <a href="index.html">Home</a> |
+    <a href="about.html">About</a> |
+    <a href="arrange-pickup.html">Arrange Pickup</a> |
+    <a href="tracking.html">Track</a> |
+    <a href="knowledge-hub.html">Knowledge Hub</a>
+  </div>
+
+  <div style="margin-top:15px;">
+    Call: 011 397 1151 / 011 397 1061<br>
+    Email: ops1@pakisalogistics.co.za
+  </div>
+
+  <div class="credit">
+    Website by Mpho Mahlaba
+  </div>
+</footer>
+
+<script>
+function calculateCost() {
+  const base = 51;
+  const fuel = 14.34;
+  const vat = 0.15;
+  const outlyingFee =
+    document.getElementById('outlying').value === 'yes' ? 850 : 0;
+
+  const total = (base + fuel) * (1 + vat) + outlyingFee;
+
+  document.getElementById('result').innerText =
+    `Estimated Total: R${total.toFixed(2)}`;
+}
+</script>
+
+</body>
+</html>
