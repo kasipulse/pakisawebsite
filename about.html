@@ -6,9 +6,7 @@
 
   <title>About Pakisa Express Logistics | From Garage Startup to National Courier Partner</title>
   <meta name="description" content="Learn how Pakisa Express Logistics grew from a garage startup in 2021 into a national logistics leader providing same day, township, chainstore and lastmile deliveries across South Africa.">
-  <meta name="keywords" content="about Pakisa Express Logistics, courier partner South Africa, township deliveries, chainstore logistics, same day courier">
-  <meta name="robots" content="index, follow">
-
+  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -22,48 +20,50 @@
     .hero-gradient {
       background: linear-gradient(135deg, #0B1F3B 0%, #1a365d 100%);
       position: relative;
-      overflow: hidden;
     }
-    .hero-gradient::before {
-      content: "";
+    
+    .timeline-dot {
+      position: relative;
+    }
+    .timeline-dot::after {
+      content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-      opacity: 0.1;
+      left: 50%;
+      top: 2rem;
+      bottom: -2rem;
+      width: 2px;
+      background: #e2e8f0;
+      transform: translateX(-50%);
     }
+    .timeline-item:last-child .timeline-dot::after { display: none; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
   <header class="bg-white/90 backdrop-blur-md fixed w-full z-50 shadow-sm border-b border-gray-100">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
-      <a href="index.html" class="flex items-center">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Express Logistics Logo" class="h-10 md:h-12">
+      <a href="index.html">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-10">
       </a>
-      <nav class="hidden lg:flex space-x-8 text-sm font-semibold uppercase tracking-wider text-slate-700">
-        <a href="index.html" class="hover:text-gold transition">Home</a>
-        <a href="about.html" class="gold transition">About</a>
-        <a href="arrange-pickup.html" class="hover:text-gold transition">Arrange Pickup</a>
-        <a href="rate-calculator.html" class="hover:text-gold transition">Rate Calculator</a>
-        <a href="tracking.html" class="hover:text-gold transition">Track</a>
-        <a href="knowledge-hub.html" class="hover:text-gold transition">Knowledge Hub</a>
-        <a href="index.html#contact" class="bg-[#0B1F3B] text-white px-5 py-2 rounded-full hover:bg-gold transition">Contact</a>
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-bold uppercase tracking-wide text-slate-600">
+        <a href="index.html" class="hover:text-[#0033A0] transition">Home</a>
+        <a href="about.html" class="text-[#0033A0]">About</a>
+        <a href="rate-calculator.html" class="hover:text-[#0033A0] transition">Rates</a>
+        <a href="tracking.html" class="hover:text-[#0033A0] transition">Track</a>
+        <a href="index.html#contact" class="bg-[#0B1F3B] text-white px-6 py-2 rounded-full hover:bg-black transition shadow-md">Get in Touch</a>
       </nav>
     </div>
   </header>
 
   <main>
-
-    <section class="hero-gradient pt-48 pb-32 px-6 text-center">
+    <section class="hero-gradient pt-48 pb-32 px-6 text-center text-white">
       <div class="container mx-auto relative z-10">
-        <span class="gold font-bold tracking-[0.2em] uppercase text-xs mb-6 block bg-white/10 w-fit mx-auto px-4 py-1 rounded-full backdrop-blur-sm">
-          Our Journey
-        </span>
-        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-8 leading-tight max-w-4xl mx-auto tracking-tight">
+        <span class="gold font-black tracking-[0.3em] uppercase text-xs mb-6 block">Our Story</span>
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-8 leading-tight max-w-4xl mx-auto tracking-tight">
           From a Garage Startup to a <br><span class="gold italic">National Leader.</span>
         </h1>
-        <p class="text-slate-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed opacity-90">
-          Established in 2021 with a dream and a van, Pakisa Express Logistics has grown into a trusted courier partner delivering nationwide.
+        <p class="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed opacity-90">
+          Established in 2021 with a dream and a single van, Pakisa Express Logistics has redefined local courier standards across South Africa.
         </p>
       </div>
     </section>
@@ -71,106 +71,135 @@
     <section class="py-24 container mx-auto px-6">
       <div class="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
         <div class="space-y-6 text-lg leading-relaxed text-slate-600">
-          <h2 class="text-3xl font-bold navy-text">Built on Consistency</h2>
+          <h2 class="text-4xl font-black navy-text">Built on <span class="gold">Consistency</span></h2>
           <p>
-            What began as a single vehicle operation driven by commitment and reliability has evolved into a dynamic logistics network serving businesses nationwide. Our growth has been built on one principle: consistency in delivery and excellence in service.
+            What began as a single-vehicle operation driven by commitment has evolved into a dynamic logistics network. Our growth hasn't been accidental—it's the result of <strong>honoring every delivery</strong> as if it were our own.
           </p>
-          <p>
-            Today, Pakisa Express Logistics operates through a strategically positioned warehouse network across South Africa. This allows us to provide seamless same day deliveries, early bird services, township coverage, and chainstore distribution.
-          </p>
-          <p>
-            We understand that logistics is more than transportation — it is about trust, timing, and operational efficiency. 
-          </p>
+          <div class="grid grid-cols-2 gap-6 pt-4">
+            <div>
+              <h4 class="font-bold navy-text text-2xl">100%</h4>
+              <p class="text-sm">SA Owned & Managed</p>
+            </div>
+            <div>
+              <h4 class="font-bold navy-text text-2xl">24/7</h4>
+              <p class="text-sm">Operations Support</p>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-2 rounded-2xl shadow-2xl rotate-2">
-            <div class="bg-slate-100 rounded-xl h-80 flex items-center justify-center text-slate-400 italic">
-                
+        <div class="relative">
+            <div class="absolute -inset-4 bg-gold/10 rounded-2xl -rotate-3"></div>
+            <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1000" alt="Warehouse" class="relative rounded-2xl shadow-2xl object-cover h-[450px] w-full">
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-slate-100">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black navy-text">The Growth Path</h2>
+            </div>
+            
+            <div class="space-y-12">
+                <div class="flex gap-8 timeline-item">
+                    <div class="flex flex-col items-center timeline-dot">
+                        <div class="w-12 h-12 gold-bg rounded-full flex items-center justify-center text-white font-bold shrink-0 shadow-lg">21</div>
+                    </div>
+                    <div class="pb-12">
+                        <h3 class="text-xl font-bold navy-text">The Garage Era</h3>
+                        <p class="text-slate-600">Founded in 2021. One man, one van, and a vision to bridge the gap in township logistics and same-day reliability.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-8 timeline-item">
+                    <div class="flex flex-col items-center timeline-dot">
+                        <div class="w-12 h-12 navy-bg rounded-full flex items-center justify-center text-white font-bold shrink-0 shadow-lg">23</div>
+                    </div>
+                    <div class="pb-12">
+                        <h3 class="text-xl font-bold navy-text">Expansion & Systems</h3>
+                        <p class="text-slate-600">Moved into dedicated warehousing. Implemented advanced tracking systems and secured major chainstore distribution contracts.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-8 timeline-item">
+                    <div class="flex flex-col items-center timeline-dot">
+                        <div class="w-12 h-12 gold-bg rounded-full flex items-center justify-center text-white font-bold shrink-0 shadow-lg">26</div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold navy-text">National Presence</h3>
+                        <p class="text-slate-600">Operating a nationwide footprint with a fleet capable of handling everything from small parcels to heavy freight.</p>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
     </section>
 
-    <section class="py-24 bg-white border-y border-gray-100">
+    <section class="py-24 bg-white">
       <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold navy-text mb-16">Our Core Values</h2>
-
+        <h2 class="text-4xl font-black navy-text mb-16">Our Core Values</h2>
         <div class="grid md:grid-cols-3 gap-10">
-          <div class="p-10 bg-slate-50 rounded-2xl border border-gray-100 hover:border-gold transition-all duration-300 group">
-            <div class="w-12 h-12 gold-bg rounded-lg mb-6 mx-auto flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">✓</div>
-            <h3 class="text-xl font-bold navy-text mb-4">Reliability</h3>
-            <p class="text-slate-600">
-              We deliver on our promises. Timelines matter in logistics, and our team ensures every commitment is honored.
-            </p>
-          </div>
-
-          <div class="p-10 bg-slate-50 rounded-2xl border border-gray-100 hover:border-gold transition-all duration-300 group">
-            <div class="w-12 h-12 gold-bg rounded-lg mb-6 mx-auto flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">⚡</div>
-            <h3 class="text-xl font-bold navy-text mb-4">Efficiency</h3>
-            <p class="text-slate-600">
-              Through optimized routes and operational systems, we ensure fast and cost-effective lastmile deliveries.
-            </p>
-          </div>
-
-          <div class="p-10 bg-slate-50 rounded-2xl border border-gray-100 hover:border-gold transition-all duration-300 group">
-            <div class="w-12 h-12 gold-bg rounded-lg mb-6 mx-auto flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">🤝</div>
+          <div class="p-10 bg-slate-50 rounded-3xl border border-transparent hover:border-gold hover:shadow-xl transition-all duration-300">
+            <div class="text-4xl mb-6">🤝</div>
             <h3 class="text-xl font-bold navy-text mb-4">Partnership</h3>
-            <p class="text-slate-600">
-              We operate as an extension of your business — your trusted courier partner, not just a service provider.
-            </p>
+            <p class="text-slate-600">We don’t just deliver; we act as an extension of your business. Your success is our reputation.</p>
+          </div>
+          <div class="p-10 bg-slate-50 rounded-3xl border border-transparent hover:border-gold hover:shadow-xl transition-all duration-300">
+            <div class="text-4xl mb-6">⚡</div>
+            <h3 class="text-xl font-bold navy-text mb-4">Efficiency</h3>
+            <p class="text-slate-600">Time is money. Our optimized route planning ensures your goods move faster and smarter.</p>
+          </div>
+          <div class="p-10 bg-slate-50 rounded-3xl border border-transparent hover:border-gold hover:shadow-xl transition-all duration-300">
+            <div class="text-4xl mb-6">🛡️</div>
+            <h3 class="text-xl font-bold navy-text mb-4">Integrity</h3>
+            <p class="text-slate-600">Transparent pricing and honest communication. No hidden fees, just reliable service.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-24 container mx-auto px-6">
-      <div class="max-w-4xl mx-auto text-center space-y-8">
-        <h2 class="text-3xl md:text-5xl font-bold navy-text">A National Footprint</h2>
-        <div class="w-24 h-1 gold-bg mx-auto"></div>
-        <p class="text-lg text-slate-600 leading-relaxed">
-          Our comprehensive network of warehouses is strategically positioned across South Africa to ensure seamless delivery and logistics solutions for your business. Whether servicing township deliveries, chainstore distribution, or same day courier requirements, Pakisa Express Logistics continues to expand its reach and capacity.
-        </p>
-      </div>
+    <section class="py-24 bg-slate-50 overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=1000" alt="Team" class="rounded-3xl shadow-2xl">
+                </div>
+                <div class="lg:w-1/2 space-y-6">
+                    <h2 class="text-4xl font-black navy-text">A National <span class="gold">Footprint</span></h2>
+                    <p class="text-lg text-slate-600">Our warehouse network is strategically positioned to cover every major hub in South Africa—from Cape Town to Musina. We specialize in reaching the areas others won't, including deep township deliveries and remote outlying areas.</p>
+                    <div class="pt-4">
+                        <a href="tracking.html" class="navy-bg text-white px-8 py-4 rounded-xl font-bold hover:bg-black transition inline-block">View Coverage Areas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="py-24 bg-[#0B1F3B] text-white text-center relative overflow-hidden">
-      <div class="absolute inset-0 opacity-10">
-        <img src="https://www.transparenttextures.com/patterns/cubes.png" alt="pattern">
-      </div>
-      <div class="relative z-10 container mx-auto px-6">
-        <h2 class="text-3xl md:text-4xl font-bold mb-10">
-          Ready to Work With a Logistics Partner You Can Trust?
+    <section class="py-24 navy-bg text-white text-center relative overflow-hidden">
+      <div class="container mx-auto px-6 relative z-10">
+        <h2 class="text-4xl md:text-5xl font-black mb-10 leading-tight">
+          Ready to Work With a Logistics <br>Partner You Can Trust?
         </h2>
         <div class="flex flex-col md:flex-row justify-center gap-6">
-          <a href="arrange-pickup.html" class="gold-bg px-12 py-5 rounded-full text-white font-bold hover:scale-105 transition shadow-2xl">
+          <a href="arrange-pickup.html" class="gold-bg px-12 py-5 rounded-xl text-white font-bold hover:scale-105 transition shadow-2xl">
             Arrange a Pickup
           </a>
-          <a href="index.html#contact" class="bg-white text-navy-bg px-12 py-5 rounded-full font-bold hover:bg-slate-100 transition shadow-2xl">
+          <a href="index.html#contact" class="bg-white text-[#0B1F3B] px-12 py-5 rounded-xl font-bold hover:bg-slate-100 transition shadow-2xl">
             Contact Our Team
           </a>
         </div>
       </div>
     </section>
-
   </main>
 
-  <footer class="bg-[#061224] text-white py-20">
-    <div class="container mx-auto px-6 text-center">
-      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-14 mx-auto mb-10 brightness-200">
-      
-      <div class="flex flex-wrap justify-center gap-8 mb-10 text-slate-400 font-medium">
-        <a href="index.html" class="hover:text-gold transition">Home</a>
-        <a href="about.html" class="hover:text-gold transition">About</a>
-        <a href="arrange-pickup.html" class="hover:text-gold transition">Arrange Pickup</a>
-        <a href="rate-calculator.html" class="hover:text-gold transition">Rate Calculator</a>
-        <a href="tracking.html" class="hover:text-gold transition">Track</a>
-        <a href="knowledge-hub.html" class="hover:text-gold transition">Knowledge Hub</a>
-        <a href="disclaimer.html" class="hover:text-gold transition">Disclaimer</a>
+  <footer class="py-12 bg-white border-t border-slate-100 text-center">
+    <div class="container mx-auto px-6">
+      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-8 mx-auto mb-6 grayscale opacity-50">
+      <div class="flex flex-wrap justify-center gap-6 mb-8 text-slate-500 font-bold uppercase text-xs tracking-widest">
+        <a href="index.html" class="hover:text-gold">Home</a>
+        <a href="about.html" class="hover:text-gold">About</a>
+        <a href="rate-calculator.html" class="hover:text-gold">Rates</a>
+        <a href="tracking.html" class="hover:text-gold">Track</a>
       </div>
-      
-      <div class="pt-10 border-t border-slate-800 text-slate-500 text-sm">
-        <p>© 2026 Pakisa Express Logistics (Pty) Ltd. All Rights Reserved.</p>
-        <p class="mt-2 text-xs">Website Designed & Developed by Mpho Mahlaba</p>
-      </div>
+      <p class="text-slate-400 text-xs">© 2026 Pakisa Express Logistics (Pty) Ltd. | Designed by Mpho Mahlaba</p>
     </div>
   </footer>
 
