@@ -152,19 +152,49 @@
       </div>
     </section>
 
+    <section class="py-20 royal-bg relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-gold opacity-10 rounded-full translate-x-1/3 translate-y-1/3"></div>
+
+      <div class="container mx-auto px-6 relative z-10 text-center">
+        <h2 class="text-white text-sm font-black uppercase tracking-[0.3em] mb-12 opacity-80">Latest Statistics</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="space-y-2">
+            <div class="text-5xl md:text-6xl font-extrabold text-white counter" data-target="9921">0</div>
+            <p class="gold font-bold uppercase tracking-widest text-xs">Collections</p>
+          </div>
+
+          <div class="space-y-2 border-y md:border-y-0 md:border-x border-white/10 py-8 md:py-0">
+            <div class="text-5xl md:text-6xl font-extrabold text-white counter" data-target="12861">0</div>
+            <p class="gold font-bold uppercase tracking-widest text-xs">Deliveries</p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="text-5xl md:text-6xl font-extrabold text-white counter" data-target="63625">0</div>
+            <p class="gold font-bold uppercase tracking-widest text-xs">KILOGRAMS SHIPPED</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="contact" class="py-24 bg-white">
       <div class="container mx-auto px-6 max-w-5xl">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 class="text-4xl font-black royal-blue mb-6">Contact Us</h2>
+            
             <div class="space-y-4 text-slate-600">
-              <p class="font-bold text-lg">Call: 011 397 1151 / 011 397 1061</p>
-              <p class="font-bold text-lg">Email: ops1@pakisalogistics.co.za</p>
+              <div class="text-lg font-bold leading-relaxed">
+                Call: 011 397 1151 / 011 397 1061<br>
+                Email: <span class="royal-blue">ops1@pakisalogistics.co.za</span>
+              </div>
             </div>
             
-            <div class="mt-8 flex items-center gap-6">
-              <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="royal-blue font-bold border-b-2 border-transparent hover:border-gold transition">Facebook</a>
-              <a href="https://www.linkedin.com/company/91512165" target="_blank" class="royal-blue font-bold border-b-2 border-transparent hover:border-gold transition">LinkedIn</a>
+            <div class="mt-8 flex items-center gap-4 text-lg font-bold royal-blue">
+              <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="hover:text-gold transition">Facebook</a>
+              <span class="text-slate-300">|</span>
+              <a href="https://www.linkedin.com/company/91512165" target="_blank" class="hover:text-gold transition">LinkedIn</a>
             </div>
           </div>
 
@@ -186,6 +216,7 @@
   </footer>
 
   <script>
+    // Rate Calculator Logic
     function calculateCost() {
       const base = 51;
       const fuel = 14.34;
@@ -194,6 +225,35 @@
       const total = (base + fuel) * (1 + vat) + outlyingFee;
       document.getElementById('result').innerText = `Est. Total: R${total.toFixed(2)}`;
     }
+
+    // Animated Counter Logic
+    const counters = document.querySelectorAll('.counter');
+    const speed = 100;
+
+    const startCounters = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target;
+          const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText.replace(/,/g, '');
+            const inc = target / speed;
+
+            if (count < target) {
+              counter.innerText = Math.ceil(count + inc).toLocaleString();
+              setTimeout(updateCount, 20);
+            } else {
+              counter.innerText = target.toLocaleString();
+            }
+          };
+          updateCount();
+          observer.unobserve(counter);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(startCounters, { threshold: 0.5 });
+    counters.forEach(counter => observer.observe(counter));
   </script>
 </body>
 </html>
