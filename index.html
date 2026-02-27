@@ -4,40 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pakisa Express Logistics | Same Day, Township & Chainstore Deliveries South Africa</title>
-  <meta name="description" content="Pakisa Express Logistics is your trusted courier partner in South Africa.">
+  <title>Pakisa Express Logistics | Same Day & Township Deliveries</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
     body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    
+    /* Branding Colors */
     .gold { color: #C6A75E; }
     .gold-bg { background-color: #C6A75E; }
-    /* Updated to Royal Blue */
-    .royal-bg { background-color: #002366; }
-    .royal-text { color: #002366; }
+    .royal-blue { color: #0033A0; }
+    .royal-bg { background-color: #0033A0; }
     
-    .hero-gradient {
-      background: linear-gradient(135deg, #002366 0%, #003399 100%);
-      position: relative;
-      overflow: hidden;
+    /* Soft Fading & Gradients */
+    .hero-soft-gradient {
+      background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%);
     }
-    .hero-gradient::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-      opacity: 0.1;
+
+    .faded-section {
+      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
     }
 
     .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 51, 160, 0.1);
     }
 
-    /* Logo Scroll Animation */
+    /* Seamless Logo Scroll */
     @keyframes scroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -45,94 +41,110 @@
     .logo-track {
       display: flex;
       width: calc(250px * 10);
-      animation: scroll 30s linear infinite;
+      animation: scroll 40s linear infinite;
     }
     .logo-track:hover { animation-play-state: paused; }
+
+    /* Input Styling */
+    .input-field {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: #0033A0;
+      background-color: #fff;
+      box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05);
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
-  <header class="bg-white/90 backdrop-blur-md fixed w-full z-50 shadow-sm border-b border-gray-100">
+  <header class="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-gray-100">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
-      <a href="index.html" class="flex items-center">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Logo" class="h-10 md:h-12">
+      <a href="index.html">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-10">
       </a>
-      <nav class="hidden lg:flex space-x-8 text-sm font-semibold uppercase tracking-wider text-slate-700">
-        <a href="index.html" class="hover:text-gold transition">Home</a>
-        <a href="about.html" class="hover:text-gold transition">About</a>
-        <a href="arrange-pickup.html" class="hover:text-gold transition">Arrange Pickup</a>
-        <a href="rate-calculator.html" class="hover:text-gold transition">Rate Calculator</a>
-        <a href="tracking.html" class="hover:text-gold transition">Track</a>
-        <a href="#contact" class="royal-bg text-white px-5 py-2 rounded-full hover:bg-gold transition">Contact</a>
+      <nav class="hidden lg:flex space-x-8 text-sm font-bold uppercase tracking-wide text-slate-600">
+        <a href="index.html" class="hover:text-royal-blue transition">Home</a>
+        <a href="rate-calculator.html" class="hover:text-royal-blue transition">Rates</a>
+        <a href="tracking.html" class="hover:text-royal-blue transition">Track</a>
+        <a href="#contact" class="royal-bg text-white px-6 py-2 rounded-full hover:bg-black transition">Get in Touch</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero-gradient pt-48 pb-40 px-6">
+    <section class="hero-soft-gradient pt-40 pb-32 px-6">
       <div class="container mx-auto text-center relative z-10">
-        <span class="gold font-bold tracking-[0.2em] uppercase text-xs mb-6 block bg-white/10 w-fit mx-auto px-4 py-1 rounded-full backdrop-blur-sm">
-          Moving your business forward
-        </span>
-        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight max-w-5xl mx-auto tracking-tight">
-          Reliable Logistics for <span class="gold italic">Every Mile.</span>
+        <span class="gold font-extrabold tracking-widest uppercase text-xs mb-4 block">Trusted Courier Partner</span>
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
+          Moving your world, <br><span class="gold italic">one mile at a time.</span>
         </h1>
-        <div class="flex flex-col md:flex-row justify-center items-center gap-6">
-          <a href="https://pakisalogistics.pperfect.com" class="gold-bg text-white px-12 py-5 rounded-full font-bold shadow-2xl hover:scale-105 transition-all duration-300 text-lg">Track Your Parcel</a>
-          <a href="#contact" class="text-white font-semibold hover:text-gold transition-colors flex items-center gap-2 group">
-            Speak to an expert <span class="group-hover:translate-x-1 transition-transform">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-12 bg-white overflow-hidden border-b border-gray-100">
-      <p class="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-8">Trusted by Leading Logistics Partners</p>
-      <div class="logo-track flex items-center gap-20 opacity-60 grayscale hover:grayscale-0 transition-all">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png" class="h-12 w-auto">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png" class="h-12 w-auto">
-      </div>
-    </section>
-
-    <section class="py-24 royal-bg text-white">
-      <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
-        <div class="lg:w-1/2">
-          <h2 class="text-3xl md:text-5xl font-bold mb-6">Quick <span class="gold">Delivery Estimate</span></h2>
-          <p class="text-slate-300 mb-8 text-lg">Fast, transparent pricing for your logistics needs.</p>
-        </div>
+        <p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto opacity-90">Reliable logistics for same day, township, and chainstore deliveries across SA.</p>
         
-        <div class="lg:w-1/2 w-full">
-          <form id="calculator-form" class="glass-card p-8 rounded-2xl text-slate-900 shadow-2xl">
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+          <a href="#" class="gold-bg text-white px-10 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition">Track Parcel</a>
+          <a href="#quote" class="bg-white text-royal-blue px-10 py-4 rounded-xl font-bold shadow-md hover:bg-blue-50 transition">Get a Quote</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-white overflow-hidden">
+      <div class="logo-track flex items-center gap-24 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png" class="h-10">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png" class="h-10">
+      </div>
+    </section>
+
+    <section id="quote" class="py-24 faded-section px-6">
+      <div class="container mx-auto flex flex-col lg:flex-row gap-16">
+        <div class="lg:w-1/2">
+          <h2 class="text-4xl font-extrabold royal-blue mb-6">Logistics <span class="gold">Estimator</span></h2>
+          <p class="text-slate-500 text-lg mb-8">Professional pricing tailored for your delivery needs. Fill in the details for an instant estimate.</p>
+          
+          <div class="space-y-4">
+             <div class="flex items-center gap-3 text-slate-600 font-medium">
+               <span class="royal-blue">✓</span> Same Day & Next Day Options
+             </div>
+             <div class="flex items-center gap-3 text-slate-600 font-medium">
+               <span class="royal-blue">✓</span> Nationwide Township Reach
+             </div>
+          </div>
+        </div>
+
+        <div class="lg:w-1/2">
+          <form class="glass-card p-8 rounded-3xl shadow-xl">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <input type="text" placeholder="To Address" class="w-full bg-slate-100 rounded-lg p-3 outline-none focus:ring-2 focus:ring-gold">
-              <input type="text" placeholder="Parcel Description" class="w-full bg-slate-100 rounded-lg p-3 outline-none focus:ring-2 focus:ring-gold">
+              <input type="text" placeholder="Recipient Address" class="input-field rounded-xl p-4 outline-none">
+              <input type="text" placeholder="Parcel Description" class="input-field rounded-xl p-4 outline-none">
             </div>
 
-            <div class="mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <p class="text-[10px] font-black uppercase text-gold mb-3 tracking-widest">Dimensions & Weight</p>
+            <div class="mb-6 p-5 bg-blue-50/50 rounded-2xl border border-blue-100">
+              <p class="text-[10px] font-black uppercase text-royal-blue mb-4 tracking-tighter opacity-60">Volumetric Data</p>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <input type="number" placeholder="L (cm)" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
-                <input type="number" placeholder="W (cm)" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
-                <input type="number" placeholder="H (cm)" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
-                <input type="number" placeholder="Kg" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
+                <input type="number" placeholder="L (cm)" class="input-field rounded-lg p-3 text-sm outline-none">
+                <input type="number" placeholder="W (cm)" class="input-field rounded-lg p-3 text-sm outline-none">
+                <input type="number" placeholder="H (cm)" class="input-field rounded-lg p-3 text-sm outline-none">
+                <input type="number" placeholder="Kg" class="input-field rounded-lg p-3 text-sm outline-none">
               </div>
             </div>
 
-            <select id="outlying" class="w-full bg-slate-100 rounded-lg p-3 mb-6 focus:ring-2 focus:ring-gold outline-none">
-              <option value="no">No, standard delivery</option>
-              <option value="yes">Yes, outlying area (+R850)</option>
+            <select id="outlying" class="w-full input-field rounded-xl p-4 mb-6 outline-none">
+              <option value="no">Standard Delivery Area</option>
+              <option value="yes">Outlying Area (+R850)</option>
             </select>
 
-            <button type="button" onclick="calculateCost()" class="w-full gold-bg text-white font-bold py-4 rounded-lg hover:brightness-110 transition shadow-lg">Calculate Estimate</button>
-            <div id="result" class="mt-6 text-2xl font-bold text-center royal-text"></div>
+            <button type="button" onclick="calculateCost()" class="w-full royal-bg text-white font-bold py-4 rounded-xl hover:bg-black transition shadow-lg">Get Estimate</button>
+            <div id="result" class="mt-6 text-2xl font-black text-center royal-blue"></div>
           </form>
         </div>
       </div>
@@ -140,56 +152,34 @@
 
     <section id="contact" class="py-24 bg-white">
       <div class="container mx-auto px-6 max-w-5xl">
-        <div class="grid lg:grid-cols-2 gap-16">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 class="text-4xl font-bold royal-text mb-6">Let's Talk Logistics</h2>
-            <div class="space-y-6">
-              <div class="flex items-center gap-6">
-                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl gold">📞</div>
-                <div>
-                  <p class="text-xs font-bold text-slate-400 uppercase">Call Us</p>
-                  <p class="font-bold">011 397 1151 / 011 397 1061</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-6">
-                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl gold">✉️</div>
-                <div>
-                  <p class="text-xs font-bold text-slate-400 uppercase">Email Support</p>
-                  <p class="font-bold">ops1@pakisalogistics.co.za</p>
-                </div>
-              </div>
-              <div class="pt-6 flex gap-4">
-                <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="royal-text hover:text-gold font-bold">Facebook</a>
-                <span class="text-slate-300">|</span>
-                <a href="https://www.linkedin.com/company/91512165" target="_blank" class="royal-text hover:text-gold font-bold">LinkedIn</a>
-              </div>
+            <h2 class="text-4xl font-black royal-blue mb-6">Contact Us</h2>
+            <div class="space-y-4 text-slate-600">
+              <p class="font-bold text-lg">Call: 011 397 1151 / 011 397 1061</p>
+              <p class="font-bold text-lg">Email: ops1@pakisalogistics.co.za</p>
+            </div>
+            
+            <div class="mt-8 flex items-center gap-6">
+              <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="royal-blue font-bold border-b-2 border-transparent hover:border-gold transition">Facebook</a>
+              <a href="https://www.linkedin.com/company/91512165" target="_blank" class="royal-blue font-bold border-b-2 border-transparent hover:border-gold transition">LinkedIn</a>
             </div>
           </div>
 
           <form class="space-y-4">
-            <input type="text" placeholder="Full Name" class="w-full border-b-2 border-slate-100 py-3 focus:border-gold outline-none">
-            <input type="email" placeholder="Email Address" class="w-full border-b-2 border-slate-100 py-3 focus:border-gold outline-none">
-            <textarea placeholder="How can we help?" rows="3" class="w-full border-b-2 border-slate-100 py-3 focus:border-gold outline-none"></textarea>
-            <button type="submit" class="royal-bg text-white px-10 py-4 rounded-lg font-bold hover:bg-gold transition">Send Message</button>
+            <input type="text" placeholder="Your Name" class="w-full border-b-2 border-slate-100 py-4 focus:border-royal-blue outline-none transition">
+            <textarea placeholder="Message" rows="3" class="w-full border-b-2 border-slate-100 py-4 focus:border-royal-blue outline-none transition"></textarea>
+            <button class="royal-bg text-white px-8 py-3 rounded-lg font-bold hover:bg-black transition">Send</button>
           </form>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="bg-[#041124] text-white py-16">
-    <div class="container mx-auto px-6 text-center">
-      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-12 mx-auto mb-8 brightness-200">
-      
-      <div class="flex justify-center gap-6 mb-8">
-        <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="hover:text-gold transition">Facebook</a>
-        <a href="https://www.linkedin.com/company/91512165" target="_blank" class="hover:text-gold transition">LinkedIn</a>
-      </div>
-
-      <div class="pt-8 border-t border-slate-800 text-slate-500 text-xs">
-        <p>© 2026 Pakisa Express Logistics (Pty) Ltd. All Rights Reserved.</p>
-        <p class="mt-2">Website Designed & Developed by Mpho Mahlaba</p>
-      </div>
+  <footer class="py-12 bg-slate-50 border-t border-slate-100 text-center">
+    <div class="container mx-auto px-6">
+      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-8 mx-auto mb-6 grayscale opacity-50">
+      <p class="text-slate-400 text-xs">© 2026 Pakisa Express Logistics (Pty) Ltd. | Designed by Mpho Mahlaba</p>
     </div>
   </footer>
 
@@ -200,7 +190,7 @@
       const vat = 0.15;
       const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
       const total = (base + fuel) * (1 + vat) + outlyingFee;
-      document.getElementById('result').innerText = `Estimated Total: R${total.toFixed(2)}`;
+      document.getElementById('result').innerText = `Est. Total: R${total.toFixed(2)}`;
     }
   </script>
 </body>
