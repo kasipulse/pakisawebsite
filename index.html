@@ -1,319 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pakisa Express Logistics | Same Day, Township & Chainstore Deliveries South Africa</title>
+  <meta name="description" content="Pakisa Express Logistics is your trusted courier partner in South Africa.">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    .gold { color: #C6A75E; }
+    .gold-bg { background-color: #C6A75E; }
+    /* Updated to Royal Blue */
+    .royal-bg { background-color: #002366; }
+    .royal-text { color: #002366; }
+    
+    .hero-gradient {
+      background: linear-gradient(135deg, #002366 0%, #003399 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-gradient::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+      opacity: 0.1;
+    }
 
-<title>Pakisa Express Logistics | Your Trusted Courier Partner</title>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-<meta name="description" content="Pakisa Express Logistics offers township deliveries, chainstore deliveries, same day courier, last mile delivery and reliable courier partner services across Johannesburg and South Africa.">
-
-<meta name="keywords" content="township deliveries, chainstore deliveries, courier partner, last mile deliveries, same day deliveries Johannesburg, Pakisa Express Logistics">
-
-<meta name="robots" content="index, follow">
-
-<link rel="canonical" href="https://www.pakisalogistics.co.za/">
-
-<!-- ✅ Favicon for Google search logo -->
-<link rel="icon" type="image/png" sizes="32x32"
-href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
-
-<link rel="apple-touch-icon"
-href="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
-
-<style>
-:root{
-  --navy:#0b1f3a;
-  --gold:#caa64b;
-  --light:#f7f9fc;
-}
-
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#fff;
-  color:#222;
-}
-
-/* NAVBAR */
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px 40px;
-  background:#fff;
-  box-shadow:0 2px 10px rgba(0,0,0,0.06);
-}
-
-.logo img{
-  height:48px;
-}
-
-.menu a{
-  margin-left:24px;
-  text-decoration:none;
-  color:var(--navy);
-  font-weight:600;
-}
-
-/* HERO */
-.hero{
-  padding:80px 20px;
-  text-align:center;
-  background:linear-gradient(180deg,#ffffff,#f5f8ff);
-}
-
-.hero h1{
-  font-size:42px;
-  color:var(--navy);
-  margin-bottom:16px;
-}
-
-.hero p{
-  font-size:18px;
-  max-width:720px;
-  margin:auto;
-  margin-bottom:30px;
-}
-
-.cta-buttons{
-  display:flex;
-  gap:16px;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-
-.btn{
-  padding:14px 28px;
-  border-radius:8px;
-  text-decoration:none;
-  font-weight:bold;
-  display:inline-block;
-}
-
-.btn-primary{
-  background:var(--navy);
-  color:white;
-}
-
-.btn-gold{
-  background:var(--gold);
-  color:white;
-}
-
-/* CLIENT LOGOS */
-.clients{
-  padding:50px 20px;
-  text-align:center;
-  background:#fff;
-}
-
-.client-logos{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:40px;
-  align-items:center;
-}
-
-.client-logos img{
-  height:50px;
-  opacity:0.9;
-}
-
-/* CALCULATOR */
-.calculator{
-  background:var(--light);
-  padding:60px 20px;
-  text-align:center;
-}
-
-.calc-box{
-  max-width:520px;
-  margin:auto;
-  background:#fff;
-  padding:30px;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
-
-.calc-box select,
-.calc-box input,
-.calc-box textarea{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  margin-bottom:18px;
-  border-radius:6px;
-  border:1px solid #ddd;
-}
-
-.result{
-  font-size:22px;
-  font-weight:bold;
-  color:var(--navy);
-  margin-top:10px;
-}
-
-.disclaimer{
-  font-size:12px;
-  color:#666;
-  margin-top:10px;
-}
-
-/* FOOTER */
-.footer{
-  background:var(--navy);
-  color:white;
-  padding:40px 20px;
-  text-align:center;
-}
-
-.footer a{
-  color:#fff;
-  text-decoration:none;
-  margin:0 10px;
-}
-
-.credit{
-  margin-top:20px;
-  font-size:13px;
-  opacity:0.8;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-  .hero h1{
-    font-size:32px;
-  }
-}
-</style>
+    /* Logo Scroll Animation */
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .logo-track {
+      display: flex;
+      width: calc(250px * 10);
+      animation: scroll 30s linear infinite;
+    }
+    .logo-track:hover { animation-play-state: paused; }
+  </style>
 </head>
+<body class="bg-slate-50 text-slate-900">
 
-<body>
-
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="logo">
-    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png">
-  </div>
-  <div class="menu">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="arrange-pickup.html">Arrange Pickup</a>
-    <a href="tracking.html">Track</a>
-    <a href="knowledge-hub.html">Knowledge Hub</a>
-  </div>
-</div>
-
-<!-- HERO -->
-<section class="hero">
-  <h1>Your Trusted Courier Partner</h1>
-  <p>
-    Specialists in township deliveries, chainstore deliveries, last-mile courier
-    and same day delivery solutions across Johannesburg and South Africa.
-  </p>
-
-  <div class="cta-buttons">
-    <a class="btn btn-primary" href="https://pakisalogistics.pperfect.com" target="_blank">
-      Track Your Parcel
-    </a>
-    <a class="btn btn-gold" href="https://www.pakisafloor.site" target="_blank">
-      View Pakisa Floor
-    </a>
-    <a class="btn btn-primary" href="#contact">
-      Contact Us
-    </a>
-  </div>
-</section>
-
-<!-- CLIENT LOGOS -->
-<section class="clients">
-  <h2>Trusted By Leading Logistics Partners</h2>
-  <div class="client-logos">
-    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png">
-    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png">
-    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png">
-    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png">
-    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png">
-  </div>
-</section>
-
-<!-- CALCULATOR + CONTACT -->
-<section class="calculator" id="contact">
-  <h2>Estimate Your Delivery</h2>
-
-  <div class="calc-box">
-
-    <label>Outlying Area?</label>
-    <select id="outlying">
-      <option value="no">No</option>
-      <option value="yes">Yes</option>
-    </select>
-
-    <button class="btn btn-primary" onclick="calculateCost()">
-      Calculate Estimate
-    </button>
-
-    <div id="result" class="result"></div>
-    <div class="disclaimer">
-      *This is just an estimate. Final pricing may vary.
+  <header class="bg-white/90 backdrop-blur-md fixed w-full z-50 shadow-sm border-b border-gray-100">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html" class="flex items-center">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Logo" class="h-10 md:h-12">
+      </a>
+      <nav class="hidden lg:flex space-x-8 text-sm font-semibold uppercase tracking-wider text-slate-700">
+        <a href="index.html" class="hover:text-gold transition">Home</a>
+        <a href="about.html" class="hover:text-gold transition">About</a>
+        <a href="arrange-pickup.html" class="hover:text-gold transition">Arrange Pickup</a>
+        <a href="rate-calculator.html" class="hover:text-gold transition">Rate Calculator</a>
+        <a href="tracking.html" class="hover:text-gold transition">Track</a>
+        <a href="#contact" class="royal-bg text-white px-5 py-2 rounded-full hover:bg-gold transition">Contact</a>
+      </nav>
     </div>
+  </header>
 
-    <hr style="margin:30px 0">
+  <main>
+    <section class="hero-gradient pt-48 pb-40 px-6">
+      <div class="container mx-auto text-center relative z-10">
+        <span class="gold font-bold tracking-[0.2em] uppercase text-xs mb-6 block bg-white/10 w-fit mx-auto px-4 py-1 rounded-full backdrop-blur-sm">
+          Moving your business forward
+        </span>
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight max-w-5xl mx-auto tracking-tight">
+          Reliable Logistics for <span class="gold italic">Every Mile.</span>
+        </h1>
+        <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+          <a href="https://pakisalogistics.pperfect.com" class="gold-bg text-white px-12 py-5 rounded-full font-bold shadow-2xl hover:scale-105 transition-all duration-300 text-lg">Track Your Parcel</a>
+          <a href="#contact" class="text-white font-semibold hover:text-gold transition-colors flex items-center gap-2 group">
+            Speak to an expert <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-    <h3>Send Us Message</h3>
+    <section class="py-12 bg-white overflow-hidden border-b border-gray-100">
+      <p class="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-8">Trusted by Leading Logistics Partners</p>
+      <div class="logo-track flex items-center gap-20 opacity-60 grayscale hover:grayscale-0 transition-all">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237771/R-removebg-preview_hengbo.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__1_-removebg-preview_sdbnus.png" class="h-12 w-auto">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237770/OIP-removebg-preview_fdjhwc.png" class="h-12 w-auto">
+      </div>
+    </section>
 
-    <form action="mailto:csd@pakisalogistics.co.za" method="POST" enctype="text/plain">
-      <input type="text" name="Name" placeholder="Full Name" required>
-      <input type="tel" name="Phone" placeholder="Phone Number" required>
-      <input type="email" name="Email" placeholder="Email Address" required>
-      <textarea name="Description" placeholder="Parcel Description" rows="4"></textarea>
-      <button class="btn btn-gold" type="submit">Send Message</button>
-    </form>
+    <section class="py-24 royal-bg text-white">
+      <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
+        <div class="lg:w-1/2">
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">Quick <span class="gold">Delivery Estimate</span></h2>
+          <p class="text-slate-300 mb-8 text-lg">Fast, transparent pricing for your logistics needs.</p>
+        </div>
+        
+        <div class="lg:w-1/2 w-full">
+          <form id="calculator-form" class="glass-card p-8 rounded-2xl text-slate-900 shadow-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <input type="text" placeholder="To Address" class="w-full bg-slate-100 rounded-lg p-3 outline-none focus:ring-2 focus:ring-gold">
+              <input type="text" placeholder="Parcel Description" class="w-full bg-slate-100 rounded-lg p-3 outline-none focus:ring-2 focus:ring-gold">
+            </div>
 
-  </div>
-</section>
+            <div class="mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <p class="text-[10px] font-black uppercase text-gold mb-3 tracking-widest">Dimensions & Weight</p>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <input type="number" placeholder="L (cm)" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
+                <input type="number" placeholder="W (cm)" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
+                <input type="number" placeholder="H (cm)" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
+                <input type="number" placeholder="Kg" class="w-full bg-white border border-slate-200 rounded p-2 text-sm outline-none">
+              </div>
+            </div>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div>
-    <a href="index.html">Home</a> |
-    <a href="about.html">About</a> |
-    <a href="arrange-pickup.html">Arrange Pickup</a> |
-    <a href="tracking.html">Track</a> |
-    <a href="knowledge-hub.html">Knowledge Hub</a>
-  </div>
+            <select id="outlying" class="w-full bg-slate-100 rounded-lg p-3 mb-6 focus:ring-2 focus:ring-gold outline-none">
+              <option value="no">No, standard delivery</option>
+              <option value="yes">Yes, outlying area (+R850)</option>
+            </select>
 
- <div style="margin-top:15px;">
-  Call: 011 397 1151 / 011 397 1061<br>
-  Email: ops1@pakisalogistics.co.za
-</div>
+            <button type="button" onclick="calculateCost()" class="w-full gold-bg text-white font-bold py-4 rounded-lg hover:brightness-110 transition shadow-lg">Calculate Estimate</button>
+            <div id="result" class="mt-6 text-2xl font-bold text-center royal-text"></div>
+          </form>
+        </div>
+      </div>
+    </section>
 
-<div style="margin-top:15px;">
-  <a href="https://www.facebook.com/PakisaExpress" target="_blank">Facebook</a> |
-  <a href="https://www.linkedin.com/company/91512165" target="_blank">LinkedIn</a>
-</div>
+    <section id="contact" class="py-24 bg-white">
+      <div class="container mx-auto px-6 max-w-5xl">
+        <div class="grid lg:grid-cols-2 gap-16">
+          <div>
+            <h2 class="text-4xl font-bold royal-text mb-6">Let's Talk Logistics</h2>
+            <div class="space-y-6">
+              <div class="flex items-center gap-6">
+                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl gold">📞</div>
+                <div>
+                  <p class="text-xs font-bold text-slate-400 uppercase">Call Us</p>
+                  <p class="font-bold">011 397 1151 / 011 397 1061</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-6">
+                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl gold">✉️</div>
+                <div>
+                  <p class="text-xs font-bold text-slate-400 uppercase">Email Support</p>
+                  <p class="font-bold">ops1@pakisalogistics.co.za</p>
+                </div>
+              </div>
+              <div class="pt-6 flex gap-4">
+                <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="royal-text hover:text-gold font-bold">Facebook</a>
+                <span class="text-slate-300">|</span>
+                <a href="https://www.linkedin.com/company/91512165" target="_blank" class="royal-text hover:text-gold font-bold">LinkedIn</a>
+              </div>
+            </div>
+          </div>
 
-  <div class="credit">
-    Website by Mpho Mahlaba
-  </div>
-</footer>
+          <form class="space-y-4">
+            <input type="text" placeholder="Full Name" class="w-full border-b-2 border-slate-100 py-3 focus:border-gold outline-none">
+            <input type="email" placeholder="Email Address" class="w-full border-b-2 border-slate-100 py-3 focus:border-gold outline-none">
+            <textarea placeholder="How can we help?" rows="3" class="w-full border-b-2 border-slate-100 py-3 focus:border-gold outline-none"></textarea>
+            <button type="submit" class="royal-bg text-white px-10 py-4 rounded-lg font-bold hover:bg-gold transition">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
 
-<script>
-function calculateCost() {
-  const base = 51;
-  const fuel = 14.34;
-  const vat = 0.15;
-  const outlyingFee =
-    document.getElementById('outlying').value === 'yes' ? 850 : 0;
+  <footer class="bg-[#041124] text-white py-16">
+    <div class="container mx-auto px-6 text-center">
+      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-12 mx-auto mb-8 brightness-200">
+      
+      <div class="flex justify-center gap-6 mb-8">
+        <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="hover:text-gold transition">Facebook</a>
+        <a href="https://www.linkedin.com/company/91512165" target="_blank" class="hover:text-gold transition">LinkedIn</a>
+      </div>
 
-  const total = (base + fuel) * (1 + vat) + outlyingFee;
+      <div class="pt-8 border-t border-slate-800 text-slate-500 text-xs">
+        <p>© 2026 Pakisa Express Logistics (Pty) Ltd. All Rights Reserved.</p>
+        <p class="mt-2">Website Designed & Developed by Mpho Mahlaba</p>
+      </div>
+    </div>
+  </footer>
 
-  document.getElementById('result').innerText =
-    `Estimated Total: R${total.toFixed(2)}`;
-}
-</script>
-
+  <script>
+    function calculateCost() {
+      const base = 51;
+      const fuel = 14.34;
+      const vat = 0.15;
+      const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
+      const total = (base + fuel) * (1 + vat) + outlyingFee;
+      document.getElementById('result').innerText = `Estimated Total: R${total.toFixed(2)}`;
+    }
+  </script>
 </body>
 </html>
