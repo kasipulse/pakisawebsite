@@ -294,5 +294,178 @@
     const observer = new IntersectionObserver(startCounters, { threshold: 0.5 });
     counters.forEach(counter => observer.observe(counter));
   </script>
+
+  <style>
+    #pakisa-chat-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0033A0;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 9999;
+      transition: transform 0.3s ease;
+    }
+    #pakisa-chat-btn:hover { transform: scale(1.05); }
+
+    #pakisa-chat-box {
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
+      width: 350px;
+      height: 500px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #pakisa-chat-header {
+      background: #0033A0;
+      color: white;
+      padding: 16px;
+      font-weight: bold;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #pakisa-chat-close { cursor: pointer; font-size: 20px; opacity: 0.8; }
+
+    #pakisa-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .msg-bot {
+      background: white;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+    .msg-user {
+      background: #C6A75E;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    #pakisa-chat-input {
+      border-top: 1px solid #e2e8f0;
+      padding: 12px;
+      display: flex;
+      background: white;
+    }
+    #pakisa-chat-input input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      padding: 8px;
+    }
+    #pakisa-chat-input button {
+      background: #0033A0;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  </style>
+
+  <div id="pakisa-chat-btn" onclick="toggleChat()">💬</div>
+
+  <div id="pakisa-chat-box">
+    <div id="pakisa-chat-header">
+      <span>Msizi - Pakisa Assistant</span>
+      <span id="pakisa-chat-close" onclick="toggleChat()">×</span>
+    </div>
+    <div id="pakisa-chat-messages">
+      <div class="chat-msg msg-bot">
+        Hello! 👋 I'm <b>Msizi</b>. I know waiting for a parcel can be stressful, but I'm here to put you at ease. <br><br>Please type your <b>waybill number</b>, and I'll find out exactly where your package is.
+      </div>
+    </div>
+    <div id="pakisa-chat-input">
+      <input id="pakisa-user-input" placeholder="Enter waybill number..." onkeypress="handleKeyPress(event)">
+      <button onclick="msiziSend()">Track</button>
+    </div>
+  </div>
+
+  <script>
+    const box = document.getElementById("pakisa-chat-box");
+    const messages = document.getElementById("pakisa-chat-messages");
+    const userInput = document.getElementById("pakisa-user-input");
+
+    function toggleChat() {
+      box.style.display = box.style.display === "flex" ? "none" : "flex";
+      if (box.style.display === "flex") {
+        userInput.focus();
+      }
+    }
+
+    function addMsg(text, sender="bot") {
+      const div = document.createElement("div");
+      div.classList.add("chat-msg");
+      div.classList.add(sender === "bot" ? "msg-bot" : "msg-user");
+      div.innerHTML = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        msiziSend();
+      }
+    }
+
+    function msiziSend() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      addMsg(text, "user");
+      userInput.value = "";
+
+      // SIMULATED SECURE API CALL (Phase 2)
+      setTimeout(() => {
+        if (/\d{6,}/.test(text)) {
+          addMsg("Looking up waybill <b>" + text + "</b> for you now... Please give me just a second to gather the latest details from our system.");
+          
+          // THIS IS WHERE THE SECURE BACKEND API CALL WILL GO
+          setTimeout(() => {
+              addMsg("Good news! 🥳 Your parcel is currently in <b>Jetpark</b> and is scheduled for delivery today. Is there anything else I can help with?");
+          }, 2000);
+          
+        } else {
+          addMsg("I didn't quite catch that. Please enter a valid waybill number so I can help you.");
+        }
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
