@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Allow: /parcel-tracking-system.html
+Allow: /proof-of-delivery-system.html
+Allow: /courier-delivery-management.html
 
+# Sitemaps
 Sitemap: https://pakisalogistics.co.za/sitemap.xml
