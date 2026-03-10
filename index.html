@@ -3,59 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <title>Pakisa Express Logistics | Same Day & Township Deliveries</title>
-  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <style>
     body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-    
-    /* Branding Colors */
     .gold { color: #C6A75E; }
     .gold-bg { background-color: #C6A75E; }
     .royal-blue { color: #0033A0; }
     .royal-bg { background-color: #0033A0; }
-    
-    /* Soft Fading & Gradients */
-    .hero-soft-gradient {
-      background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%);
-    }
-
-    .faded-section {
-      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
-    }
-
-    .glass-card {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 51, 160, 0.1);
-    }
-
-    /* Seamless Logo Scroll */
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .logo-track {
-      display: flex;
-      width: calc(250px * 10);
-      animation: scroll 40s linear infinite;
-    }
+    .hero-soft-gradient { background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%); }
+    .faded-section { background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); }
+    .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(0, 51, 160, 0.1); }
+    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .logo-track { display: flex; width: calc(250px * 10); animation: scroll 40s linear infinite; }
     .logo-track:hover { animation-play-state: paused; }
-
-    /* Input Styling */
-    .input-field {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      transition: all 0.3s ease;
-    }
-    .input-field:focus {
-      border-color: #0033A0;
-      background-color: #fff;
-      box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05);
-    }
+    .input-field { background-color: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+    .input-field:focus { border-color: #0033A0; background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05); }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -83,7 +47,6 @@
           Moving your world, <br><span class="gold italic">one mile at a time.</span>
         </h1>
         <p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto opacity-90">Reliable logistics for same day, township, and chainstore deliveries across SA.</p>
-        
         <div class="flex flex-col md:flex-row justify-center gap-4">
           <a href="tracking.html" class="gold-bg text-white px-10 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition">Track Parcel</a>
           <a href="#quote" class="bg-white text-royal-blue px-10 py-4 rounded-xl font-bold shadow-md hover:bg-blue-50 transition">Get a Quote</a>
@@ -92,7 +55,8 @@
       </div>
     </section>
 
-    <section class="py-16 bg-white overflow-hidden">
+    <section class="py-12 bg-white overflow-hidden border-b border-slate-50">
+      <h2 class="text-center text-slate-400 font-bold uppercase tracking-[0.2em] text-xs mb-10">Our Clients</h2>
       <div class="logo-track flex items-center gap-24 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
         <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/R__1_-removebg-preview_i1debb.png" class="h-10">
         <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237772/OIP__2_-removebg-preview_fiqbry.png" class="h-10">
@@ -113,7 +77,6 @@
           <h2 class="text-4xl font-extrabold royal-blue mb-6">Johannesburg Same Day & Township Delivery Experts</h2>
           <p class="text-slate-600 text-lg leading-relaxed">Pakisa Express Logistics specializes in fast, reliable courier solutions across Johannesburg, Gauteng, and nationwide. From urgent same day deliveries to complex township distribution and chainstore logistics, we move your parcels safely and on time.</p>
         </div>
-
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="relative">
             <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1772435702/IMG_3665_peq1ua.jpg" alt="Pakisa Express Logistics truck on highway Johannesburg" class="rounded-3xl shadow-2xl w-full object-cover" loading="lazy">
@@ -143,12 +106,8 @@
           <h2 class="text-4xl font-extrabold royal-blue mb-6">Rate <span class="gold">Calculator</span></h2>
           <p class="text-slate-500 text-lg mb-8">Professional pricing tailored for your delivery needs. Fill in the details for an instant estimate.</p>
           <div class="space-y-4">
-             <div class="flex items-center gap-3 text-slate-600 font-medium">
-               <span class="royal-blue">✓</span> Same Day & Next Day Options
-             </div>
-             <div class="flex items-center gap-3 text-slate-600 font-medium">
-               <span class="royal-blue">✓</span> Nationwide Township Reach
-             </div>
+             <div class="flex items-center gap-3 text-slate-600 font-medium"><span class="royal-blue">✓</span> Same Day & Next Day Options</div>
+             <div class="flex items-center gap-3 text-slate-600 font-medium"><span class="royal-blue">✓</span> Nationwide Township Reach</div>
           </div>
         </div>
         <div class="lg:w-1/2">
@@ -204,38 +163,26 @@
         <div class="grid lg:grid-cols-2 gap-16 items-start">
           <div>
             <h2 class="text-4xl font-black royal-blue mb-6">Contact Us</h2>
-            
             <div class="space-y-4 text-slate-600">
               <div class="text-lg font-bold leading-relaxed">
                 Call: 011 397 1151 / 011 397 1061<br>
                 Email: <span class="royal-blue">ops1@pakisalogistics.co.za</span>
               </div>
             </div>
-            
             <div class="mt-8 flex items-center gap-4 text-lg font-bold royal-blue">
               <a href="https://www.facebook.com/PakisaExpress" target="_blank" class="hover:text-gold transition">Facebook</a>
               <span class="text-slate-300">|</span>
               <a href="https://www.linkedin.com/company/91512165" target="_blank" class="hover:text-gold transition">LinkedIn</a>
             </div>
-
             <div class="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-100">
               <h3 class="text-2xl font-bold royal-blue mb-2">Come and visit us?</h3>
               <p class="text-slate-600 mb-4">We would love to meet you, coffee is always ready!</p>
               <p class="font-bold text-slate-800">Johannesburg</p>
-              <p class="text-slate-500 mb-4">
-                10 Burry Koen street, <br>
-                Jetpark, Boksburg, 1459
-              </p>
-              <p class="text-slate-500 mb-6">
-                +27 (0)11 397 1151<br>
-                ops1@pakisalogistics.co.za
-              </p>
-              <a href="https://g.page/r/Cc8Vl71MUgigEAI/review" target="_blank" class="inline-block gold-bg text-white px-6 py-3 rounded-lg font-bold hover:scale-105 transition shadow-lg">
-                Review Us on Google
-              </a>
+              <p class="text-slate-500 mb-4">10 Burry Koen street, <br>Jetpark, Boksburg, 1459</p>
+              <p class="text-slate-500 mb-6">+27 (0)11 397 1151<br>ops1@pakisalogistics.co.za</p>
+              <a href="https://g.page/r/Cc8Vl71MUgigEAI/review" target="_blank" class="inline-block gold-bg text-white px-6 py-3 rounded-lg font-bold hover:scale-105 transition shadow-lg">Review Us on Google</a>
             </div>
           </div>
-
           <form class="space-y-4">
             <input type="text" placeholder="Your Name" class="w-full border-b-2 border-slate-100 py-4 focus:border-royal-blue outline-none transition">
             <input type="email" placeholder="Your Email" class="w-full border-b-2 border-slate-100 py-4 focus:border-royal-blue outline-none transition">
@@ -247,169 +194,39 @@
     </section>
   </main>
 
-  <footer class="py-12 bg-slate-50 border-t border-slate-100 text-center">
+  <footer class="py-16 bg-slate-50 border-t border-slate-100">
     <div class="container mx-auto px-6">
-      <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-8 mx-auto mb-6 grayscale opacity-50">
-      <p class="text-slate-400 text-xs">© 2026 Pakisa Express Logistics (Pty) Ltd. | Designed by Mpho Mahlaba</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-left mb-12">
+        <div class="space-y-4">
+          <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-8 grayscale opacity-70">
+          <p class="text-slate-400 text-xs leading-relaxed">© 2026 Pakisa Express Logistics (Pty) Ltd. <br>Designed by Mpho Mahlaba</p>
+        </div>
+        <div>
+          <h3 class="font-bold royal-blue mb-4 uppercase tracking-wider text-sm">Logistics Technology Solutions</h3>
+          <ul class="space-y-2 text-slate-500 text-sm">
+            <li><a href="parcel-tracking-system.html" class="hover:text-gold transition">Parcel Tracking System</a></li>
+            <li><a href="proof-of-delivery-system.html" class="hover:text-gold transition">Proof of Delivery System</a></li>
+            <li><a href="courier-delivery-management.html" class="hover:text-gold transition">Courier Delivery Management</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold royal-blue mb-4 uppercase tracking-wider text-sm">Quick Links</h3>
+          <ul class="space-y-2 text-slate-500 text-sm">
+            <li><a href="index.html" class="hover:text-gold transition">Home</a></li>
+            <li><a href="rate-calculator.html" class="hover:text-gold transition">Rate Calculator</a></li>
+            <li><a href="tracking.html" class="hover:text-gold transition">Track Waybill</a></li>
+            <li><a href="http://www.pakisafloor.site" target="_blank" class="hover:text-gold transition">Pakisa Floor</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </footer>
 
-  <script>
-    // Rate Calculator Logic
-    function calculateCost() {
-      const base = 51;
-      const fuel = 14.34;
-      const vat = 0.15;
-      const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
-      const total = (base + fuel) * (1 + vat) + outlyingFee;
-      document.getElementById('result').innerText = `Est. Total: R${total.toFixed(2)}`;
-    }
-
-    // Animated Counter Logic
-    const counters = document.querySelectorAll('.counter');
-    const speed = 100;
-
-    const startCounters = (entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const counter = entry.target;
-          const updateCount = () => {
-            const target = +counter.getAttribute('data-target');
-            const count = +counter.innerText.replace(/,/g, '');
-            const inc = target / speed;
-
-            if (count < target) {
-              counter.innerText = Math.ceil(count + inc).toLocaleString();
-              setTimeout(updateCount, 20);
-            } else {
-              counter.innerText = target.toLocaleString();
-            }
-          };
-          updateCount();
-          observer.unobserve(counter);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(startCounters, { threshold: 0.5 });
-    counters.forEach(counter => observer.observe(counter));
-  </script>
-
-  <style>
-    #pakisa-chat-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #0033A0;
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      z-index: 9999;
-      transition: transform 0.3s ease;
-    }
-    #pakisa-chat-btn:hover { transform: scale(1.05); }
-
-    #pakisa-chat-box {
-      position: fixed;
-      bottom: 100px;
-      right: 24px;
-      width: 350px;
-      height: 500px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 9999;
-      font-family: 'Inter', sans-serif;
-    }
-
-    #pakisa-chat-header {
-      background: #0033A0;
-      color: white;
-      padding: 16px;
-      font-weight: bold;
-      font-size: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #pakisa-chat-close { cursor: pointer; font-size: 20px; opacity: 0.8; }
-
-    #pakisa-chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      background: #f8fafc;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .chat-msg {
-      max-width: 85%;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-    .msg-bot {
-      background: white;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-      border: 1px solid #e2e8f0;
-    }
-    .msg-user {
-      background: #C6A75E;
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-
-    #pakisa-chat-input {
-      border-top: 1px solid #e2e8f0;
-      padding: 12px;
-      display: flex;
-      background: white;
-    }
-    #pakisa-chat-input input {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: 14px;
-      padding: 8px;
-    }
-    #pakisa-chat-input button {
-      background: #0033A0;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-    }
-  </style>
-
   <div id="pakisa-chat-btn" onclick="toggleChat()">💬</div>
-
   <div id="pakisa-chat-box">
-    <div id="pakisa-chat-header">
-      <span>Msizi - Pakisa Assistant</span>
-      <span id="pakisa-chat-close" onclick="toggleChat()">×</span>
-    </div>
+    <div id="pakisa-chat-header"><span>Msizi - Pakisa Assistant</span><span id="pakisa-chat-close" onclick="toggleChat()">×</span></div>
     <div id="pakisa-chat-messages">
-      <div class="chat-msg msg-bot">
-        Hello! 👋 I'm <b>Msizi</b>. I know waiting for a parcel can be stressful, but I'm here to put you at ease. <br><br>Please type your <b>waybill number</b>, and I'll find out exactly where your package is.
-      </div>
+      <div class="chat-msg msg-bot">Hello! 👋 I'm <b>Msizi</b>. I know waiting for a parcel can be stressful, but I'm here to put you at ease. <br><br>Please type your <b>waybill number</b>, and I'll find out exactly where your package is.</div>
     </div>
     <div id="pakisa-chat-input">
       <input id="pakisa-user-input" placeholder="Enter waybill number..." onkeypress="handleKeyPress(event)">
@@ -417,53 +234,58 @@
     </div>
   </div>
 
+  <style>
+    #pakisa-chat-btn { position: fixed; bottom: 24px; right: 24px; background: #0033A0; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.25); z-index: 9999; transition: transform 0.3s ease; }
+    #pakisa-chat-box { position: fixed; bottom: 100px; right: 24px; width: 350px; height: 500px; background: white; border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); display: none; flex-direction: column; overflow: hidden; z-index: 9999; }
+    #pakisa-chat-header { background: #0033A0; color: white; padding: 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    #pakisa-chat-messages { flex: 1; overflow-y: auto; padding: 20px; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; }
+    .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 14px; }
+    .msg-bot { background: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #e2e8f0; }
+    .msg-user { background: #C6A75E; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    #pakisa-chat-input { border-top: 1px solid #e2e8f0; padding: 12px; display: flex; background: white; }
+    #pakisa-chat-input input { flex: 1; border: none; outline: none; padding: 8px; }
+    #pakisa-chat-input button { background: #0033A0; color: white; padding: 8px 16px; border-radius: 8px; font-weight: bold; }
+  </style>
+
   <script>
-    const box = document.getElementById("pakisa-chat-box");
-    const messages = document.getElementById("pakisa-chat-messages");
-    const userInput = document.getElementById("pakisa-user-input");
-
-    function toggleChat() {
-      box.style.display = box.style.display === "flex" ? "none" : "flex";
-      if (box.style.display === "flex") {
-        userInput.focus();
-      }
+    function calculateCost() {
+      const base = 51; const fuel = 14.34; const vat = 0.15;
+      const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
+      const total = (base + fuel) * (1 + vat) + outlyingFee;
+      document.getElementById('result').innerText = `Est. Total: R${total.toFixed(2)}`;
     }
+    const counters = document.querySelectorAll('.counter');
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target;
+          const target = +counter.getAttribute('data-target');
+          let count = 0;
+          const update = () => {
+            const inc = target / 100;
+            if (count < target) { count += inc; counter.innerText = Math.ceil(count).toLocaleString(); setTimeout(update, 20); }
+            else { counter.innerText = target.toLocaleString(); }
+          };
+          update(); obs.unobserve(counter);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(c => observer.observe(c));
 
+    function toggleChat() { box.style.display = box.style.display === "flex" ? "none" : "flex"; }
     function addMsg(text, sender="bot") {
-      const div = document.createElement("div");
-      div.classList.add("chat-msg");
-      div.classList.add(sender === "bot" ? "msg-bot" : "msg-user");
-      div.innerHTML = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
+      const div = document.createElement("div"); div.className = `chat-msg msg-${sender}`; div.innerHTML = text;
+      messages.appendChild(div); messages.scrollTop = messages.scrollHeight;
     }
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        msiziSend();
-      }
-    }
-
+    function handleKeyPress(e) { if (e.key === 'Enter') msiziSend(); }
     function msiziSend() {
-      const text = userInput.value.trim();
-      if (!text) return;
-
-      addMsg(text, "user");
-      userInput.value = "";
-
-      // SIMULATED SECURE API CALL (Phase 2)
+      const text = userInput.value.trim(); if (!text) return;
+      addMsg(text, "user"); userInput.value = "";
       setTimeout(() => {
         if (/\d{6,}/.test(text)) {
-          addMsg("Looking up waybill <b>" + text + "</b> for you now... Please give me just a second to gather the latest details from our system.");
-          
-          // THIS IS WHERE THE SECURE BACKEND API CALL WILL GO
-          setTimeout(() => {
-              addMsg("Good news! 🥳 Your parcel is currently in <b>Jetpark</b> and is scheduled for delivery today. Is there anything else I can help with?");
-          }, 2000);
-          
-        } else {
-          addMsg("I didn't quite catch that. Please enter a valid waybill number so I can help you.");
-        }
+          addMsg("Looking up waybill <b>" + text + "</b>...");
+          setTimeout(() => addMsg("Your parcel is in <b>Jetpark</b> and is scheduled for delivery today."), 2000);
+        } else { addMsg("Please enter a valid waybill number."); }
       }, 1000);
     }
   </script>
