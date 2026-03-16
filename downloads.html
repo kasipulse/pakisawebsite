@@ -48,17 +48,30 @@
             <p id="error" class="text-red-500 text-sm mt-4 hidden">Invalid authorization code. Please contact support.</p>
         </div>
 
-        <div id="downloadArea" class="hidden">
-            <div class="p-4 bg-green-50 text-green-700 rounded-xl mb-6 font-medium">Identity Verified Successfully</div>
-            <a id="apkLink" href="#" download class="block w-full gold-bg text-white font-bold py-4 rounded-xl hover:scale-105 transition shadow-lg text-center">
+        <div id="downloadArea" class="hidden text-left">
+            <div class="p-4 bg-green-50 text-green-700 rounded-xl mb-6 font-medium text-center border border-green-100">Identity Verified Successfully</div>
+            
+            <a id="apkLink" href="#" download class="block w-full gold-bg text-white font-bold py-4 rounded-xl hover:scale-105 transition shadow-lg text-center mb-8">
                 Download LethaScan.apk
             </a>
+
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                <h3 class="font-bold royal-blue mb-4 uppercase text-xs tracking-widest">How to Install & Enable</h3>
+                <ul class="text-sm text-slate-600 space-y-3">
+                    <li class="flex gap-3"><span class="royal-blue font-bold">1.</span> <strong>Download:</strong> Tap the button above to download the APK file.</li>
+                    <li class="flex gap-3"><span class="royal-blue font-bold">2.</span> <strong>Allow:</strong> If prompted, allow "Install from Unknown Sources" in your browser settings.</li>
+                    <li class="flex gap-3"><span class="royal-blue font-bold">3.</span> <strong>Open:</strong> Install the app and open LethaScan from your app drawer.</li>
+                    <li class="flex gap-3"><span class="royal-blue font-bold">4.</span> <strong>Enable:</strong> Go to Settings > System > Languages > On-screen keyboard and toggle <strong>LethaScan</strong> ON.</li>
+                    <li class="flex gap-3"><span class="royal-blue font-bold">5.</span> <strong>Switch:</strong> Tap the keyboard icon while typing to switch to the LethaScan interface.</li>
+                </ul>
+            </div>
         </div>
       </div>
 
-      <div class="mt-12 text-slate-500 text-sm">
-        <p>Need assistance? Contact <strong>Ops1@pakisalogistics.co.za</strong></p>
-        <p class="mt-1">Support Line: <strong>011 397 1061</strong></p>
+      <div class="mt-12 text-slate-500 text-sm bg-white/50 p-6 rounded-2xl border border-slate-100 inline-block w-full">
+        <p class="font-bold royal-blue mb-1">Need Technical Assistance?</p>
+        <p>Email: <strong>Ops1@pakisalogistics.co.za</strong></p>
+        <p>Support: <strong>011 397 1061</strong></p>
       </div>
     </div>
   </main>
@@ -71,11 +84,10 @@
         const error = document.getElementById('error');
         const apkLink = document.getElementById('apkLink');
 
-        // Set your desired password here
         if (code === 'Pakisa2026') {
             gate.classList.add('hidden');
             downloadArea.classList.remove('hidden');
-            // Path to your APK file (Ensure this is in your GitHub/Render public folder)
+            // Path to your APK file in your GitHub downloads folder
             apkLink.href = '/downloads/LethaScan.apk'; 
         } else {
             error.classList.remove('hidden');
