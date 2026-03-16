@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads | Pakisa Express Logistics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .gold { color: #C6A75E; }
+    .gold-bg { background-color: #C6A75E; }
+    .royal-blue { color: #0033A0; }
+    .royal-bg { background-color: #0033A0; }
+    .glass-card { background: white; border: 1px solid rgba(0, 51, 160, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+  <header class="bg-white/80 backdrop-blur-md w-full border-b border-gray-100">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html"><img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-10"></a>
+      <nav class="flex items-center space-x-6 text-sm font-bold uppercase tracking-wide text-slate-600">
+        <a href="index.html" class="hover:text-royal-blue transition">Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="py-20 px-6">
+    <div class="container mx-auto max-w-2xl text-center">
+      <h1 class="text-4xl font-extrabold royal-blue mb-4">Software & Tools</h1>
+      <p class="text-slate-600 mb-12">Authorized drivers and staff can download the latest LethaScan Keyboard (IME) below.</p>
+
+      <div class="glass-card p-10 rounded-3xl">
+        <div class="mb-8">
+            <div class="w-20 h-20 royal-bg rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold royal-blue">LethaScan Keyboard</h2>
+            <p class="text-sm text-slate-400">Version 1.0.0 • Android APK</p>
+        </div>
+
+        <div id="gate">
+            <input type="password" id="authCode" placeholder="Enter Authorization Code" class="w-full border-2 border-slate-100 rounded-xl p-4 mb-4 text-center focus:border-royal-blue outline-none transition">
+            <button onclick="unlock()" class="w-full royal-bg text-white font-bold py-4 rounded-xl hover:bg-black transition">Verify & Unlock Download</button>
+            <p id="error" class="text-red-500 text-sm mt-4 hidden">Invalid authorization code. Please contact support.</p>
+        </div>
+
+        <div id="downloadArea" class="hidden">
+            <div class="p-4 bg-green-50 text-green-700 rounded-xl mb-6 font-medium">Identity Verified Successfully</div>
+            <a id="apkLink" href="#" download class="block w-full gold-bg text-white font-bold py-4 rounded-xl hover:scale-105 transition shadow-lg text-center">
+                Download LethaScan.apk
+            </a>
+        </div>
+      </div>
+
+      <div class="mt-12 text-slate-500 text-sm">
+        <p>Need assistance? Contact <strong>Ops1@pakisalogistics.co.za</strong></p>
+        <p class="mt-1">Support Line: <strong>011 397 1061</strong></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function unlock() {
+        const code = document.getElementById('authCode').value;
+        const gate = document.getElementById('gate');
+        const downloadArea = document.getElementById('downloadArea');
+        const error = document.getElementById('error');
+        const apkLink = document.getElementById('apkLink');
+
+        // Set your desired password here
+        if (code === 'Pakisa2026') {
+            gate.classList.add('hidden');
+            downloadArea.classList.remove('hidden');
+            // Path to your APK file (Ensure this is in your GitHub/Render public folder)
+            apkLink.href = '/downloads/LethaScan.apk'; 
+        } else {
+            error.classList.remove('hidden');
+        }
+    }
+  </script>
+</body>
+</html>
