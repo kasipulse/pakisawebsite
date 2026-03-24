@@ -13,42 +13,37 @@
     .royal-blue { color: #0033A0; }
     .royal-bg { background-color: #0033A0; }
     
-    /* Hero Section Logic */
-    .hero-container { 
+    /* Hero Section with Transition Logic */
+    .hero-soft-gradient { 
         position: relative;
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
+        background: linear-gradient(180deg, #0033A0 0%, #0044cc 70%, #f8fafc 100%); 
         overflow: hidden;
-        background: #0033A0; 
     }
 
-    /* The Video Background */
-    .hero-video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        transform: translate(-50%, -50%);
-        object-fit: cover;
-        z-index: 1;
-    }
-
-    /* The Royal Blue Overlay - Reduced Opacity for better visibility */
-    .hero-overlay {
+    /* The Image Overlay Layer */
+    .hero-soft-gradient::before {
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(180deg, rgba(0, 51, 160, 0.70) 0%, rgba(0, 51, 160, 0.80) 100%);
-        z-index: 2;
+        /* 0.85 opacity Royal Blue overlay over the truck image */
+        background: 
+            linear-gradient(rgba(0, 51, 160, 0.85), rgba(0, 51, 160, 0.85)), 
+            url('https://res.cloudinary.com/dwxgkbuln/image/upload/v1773160443/Gemini_Generated_Image_1pxwxv1pxwxv1pxw_eh5des.png');
+        background-size: cover;
+        background-position: center;
+        z-index: 1;
+        /* Animation: Wait 4s, then fade out over 2s */
+        animation: fadeOutImage 2s forwards;
+        animation-delay: 4s;
     }
 
-    .hero-content { position: relative; z-index: 3; width: 100%; }
+    @keyframes fadeOutImage {
+        from { opacity: 1; }
+        to { opacity: 0; visibility: hidden; }
+    }
 
     .faded-section { background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); }
     .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(0, 51, 160, 0.1); }
@@ -80,13 +75,8 @@
   </header>
 
   <main>
-    <section class="hero-container">
-      <video autoplay muted loop playsinline class="hero-video">
-        <source src="https://res.cloudinary.com/dwxgkbuln/video/upload/v1774359762/Truck_Dashboard_View_Highway_Loop_kczm1h.mp4" type="video/mp4">
-      </video>
-      <div class="hero-overlay"></div>
-      
-      <div class="container mx-auto text-center hero-content px-6 pt-20">
+    <section class="hero-soft-gradient pt-40 pb-32 px-6">
+      <div class="container mx-auto text-center relative z-10">
         <span class="gold font-extrabold tracking-widest uppercase text-xs mb-4 block">Trusted Courier Partner</span>
         <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
           Moving your world, <br><span class="gold italic">one mile at a time.</span>
@@ -329,19 +319,21 @@
 
       window.addMsg(waybill, "user");
       userInput.value = "";
-      window.addMsg("Checking database for waybill <b>" + waybill + "</b>...");
+      window.addMsg("Searching for waybill <b>" + waybill + "</b>...");
 
       try {
+        // 1. Check PODs first (Delivered Status)
         const podRef = ref(db, 'pods');
         const podQuery = query(podRef, orderByChild('waybill'), equalTo(waybill));
         const podSnap = await get(podQuery);
 
         if (podSnap.exists()) {
           const podData = Object.values(podSnap.val())[0];
-          window.addMsg(`✅ <b>Status: Delivered</b><br>Received by: ${podData.signedBy}<br>Date: ${podData.date} @ ${podData.time}`);
+          window.addMsg(`✅ Great news! Your parcel was <b>delivered to ${podData.signedBy}</b> on ${podData.date} at ${podData.time}.`);
           return;
         }
 
+        // 2. Check Scans for latest movement
         const scanRef = ref(db, 'scans');
         const scanQuery = query(scanRef, orderByChild('waybill'), equalTo(waybill));
         const scanSnap = await get(scanQuery);
@@ -349,13 +341,27 @@
         if (scanSnap.exists()) {
           const scans = Object.values(scanSnap.val());
           const latest = scans.sort((a, b) => b.timestamp - a.timestamp)[0];
-          window.addMsg(`📍 <b>Current Status:</b> ${latest.reason}<br>Date: ${latest.date}<br>Network: ${latest.companyName}`);
+          
+          let conversationalMsg = "";
+          const reason = (latest.reason || "").toLowerCase();
+
+          if (reason.includes("out for delivery")) {
+            conversationalMsg = `🚚 Your parcel is currently <b>out for delivery</b> with ${latest.companyName}.`;
+          } else if (reason.includes("refused")) {
+            conversationalMsg = `⚠️ Our records show the <b>parcel was refused by the consignee</b>.`;
+          } else if (reason.includes("incorrect address")) {
+            conversationalMsg = `❌ Delivery failed due to an <b>incorrect address</b>. Please contact our support team.`;
+          } else {
+            conversationalMsg = `📍 Status Update: The parcel is currently marked as <b>"${latest.reason}"</b> via ${latest.companyName}.`;
+          }
+
+          window.addMsg(conversationalMsg);
         } else {
-          window.addMsg("❌ Waybill not found. Please verify the number.");
+          window.addMsg("❌ I couldn't find that waybill in our system. Please double-check the number.");
         }
       } catch (err) {
         console.error(err);
-        window.addMsg("⚠️ Connection error. Please try again later.");
+        window.addMsg("⚠️ Sorry, I'm having trouble connecting to the system right now.");
       }
     };
   </script>
