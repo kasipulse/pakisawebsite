@@ -298,10 +298,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // Global elements
     const box = document.getElementById('pakisa-chat-box');
     const messages = document.getElementById('pakisa-chat-messages');
     const userInput = document.getElementById('pakisa-user-input');
 
+    // Make functions global for inline onclick/onkeypress
     window.toggleChat = () => box.style.display = box.style.display === "flex" ? "none" : "flex";
     window.handleKeyPress = (e) => { if (e.key === 'Enter') window.msiziSend(); };
 
@@ -319,7 +321,7 @@
 
       window.addMsg(waybill, "user");
       userInput.value = "";
-      window.addMsg("Searching for waybill <b>" + waybill + "</b>...");
+      window.addMsg("Checking database for waybill <b>" + waybill + "</b>...");
 
       try {
         // 1. Check PODs first (Delivered Status)
@@ -329,8 +331,7 @@
 
         if (podSnap.exists()) {
           const podData = Object.values(podSnap.val())[0];
-          // CONVERSATIONAL LOGIC FOR DELIVERED
-          window.addMsg(`✅ Great news! Your parcel was <b>delivered to ${podData.signedBy}</b> on ${podData.date} at ${podData.time}.`);
+          window.addMsg(`✅ <b>Status: Delivered</b><br>Received by: ${podData.signedBy}<br>Date: ${podData.date} @ ${podData.time}`);
           return;
         }
 
@@ -341,29 +342,15 @@
 
         if (scanSnap.exists()) {
           const scans = Object.values(scanSnap.val());
+          // Sort by timestamp descending to get the latest update
           const latest = scans.sort((a, b) => b.timestamp - a.timestamp)[0];
-          
-          let response = "";
-          const reason = (latest.reason || "").toLowerCase();
-
-          // CONVERSATIONAL LOGIC FOR SCANS
-          if (reason.includes("out for delivery")) {
-            response = `🚚 Your parcel is <b>out for delivery</b> and should be with you shortly! (Managed by ${latest.companyName})`;
-          } else if (reason.includes("refused")) {
-            response = `⚠️ Our records show that the <b>parcel was refused by the consignee</b> on ${latest.date}.`;
-          } else if (reason.includes("incorrect address")) {
-            response = `❌ It looks like there is an <b>incorrect address</b> for this delivery. Please contact us to update your details.`;
-          } else {
-            response = `📦 Your parcel was last seen on ${latest.date} with the status: <b>"${latest.reason}"</b> at ${latest.companyName}.`;
-          }
-          
-          window.addMsg(response);
+          window.addMsg(`📍 <b>Current Status:</b> ${latest.reason}<br>Date: ${latest.date}<br>Network: ${latest.companyName}`);
         } else {
-          window.addMsg("❌ I couldn't find that waybill in our system. Please double-check the number.");
+          window.addMsg("❌ Waybill not found. Please verify the number.");
         }
       } catch (err) {
         console.error(err);
-        window.addMsg("⚠️ Sorry, I'm having trouble connecting to the system right now.");
+        window.addMsg("⚠️ Connection error. Please try again later.");
       }
     };
   </script>
