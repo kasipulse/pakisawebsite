@@ -329,6 +329,7 @@
 
         if (podSnap.exists()) {
           const podData = Object.values(podSnap.val())[0];
+          // CONVERSATIONAL LOGIC FOR DELIVERED
           window.addMsg(`✅ Great news! Your parcel was <b>delivered to ${podData.signedBy}</b> on ${podData.date} at ${podData.time}.`);
           return;
         }
@@ -342,20 +343,21 @@
           const scans = Object.values(scanSnap.val());
           const latest = scans.sort((a, b) => b.timestamp - a.timestamp)[0];
           
-          let conversationalMsg = "";
+          let response = "";
           const reason = (latest.reason || "").toLowerCase();
 
+          // CONVERSATIONAL LOGIC FOR SCANS
           if (reason.includes("out for delivery")) {
-            conversationalMsg = `🚚 Your parcel is currently <b>out for delivery</b> with ${latest.companyName}.`;
+            response = `🚚 Your parcel is <b>out for delivery</b> and should be with you shortly! (Managed by ${latest.companyName})`;
           } else if (reason.includes("refused")) {
-            conversationalMsg = `⚠️ Our records show the <b>parcel was refused by the consignee</b>.`;
+            response = `⚠️ Our records show that the <b>parcel was refused by the consignee</b> on ${latest.date}.`;
           } else if (reason.includes("incorrect address")) {
-            conversationalMsg = `❌ Delivery failed due to an <b>incorrect address</b>. Please contact our support team.`;
+            response = `❌ It looks like there is an <b>incorrect address</b> for this delivery. Please contact us to update your details.`;
           } else {
-            conversationalMsg = `📍 Status Update: The parcel is currently marked as <b>"${latest.reason}"</b> via ${latest.companyName}.`;
+            response = `📦 Your parcel was last seen on ${latest.date} with the status: <b>"${latest.reason}"</b> at ${latest.companyName}.`;
           }
-
-          window.addMsg(conversationalMsg);
+          
+          window.addMsg(response);
         } else {
           window.addMsg("❌ I couldn't find that waybill in our system. Please double-check the number.");
         }
