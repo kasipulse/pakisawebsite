@@ -276,16 +276,86 @@
     .msg-bot { background: white; align-self: flex-start; border: 1px solid #e2e8f0; }
     .msg-user { background: #C6A75E; color: white; align-self: flex-end; }
     #pakisa-chat-input { border-top: 1px solid #e2e8f0; padding: 10px; display: flex; }
-    #pakisa-chat-input input { flex: 1; border: none; outline: none; }
+    #pakisa-user-input { flex: 1; border: none; outline: none; }
     #pakisa-chat-input button { background: #0033A0; color: white; padding: 5px 12px; border-radius: 6px; }
   </style>
 
-  <script>
-    // Elements for Chatbot
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBh-KhkmZrS6b97MPv-YTMjU6qTF0qFzbY",
+      authDomain: "pakisa-floor.firebaseapp.com",
+      databaseURL: "https://pakisa-floor-default-rtdb.firebaseio.com",
+      projectId: "pakisa-floor",
+      storageBucket: "pakisa-floor.firebasestorage.app",
+      messagingSenderId: "1003516506618",
+      appId: "1:1003516506618:web:777d702f93616b6e323443",
+      measurementId: "G-JBZ8DYW49B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Global elements
     const box = document.getElementById('pakisa-chat-box');
     const messages = document.getElementById('pakisa-chat-messages');
     const userInput = document.getElementById('pakisa-user-input');
 
+    // Make functions global for inline onclick/onkeypress
+    window.toggleChat = () => box.style.display = box.style.display === "flex" ? "none" : "flex";
+    window.handleKeyPress = (e) => { if (e.key === 'Enter') window.msiziSend(); };
+
+    window.addMsg = (text, sender="bot") => {
+      const div = document.createElement("div"); 
+      div.className = `chat-msg msg-${sender}`; 
+      div.innerHTML = text;
+      messages.appendChild(div); 
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    window.msiziSend = async () => {
+      const waybill = userInput.value.trim();
+      if (!waybill) return;
+
+      window.addMsg(waybill, "user");
+      userInput.value = "";
+      window.addMsg("Checking database for waybill <b>" + waybill + "</b>...");
+
+      try {
+        // 1. Check PODs first (Delivered Status)
+        const podRef = ref(db, 'pods');
+        const podQuery = query(podRef, orderByChild('waybill'), equalTo(waybill));
+        const podSnap = await get(podQuery);
+
+        if (podSnap.exists()) {
+          const podData = Object.values(podSnap.val())[0];
+          window.addMsg(`✅ <b>Status: Delivered</b><br>Received by: ${podData.signedBy}<br>Date: ${podData.date} @ ${podData.time}`);
+          return;
+        }
+
+        // 2. Check Scans for latest movement
+        const scanRef = ref(db, 'scans');
+        const scanQuery = query(scanRef, orderByChild('waybill'), equalTo(waybill));
+        const scanSnap = await get(scanQuery);
+
+        if (scanSnap.exists()) {
+          const scans = Object.values(scanSnap.val());
+          // Sort by timestamp descending to get the latest update
+          const latest = scans.sort((a, b) => b.timestamp - a.timestamp)[0];
+          window.addMsg(`📍 <b>Current Status:</b> ${latest.reason}<br>Date: ${latest.date}<br>Network: ${latest.companyName}`);
+        } else {
+          window.addMsg("❌ Waybill not found. Please verify the number.");
+        }
+      } catch (err) {
+        console.error(err);
+        window.addMsg("⚠️ Connection error. Please try again later.");
+      }
+    };
+  </script>
+
+  <script>
     function calculateCost() {
       const base = 51; const fuel = 14.34; const vat = 0.15;
       const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
@@ -310,23 +380,6 @@
       });
     }, { threshold: 0.5 });
     counters.forEach(c => observer.observe(c));
-
-    function toggleChat() { box.style.display = box.style.display === "flex" ? "none" : "flex"; }
-    function addMsg(text, sender="bot") {
-      const div = document.createElement("div"); div.className = `chat-msg msg-${sender}`; div.innerHTML = text;
-      messages.appendChild(div); messages.scrollTop = messages.scrollHeight;
-    }
-    function handleKeyPress(e) { if (e.key === 'Enter') msiziSend(); }
-    function msiziSend() {
-      const text = userInput.value.trim(); if (!text) return;
-      addMsg(text, "user"); userInput.value = "";
-      setTimeout(() => {
-        if (/\d{5,}/.test(text)) {
-          addMsg("Checking waybill <b>" + text + "</b>...");
-          setTimeout(() => addMsg("Your parcel is currently at our <b>Jetpark Hub</b> and is out for delivery."), 1500);
-        } else { addMsg("Please enter a valid waybill number."); }
-      }, 800);
-    }
   </script>
 </body>
 </html>
