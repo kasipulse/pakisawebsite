@@ -38,31 +38,59 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold royal-blue">LethaScan Keyboard</h2>
-            <p class="text-sm text-slate-400">Version 1.0.0 • Android APK</p>
+            <h2 class="text-2xl font-bold royal-blue">Internal Driver Tools</h2>
+            <p class="text-sm text-slate-400">Secure Access for Pakisa Personnel Only</p>
         </div>
 
         <div id="gate">
             <input type="password" id="authCode" placeholder="Enter Authorization Code" class="w-full border-2 border-slate-100 rounded-xl p-4 mb-4 text-center focus:border-royal-blue outline-none transition">
-            <button onclick="unlock()" class="w-full royal-bg text-white font-bold py-4 rounded-xl hover:bg-black transition">Verify & Unlock Download</button>
+            <button onclick="unlock()" class="w-full royal-bg text-white font-bold py-4 rounded-xl hover:bg-black transition">Verify & Unlock Access</button>
             <p id="error" class="text-red-500 text-sm mt-4 hidden">Invalid authorization code. Please contact support.</p>
         </div>
 
-        <div id="downloadArea" class="hidden text-left">
-            <div class="p-4 bg-green-50 text-green-700 rounded-xl mb-6 font-medium text-center border border-green-100">Identity Verified Successfully</div>
+        <div id="downloadArea" class="hidden text-left space-y-8">
+            <div class="p-4 bg-green-50 text-green-700 rounded-xl font-medium text-center border border-green-100">Identity Verified Successfully</div>
             
-            <a id="apkLink" href="#" download class="block w-full gold-bg text-white font-bold py-4 rounded-xl hover:scale-105 transition shadow-lg text-center mb-8">
-                Download LethaScan.apk
-            </a>
+            <div class="border-b border-slate-100 pb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center royal-blue">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold royal-blue">LethaScan Keyboard</h3>
+                        <p class="text-xs text-slate-400">v1.0.0 • Android Package (APK)</p>
+                    </div>
+                </div>
+                <a id="apkLink" href="#" download class="block w-full gold-bg text-white font-bold py-4 rounded-xl hover:scale-[1.02] transition shadow-lg text-center">
+                    Download LethaScan.apk
+                </a>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center royal-blue">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold royal-blue">Driver Trip Platform</h3>
+                        <p class="text-xs text-slate-400">Mobile Web App • No Install Required</p>
+                    </div>
+                </div>
+                <a href="https://www.pakisafloor.site/driver.html" target="_blank" class="block w-full border-2 border-royal-blue text-royal-blue font-bold py-4 rounded-xl hover:bg-slate-50 transition text-center">
+                    Launch Driver Platform
+                </a>
+                <p class="text-[10px] text-slate-400 mt-2 text-center">Tip: Open this link and select "Add to Home Screen" to use as an app.</p>
+            </div>
 
             <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-                <h3 class="font-bold royal-blue mb-4 uppercase text-xs tracking-widest">How to Install & Enable</h3>
+                <h3 class="font-bold royal-blue mb-4 uppercase text-xs tracking-widest">Installation Instructions</h3>
                 <ul class="text-sm text-slate-600 space-y-3">
-                    <li class="flex gap-3"><span class="royal-blue font-bold">1.</span> <strong>Download:</strong> Tap the button above to download the APK file.</li>
-                    <li class="flex gap-3"><span class="royal-blue font-bold">2.</span> <strong>Allow:</strong> If prompted, allow "Install from Unknown Sources" in your browser settings.</li>
-                    <li class="flex gap-3"><span class="royal-blue font-bold">3.</span> <strong>Open:</strong> Install the app and open LethaScan from your app drawer.</li>
-                    <li class="flex gap-3"><span class="royal-blue font-bold">4.</span> <strong>Enable:</strong> Go to Settings > System > Languages > On-screen keyboard and toggle <strong>LethaScan</strong> ON.</li>
-                    <li class="flex gap-3"><span class="royal-blue font-bold">5.</span> <strong>Switch:</strong> Tap the keyboard icon while typing to switch to the LethaScan interface.</li>
+                    <li class="flex gap-3"><span class="royal-blue font-bold">1.</span> <strong>LethaScan:</strong> Download the APK and allow "Unknown Sources" in settings to install.</li>
+                    <li class="flex gap-3"><span class="royal-blue font-bold">2.</span> <strong>Trip Sheet:</strong> Launch the Platform, tap your browser menu, and select <strong>'Add to Home Screen'</strong> to install the icon.</li>
                 </ul>
             </div>
         </div>
@@ -87,7 +115,6 @@
         if (code === 'Pakisa2026') {
             gate.classList.add('hidden');
             downloadArea.classList.remove('hidden');
-            // Path to your APK file in your GitHub downloads folder
             apkLink.href = '/downloads/LethaScan.apk'; 
         } else {
             error.classList.remove('hidden');
