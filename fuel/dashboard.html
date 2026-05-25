@@ -6,74 +6,446 @@
 
   <title>Pakisa Fuel Dashboard</title>
 
-  <link rel="stylesheet" href="style.css">
+  <style>
 
-  <script type="module" src="app.js"></script>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#f4f6f8;
+    }
+
+    header{
+      background:#072760;
+      color:white;
+      padding:18px;
+      text-align:center;
+      font-size:20px;
+      font-weight:bold;
+    }
+
+    .container{
+      padding:15px;
+      max-width:700px;
+      margin:auto;
+    }
+
+    .card{
+      background:white;
+      padding:18px;
+      border-radius:12px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.08);
+      margin-bottom:15px;
+    }
+
+    .total{
+      background:#0F99DA;
+      color:white;
+      text-align:center;
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    select,input,button{
+      width:100%;
+      padding:14px;
+      margin-top:12px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-size:16px;
+      box-sizing:border-box;
+    }
+
+    button{
+      background:#072760;
+      color:white;
+      border:none;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#0F99DA;
+    }
+
+    .voucher{
+      background:#eef4ff;
+      padding:12px;
+      border-radius:10px;
+      margin-top:10px;
+      font-size:14px;
+    }
+
+    .pending{
+      border-left:5px solid orange;
+    }
+
+    .verified{
+      border-left:5px solid green;
+    }
+
+  </style>
 </head>
+
 <body>
 
-<div class="dashboard">
+<header>
+  Pakisa Fuel Dashboard
+</header>
 
-  <div class="topbar">
+<div class="container">
 
-    <img
-      src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png"
-      class="top-logo"
-    >
-
-    <button onclick="logout()">
-      Logout
-    </button>
-
-  </div>
-
-  <div class="card total-card">
-    Total Fuel Today: <span id="totalFuel">R0</span>
+  <div class="card total">
+    Total Fuel Today:
+    <div id="totalFuel">R0</div>
   </div>
 
   <div class="card">
 
     <h3>Create Fuel Voucher</h3>
 
+    <select id="driverSelect">
+      <option value="">Select Driver</option>
+    </select>
+
     <input
       type="text"
-      id="driverName"
-      placeholder="Driver Name"
+      id="manualDriver"
+      placeholder="Or Enter Driver Name"
     >
 
     <input
       type="text"
-      id="driverPhone"
-      placeholder="Driver Phone (082...)"
+      id="manualPhone"
+      placeholder="Driver Phone"
     >
+
+    <select id="vehicleSelect">
+      <option value="">Select Vehicle</option>
+    </select>
 
     <input
       type="text"
-      id="vehicleReg"
-      placeholder="Vehicle Registration"
+      id="manualVehicle"
+      placeholder="Or Enter Vehicle Registration"
     >
 
     <input
       type="number"
-      id="fuelAmount"
-      placeholder="Fuel Amount"
+      id="amount"
+      placeholder="Estimated Fuel Amount"
     >
 
     <button onclick="createVoucher()">
-      Send Voucher
+      Create Voucher
     </button>
 
   </div>
 
   <div class="card">
 
-    <h3>Today's Transactions</h3>
+    <h3>Today's Vouchers</h3>
 
-    <ul id="voucherList"></ul>
+    <div id="voucherList"></div>
 
   </div>
 
 </div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  where,
+  Timestamp
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ---------------- FIREBASE ---------------- */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
+  authDomain: "fuel-management-system-7784c.firebaseapp.com",
+  projectId: "fuel-management-system-7784c",
+  storageBucket: "fuel-management-system-7784c.firebasestorage.app",
+  messagingSenderId: "718691738844",
+  appId: "1:718691738844:web:a590ae6d2c734ffa1f4019"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* ---------------- LOAD DRIVERS ---------------- */
+
+async function loadDrivers(){
+
+  const select =
+    document.getElementById("driverSelect");
+
+  const snap =
+    await getDocs(collection(db,"drivers"));
+
+  snap.forEach(doc => {
+
+    const d = doc.data();
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      JSON.stringify(d);
+
+    option.textContent =
+      `${d.name} (${d.phone})`;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+loadDrivers();
+
+/* ---------------- LOAD VEHICLES ---------------- */
+
+async function loadVehicles(){
+
+  const select =
+    document.getElementById("vehicleSelect");
+
+  const snap =
+    await getDocs(collection(db,"vehicles"));
+
+  snap.forEach(doc => {
+
+    const d = doc.data();
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      d.registration;
+
+    option.textContent =
+      d.registration;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+loadVehicles();
+
+/* ---------------- GENERATE CODE ---------------- */
+
+function generateCode(){
+
+  return "PKS-" +
+    Math.floor(100000 + Math.random()*900000);
+
+}
+
+/* ---------------- WEEKEND ---------------- */
+
+function isWeekend(){
+
+  const day = new Date().getDay();
+
+  return day === 0 || day === 6;
+
+}
+
+/* ---------------- VEHICLE CHECK ---------------- */
+
+async function countVehicleToday(vehicle){
+
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  const q = query(
+    collection(db,"fuel_vouchers"),
+    where("vehicle","==",vehicle),
+    where("date","==",today)
+  );
+
+  const snap = await getDocs(q);
+
+  return snap.size;
+
+}
+
+/* ---------------- CREATE VOUCHER ---------------- */
+
+window.createVoucher = async function(){
+
+  const selectedDriver =
+    document.getElementById("driverSelect").value;
+
+  const manualDriver =
+    document.getElementById("manualDriver").value;
+
+  const manualPhone =
+    document.getElementById("manualPhone").value;
+
+  let driverName = "";
+  let phone = "";
+
+  if(selectedDriver){
+
+    const parsed =
+      JSON.parse(selectedDriver);
+
+    driverName = parsed.name;
+    phone = parsed.phone;
+
+  }else{
+
+    driverName = manualDriver;
+    phone = manualPhone;
+
+  }
+
+  const vehicle =
+    document.getElementById("vehicleSelect").value ||
+    document.getElementById("manualVehicle").value;
+
+  const amount =
+    Number(document.getElementById("amount").value);
+
+  if(!driverName || !phone || !vehicle || !amount){
+
+    alert("Complete all fields");
+
+    return;
+  }
+
+  const repeatCount =
+    await countVehicleToday(vehicle);
+
+  const requiresApproval =
+    isWeekend() ||
+    repeatCount >= 1 ||
+    amount >= 1500;
+
+  const voucher = {
+
+    code: generateCode(),
+
+    driver: driverName,
+
+    phone,
+
+    vehicle: vehicle.toUpperCase(),
+
+    amount: {
+      estimated: amount,
+      actual: null
+    },
+
+    status:
+      requiresApproval
+      ? "PENDING_APPROVAL"
+      : "ISSUED",
+
+    requiresApproval,
+
+    date:
+      new Date().toISOString().split("T")[0],
+
+    createdAt:
+      Timestamp.now()
+
+  };
+
+  await addDoc(
+    collection(db,"fuel_vouchers"),
+    voucher
+  );
+
+  /* ---------- WHATSAPP ---------- */
+
+  const message =
+`🚛 Pakisa Fuel Voucher
+
+Code: ${voucher.code}
+Vehicle: ${voucher.vehicle}
+Amount: R${amount}
+
+Show this at depot`;
+
+  const wa =
+`https://wa.me/27${phone.replace(/^0/,"")}?text=${encodeURIComponent(message)}`;
+
+  window.open(wa,"_blank");
+
+  alert("Voucher created");
+
+  loadVouchers();
+
+}
+
+/* ---------------- LOAD VOUCHERS ---------------- */
+
+async function loadVouchers(){
+
+  const list =
+    document.getElementById("voucherList");
+
+  list.innerHTML = "";
+
+  const snap =
+    await getDocs(collection(db,"fuel_vouchers"));
+
+  let total = 0;
+
+  snap.forEach(doc => {
+
+    const d = doc.data();
+
+    total +=
+      d.amount.actual ||
+      d.amount.estimated ||
+      0;
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      `voucher ${
+        d.status === "VERIFIED"
+        ? "verified"
+        : "pending"
+      }`;
+
+    div.innerHTML =
+`
+<b>${d.vehicle}</b><br>
+${d.driver}<br>
+Estimated: R${d.amount.estimated}<br>
+Status: ${d.status}<br>
+Code: ${d.code}
+`;
+
+    list.appendChild(div);
+
+  });
+
+  document.getElementById("totalFuel")
+    .innerText = "R" + total;
+
+}
+
+loadVouchers();
+
+</script>
 
 </body>
 </html>
