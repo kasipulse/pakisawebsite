@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Verify Fuel Slip</title>
+
+  <style>
+
+    body{
+      font-family: Arial, sans-serif;
+      margin:0;
+      padding:0;
+      background:#f4f6f8;
+    }
+
+    header{
+      background:#0b1f3a;
+      color:white;
+      padding:15px;
+      text-align:center;
+      font-size:20px;
+      font-weight:bold;
+    }
+
+    .container{
+      padding:15px;
+      max-width:500px;
+      margin:auto;
+    }
+
+    .card{
+      background:white;
+      border-radius:12px;
+      padding:20px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input, button{
+      width:100%;
+      padding:14px;
+      margin-top:12px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-size:16px;
+      box-sizing:border-box;
+    }
+
+    button{
+      background:#0F99DA;
+      color:white;
+      border:none;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#072760;
+    }
+
+    #status{
+      margin-top:15px;
+      font-weight:bold;
+    }
+
+    img{
+      width:100%;
+      margin-top:15px;
+      border-radius:10px;
+      display:none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  Verify Fuel Slip
+</header>
+
+<div class="container">
+
+  <div class="card">
+
+    <input
+      type="text"
+      id="voucherCode"
+      placeholder="Enter Voucher Code"
+    >
+
+    <input
+      type="number"
+      id="actualAmount"
+      placeholder="Actual Fuel Amount"
+    >
+
+    <input
+      type="file"
+      id="slipImage"
+      accept="image/*"
+    >
+
+    <img id="preview">
+
+    <button onclick="verifyVoucher()">
+      Verify Voucher
+    </button>
+
+    <div id="status"></div>
+
+  </div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+/* ---------------- FIREBASE ---------------- */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
+  authDomain: "fuel-management-system-7784c.firebaseapp.com",
+  projectId: "fuel-management-system-7784c",
+  storageBucket: "fuel-management-system-7784c.firebasestorage.app",
+  messagingSenderId: "718691738844",
+  appId: "1:718691738844:web:a590ae6d2c734ffa1f4019"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const storage = getStorage(app);
+
+/* ---------------- IMAGE PREVIEW ---------------- */
+
+const imageInput =
+  document.getElementById("slipImage");
+
+const preview =
+  document.getElementById("preview");
+
+imageInput.addEventListener("change", () => {
+
+  const file = imageInput.files[0];
+
+  if(file){
+
+    preview.src = URL.createObjectURL(file);
+
+    preview.style.display = "block";
+
+  }
+
+});
+
+/* ---------------- VERIFY ---------------- */
+
+window.verifyVoucher = async function(){
+
+  const code =
+    document.getElementById("voucherCode")
+    .value
+    .trim()
+    .toUpperCase();
+
+  const actualAmount =
+    Number(
+      document.getElementById("actualAmount")
+      .value
+    );
+
+  const status =
+    document.getElementById("status");
+
+  if(!code || !actualAmount){
+
+    status.innerText =
+      "Enter code and amount";
+
+    return;
+  }
+
+  try{
+
+    const q = query(
+      collection(db, "fuel_vouchers"),
+      where("code", "==", code)
+    );
+
+    const snap = await getDocs(q);
+
+    if(snap.empty){
+
+      status.innerText =
+        "Voucher not found";
+
+      return;
+    }
+
+    let slipUrl = null;
+
+    /* ---------- OPTIONAL IMAGE ---------- */
+
+    const file = imageInput.files[0];
+
+    if(file){
+
+      const storageRef = ref(
+        storage,
+        `slips/${code}.jpg`
+      );
+
+      await uploadBytes(storageRef, file);
+
+      slipUrl =
+        await getDownloadURL(storageRef);
+
+    }
+
+    /* ---------- UPDATE VOUCHER ---------- */
+
+    snap.forEach(async (voucherDoc) => {
+
+      await updateDoc(
+        doc(db, "fuel_vouchers", voucherDoc.id),
+        {
+
+          "amount.actual": actualAmount,
+
+          status: "VERIFIED",
+
+          verifiedAt: new Date(),
+
+          slipImage: slipUrl || null
+
+        }
+      );
+
+    });
+
+    status.innerText =
+      "Voucher verified successfully";
+
+  }catch(err){
+
+    status.innerText =
+      err.message;
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
