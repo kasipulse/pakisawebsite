@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Pakisa Fuel Dashboard</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <div class="topbar">
+
+    <img
+      src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png"
+      class="top-logo"
+    >
+
+    <button onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+  <div class="card total-card">
+    Total Fuel Today: <span id="totalFuel">R0</span>
+  </div>
+
+  <div class="card">
+
+    <h3>Create Fuel Voucher</h3>
+
+    <input
+      type="text"
+      id="driverName"
+      placeholder="Driver Name"
+    >
+
+    <input
+      type="text"
+      id="driverPhone"
+      placeholder="Driver Phone (082...)"
+    >
+
+    <input
+      type="text"
+      id="vehicleReg"
+      placeholder="Vehicle Registration"
+    >
+
+    <input
+      type="number"
+      id="fuelAmount"
+      placeholder="Fuel Amount"
+    >
+
+    <button onclick="createVoucher()">
+      Send Voucher
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <h3>Today's Transactions</h3>
+
+    <ul id="voucherList"></ul>
+
+  </div>
+
+</div>
+
+</body>
+</html>
