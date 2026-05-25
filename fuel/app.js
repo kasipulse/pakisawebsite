@@ -2,8 +2,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 
 import {
   getAuth,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  doc,
+  Timestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
@@ -17,30 +28,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-window.login = async function(){
+window.login = async function () {
 
-  const email =
-    document.getElementById("email").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  const password =
-    document.getElementById("password").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
 
-  try{
+    window.location.href = "dashboard.html";
 
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    window.location.href =
-      "dashboard.html";
-
-  }catch(err){
-
+  } catch (err) {
     alert(err.message);
-
   }
+};
 
-}
+window.logout = async function () {
+  await signOut(auth);
+  window.location.href = "index.html";
+};
