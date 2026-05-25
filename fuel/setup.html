@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Pakisa Fuel Setup</title>
+
+  <style>
+
+    body{
+      font-family: Arial, sans-serif;
+      background:#f4f6f8;
+      padding:20px;
+    }
+
+    .card{
+      background:white;
+      max-width:500px;
+      margin:auto;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      color:#072760;
+      text-align:center;
+    }
+
+    button{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:8px;
+      background:#0F99DA;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:20px;
+    }
+
+    button:hover{
+      background:#072760;
+    }
+
+    #status{
+      margin-top:20px;
+      white-space:pre-line;
+      font-weight:bold;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>Pakisa Fuel Setup</h1>
+
+  <button onclick="runSetup()">
+    Run Firestore Setup
+  </button>
+
+  <div id="status"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ---------------- FIREBASE ---------------- */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
+  authDomain: "fuel-management-system-7784c.firebaseapp.com",
+  projectId: "fuel-management-system-7784c",
+  storageBucket: "fuel-management-system-7784c.firebasestorage.app",
+  messagingSenderId: "718691738844",
+  appId: "1:718691738844:web:a590ae6d2c734ffa1f4019"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* ---------------- MASTER DATA ---------------- */
+
+const DRIVERS = [
+
+  { name: "Mpho Mahlaba", phone: "0658177124" },
+  { name: "Shadrack Buthelezi", phone: "0736864465" },
+  { name: "Jerry Gambu", phone: "0824323950" },
+  { name: "Collen", phone: "0810671986" },
+  { name: "Sphelo", phone: "0689307396" },
+  { name: "Shadrack Mathibela", phone: "0689437060" },
+  { name: "Happy", phone: "0832497940" },
+  { name: "Jonathan", phone: "0689366490" },
+  { name: "Jess", phone: "0672361547" },
+  { name: "Tumelo Moleloa", phone: "0760375209" },
+  { name: "Stanley", phone: "0606527696" },
+  { name: "Vishnu Pillay", phone: "0721343711" },
+  { name: "Thulani", phone: "0689359177" },
+  { name: "Tebogo", phone: "0679108285" },
+  { name: "Tumelo", phone: "0672060870" },
+  { name: "Thabang", phone: "0732075609" }
+
+];
+
+const VEHICLES = [
+
+  "ZBJ475GP",
+  "MK51ZRGP",
+  "KJ54TJGP",
+  "KL08LPGP",
+  "VDH195GP",
+  "DD59NRGP",
+  "FK91MWGP",
+  "HR68HRGP",
+  "KF66JPGP",
+  "KK81BPGP",
+  "VFR558GP",
+  "KV30DMGP",
+  "KY28LGGP",
+  "LR48HRGP",
+  "LW47BHGP"
+
+];
+
+/* ---------------- SETUP ---------------- */
+
+window.runSetup = async function(){
+
+  const status =
+    document.getElementById("status");
+
+  status.innerText =
+    "Running setup...";
+
+  try{
+
+    /* ---------- DRIVERS ---------- */
+
+    for(const driver of DRIVERS){
+
+      await addDoc(
+        collection(db, "drivers"),
+        {
+          ...driver,
+          active: true,
+          createdAt: new Date()
+        }
+      );
+
+    }
+
+    /* ---------- VEHICLES ---------- */
+
+    for(const reg of VEHICLES){
+
+      await addDoc(
+        collection(db, "vehicles"),
+        {
+          registration: reg,
+          active: true,
+          createdAt: new Date()
+        }
+      );
+
+    }
+
+    /* ---------- SUPER ADMIN ---------- */
+
+    await addDoc(
+      collection(db, "admins"),
+      {
+        name: "Stanley",
+        phone: "0606527696",
+        role: "SUPER_ADMIN",
+        active: true,
+        createdAt: new Date()
+      }
+    );
+
+    status.innerText =
+`✅ Setup Complete
+
+Drivers Added
+Vehicles Added
+Super Admin Added`;
+
+  }catch(err){
+
+    status.innerText =
+      err.message;
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
