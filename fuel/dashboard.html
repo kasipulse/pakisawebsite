@@ -83,6 +83,14 @@
       border-left:5px solid green;
     }
 
+    .issued{
+      border-left:5px solid #0F99DA;
+    }
+
+    .rejected{
+      border-left:5px solid red;
+    }
+
   </style>
 </head>
 
@@ -370,9 +378,37 @@ window.createVoucher = async function(){
     voucher
   );
 
-  /* ---------- WHATSAPP ---------- */
+  /* ---------- APPROVAL REQUIRED ---------- */
 
-  const message =
+  if(requiresApproval){
+
+    const approvalMessage =
+`🚨 Fuel Approval Required
+
+Driver: ${driverName}
+Vehicle: ${vehicle}
+Amount: R${amount}
+
+Open approvals:
+https://YOURDOMAIN/fuel/approvals.html`;
+
+    const stanleyPhone =
+      "27606527696";
+
+    const approvalWA =
+`https://wa.me/${stanleyPhone}?text=${encodeURIComponent(approvalMessage)}`;
+
+    window.open(approvalWA,"_blank");
+
+    alert("Approval request sent to Stanley");
+
+  }
+
+  /* ---------- NORMAL VOUCHER ---------- */
+
+  else{
+
+    const message =
 `🚛 Pakisa Fuel Voucher
 
 Code: ${voucher.code}
@@ -381,12 +417,14 @@ Amount: R${amount}
 
 Show this at depot`;
 
-  const wa =
+    const wa =
 `https://wa.me/27${phone.replace(/^0/,"")}?text=${encodeURIComponent(message)}`;
 
-  window.open(wa,"_blank");
+    window.open(wa,"_blank");
 
-  alert("Voucher created");
+    alert("Voucher created");
+
+  }
 
   loadVouchers();
 
@@ -418,12 +456,28 @@ async function loadVouchers(){
     const div =
       document.createElement("div");
 
+    let statusClass = "";
+
+    if(d.status === "VERIFIED"){
+
+      statusClass = "verified";
+
+    }else if(d.status === "ISSUED"){
+
+      statusClass = "issued";
+
+    }else if(d.status === "REJECTED"){
+
+      statusClass = "rejected";
+
+    }else{
+
+      statusClass = "pending";
+
+    }
+
     div.className =
-      `voucher ${
-        d.status === "VERIFIED"
-        ? "verified"
-        : "pending"
-      }`;
+      `voucher ${statusClass}`;
 
     div.innerHTML =
 `
