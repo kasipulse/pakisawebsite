@@ -23,6 +23,36 @@
       font-weight:bold;
     }
 
+    /* TOP MENU */
+    .top-nav{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      background: #072760;
+      overflow-x: auto;
+    }
+
+    .top-nav button{
+      flex: 1;
+      min-width: 120px;
+      padding: 10px;
+      font-size: 13px;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: #072760;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .top-nav button:hover{
+      background: #0F99DA;
+      color: white;
+    }
+
     .container{
       padding:15px;
       max-width:700px;
@@ -111,23 +141,28 @@
   Pakisa Fuel Dashboard
 </header>
 
+<!-- TOP MENU -->
+<div class="top-nav">
+  <button onclick="scrollToSection('topTotal')">Total</button>
+  <button onclick="scrollToSection('createSection')">Create Voucher</button>
+  <button onclick="scrollToSection('listSection')">Vouchers</button>
+</div>
+
 <div class="container">
 
-  <div class="card total">
+  <div class="card total" id="topTotal">
     Total Fuel Today:
     <div id="totalFuel">R0</div>
   </div>
 
-  <div class="card">
+  <div class="card" id="createSection">
 
     <h3>Create Fuel Voucher</h3>
 
-    <!-- DRIVER -->
     <select id="driverSelect">
       <option value="">Select Driver</option>
     </select>
 
-    <!-- VEHICLE -->
     <select id="vehicleSelect">
       <option value="">Select Vehicle</option>
     </select>
@@ -144,7 +179,7 @@
 
   </div>
 
-  <div class="card">
+  <div class="card" id="listSection">
 
     <h3>Today's Vouchers</h3>
     <div id="voucherList"></div>
@@ -204,6 +239,11 @@ const db = getFirestore(app);
 
 let currentVoucher = null;
 
+/* ---------------- NAV SCROLL ---------------- */
+window.scrollToSection = function(id){
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+};
+
 /* ---------------- LOAD DRIVERS ---------------- */
 
 async function loadDrivers(){
@@ -220,11 +260,6 @@ async function loadDrivers(){
 
     select.appendChild(opt);
   });
-
-  const addNew = document.createElement("option");
-  addNew.value = "NEW_DRIVER";
-  addNew.textContent = "➕ Add new driver";
-  select.appendChild(addNew);
 }
 
 loadDrivers();
@@ -245,11 +280,6 @@ async function loadVehicles(){
 
     select.appendChild(opt);
   });
-
-  const addNew = document.createElement("option");
-  addNew.value = "NEW_VEHICLE";
-  addNew.textContent = "➕ Add new vehicle";
-  select.appendChild(addNew);
 }
 
 loadVehicles();
@@ -292,11 +322,6 @@ window.createVoucher = async function(){
     return;
   }
 
-  if(driverVal === "NEW_DRIVER" || vehicleVal === "NEW_VEHICLE"){
-    alert("Add new driver/vehicle via admin setup");
-    return;
-  }
-
   const driver = JSON.parse(driverVal);
 
   const repeat = await countVehicleToday(vehicleVal);
@@ -321,7 +346,7 @@ window.createVoucher = async function(){
   if(requiresApproval){
 
     const msg =
-`🚨 Fuel Approval Required
+`Fuel Approval Required
 Driver: ${driver.name}
 Vehicle: ${vehicleVal}
 Amount: R${amount}`;
@@ -342,12 +367,12 @@ Amount: R${amount}`;
   loadVouchers();
 };
 
-/* ---------------- WHATSAPP ---------------- */
+/* ---------------- SEND WHATSAPP ---------------- */
 
 window.sendWhatsApp = function(){
 
   const msg =
-`🚛 Pakisa Fuel Voucher
+`Fuel Voucher
 Code: ${currentVoucher.code}
 Vehicle: ${currentVoucher.vehicle}
 Amount: R${currentVoucher.amount.estimated}`;
@@ -397,7 +422,7 @@ async function loadVouchers(){
 
     const div = document.createElement("div");
 
-    let cls =
+    const cls =
       d.status === "VERIFIED" ? "verified" :
       d.status === "ISSUED" ? "issued" :
       d.status === "REJECTED" ? "rejected" : "pending";
