@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Pakisa Admin Panel</title>
+
+<style>
+body{
+  font-family:Arial;
+  margin:0;
+  background:#f4f6f8;
+}
+
+header{
+  background:#072760;
+  color:white;
+  padding:16px;
+  text-align:center;
+  font-weight:bold;
+}
+
+.container{
+  padding:15px;
+  max-width:700px;
+  margin:auto;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+input,button,select{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  background:#072760;
+  color:white;
+  border:none;
+  font-weight:bold;
+}
+button:hover{background:#0F99DA}
+
+.voucher{
+  background:#eef4ff;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+}
+
+.pending{border-left:5px solid orange;}
+.verified{border-left:5px solid green;}
+.rejected{border-left:5px solid red;}
+</style>
+</head>
+
+<body>
+
+<header>Pakisa Admin Panel</header>
+
+<div class="container">
+
+<!-- ADD DRIVER -->
+<div class="card">
+<h3>Add Driver</h3>
+<input id="driverName" placeholder="Driver Name">
+<input id="driverPhone" placeholder="Phone">
+<button onclick="addDriver()">Add Driver</button>
+</div>
+
+<!-- ADD VEHICLE -->
+<div class="card">
+<h3>Add Vehicle</h3>
+<input id="vehicleReg" placeholder="Registration (e.g. ZBJ475GP)">
+<button onclick="addVehicle()">Add Vehicle</button>
+</div>
+
+<!-- APPROVALS -->
+<div class="card">
+<h3>Pending Approvals</h3>
+<div id="pendingList"></div>
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  doc,
+  query,
+  where,
+  Timestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
+  authDomain: "fuel-management-system-7784c.firebaseapp.com",
+  projectId: "fuel-management-system-7784c",
+  storageBucket: "fuel-management-system-7784c.firebasestorage.app",
+  messagingSenderId: "718691738844",
+  appId: "1:718691738844:web:a590ae6d2c734ffa1f4019"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ---------------- ADD DRIVER ---------------- */
+window.addDriver = async function(){
+
+  await addDoc(collection(db,"drivers"),{
+    name: document.getElementById("driverName").value,
+    phone: document.getElementById("driverPhone").value,
+    active:true,
+    createdAt: Timestamp.now()
+  });
+
+  alert("Driver added");
+}
+
+/* ---------------- ADD VEHICLE ---------------- */
+window.addVehicle = async function(){
+
+  await addDoc(collection(db,"vehicles"),{
+    registration: document.getElementById("vehicleReg").value.toUpperCase(),
+    active:true,
+    createdAt: Timestamp.now()
+  });
+
+  alert("Vehicle added");
+}
+
+/* ---------------- LOAD APPROVALS ---------------- */
+async function loadApprovals(){
+
+  const list = document.getElementById("pendingList");
+  list.innerHTML = "";
+
+  const snap = await getDocs(collection(db,"fuel_vouchers"));
+
+  snap.forEach(d => {
+
+    const v = d.data();
+
+    if(v.status !== "PENDING_APPROVAL") return;
+
+    const div = document.createElement("div");
+    div.className = "voucher pending";
+
+    div.innerHTML = `
+<b>${v.vehicle}</b><br>
+${v.driver}<br>
+R${v.amount.estimated}<br>
+Code: ${v.code}<br><br>
+
+<button onclick="approve('${d.id}')">Approve</button>
+<button onclick="reject('${d.id}')">Reject</button>
+`;
+
+    list.appendChild(div);
+  });
+}
+
+/* ---------------- APPROVE ---------------- */
+window.approve = async function(id){
+
+  await updateDoc(doc(db,"fuel_vouchers",id),{
+    status:"VERIFIED",
+    approvedBy:"admin"
+  });
+
+  alert("Approved");
+  loadApprovals();
+}
+
+/* ---------------- REJECT ---------------- */
+window.reject = async function(id){
+
+  await updateDoc(doc(db,"fuel_vouchers",id),{
+    status:"REJECTED"
+  });
+
+  alert("Rejected");
+  loadApprovals();
+}
+
+loadApprovals();
+
+</script>
+
+</body>
+</html>
