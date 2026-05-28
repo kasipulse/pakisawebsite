@@ -75,21 +75,10 @@
       font-size:14px;
     }
 
-    .pending{
-      border-left:5px solid orange;
-    }
-
-    .verified{
-      border-left:5px solid green;
-    }
-
-    .issued{
-      border-left:5px solid #0F99DA;
-    }
-
-    .rejected{
-      border-left:5px solid red;
-    }
+    .pending{ border-left:5px solid orange; }
+    .verified{ border-left:5px solid green; }
+    .issued{ border-left:5px solid #0F99DA; }
+    .rejected{ border-left:5px solid red; }
 
     #sendModal{
       display:none;
@@ -133,31 +122,15 @@
 
     <h3>Create Fuel Voucher</h3>
 
+    <!-- DRIVER -->
     <select id="driverSelect">
       <option value="">Select Driver</option>
     </select>
 
-    <input
-      type="text"
-      id="manualDriver"
-      placeholder="Or Enter Driver Name"
-    >
-
-    <input
-      type="text"
-      id="manualPhone"
-      placeholder="Driver Phone"
-    >
-
+    <!-- VEHICLE -->
     <select id="vehicleSelect">
       <option value="">Select Vehicle</option>
     </select>
-
-    <input
-      type="text"
-      id="manualVehicle"
-      placeholder="Or Enter Vehicle Registration"
-    >
 
     <input
       type="number"
@@ -174,7 +147,6 @@
   <div class="card">
 
     <h3>Today's Vouchers</h3>
-
     <div id="voucherList"></div>
 
   </div>
@@ -182,9 +154,7 @@
 </div>
 
 <!-- SEND MODAL -->
-
 <div id="sendModal">
-
   <div class="modal-box">
 
     <h3>Send Voucher</h3>
@@ -202,13 +172,11 @@
     </button>
 
   </div>
-
 </div>
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
   getFirestore,
@@ -218,8 +186,7 @@ import {
   query,
   where,
   Timestamp
-}
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* ---------------- FIREBASE ---------------- */
 
@@ -233,7 +200,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 let currentVoucher = null;
@@ -242,29 +208,23 @@ let currentVoucher = null;
 
 async function loadDrivers(){
 
-  const select =
-    document.getElementById("driverSelect");
-
-  const snap =
-    await getDocs(collection(db,"drivers"));
+  const select = document.getElementById("driverSelect");
+  const snap = await getDocs(collection(db,"drivers"));
 
   snap.forEach(doc => {
-
     const d = doc.data();
 
-    const option =
-      document.createElement("option");
+    const opt = document.createElement("option");
+    opt.value = JSON.stringify(d);
+    opt.textContent = `${d.name} (${d.phone})`;
 
-    option.value =
-      JSON.stringify(d);
-
-    option.textContent =
-      `${d.name} (${d.phone})`;
-
-    select.appendChild(option);
-
+    select.appendChild(opt);
   });
 
+  const addNew = document.createElement("option");
+  addNew.value = "NEW_DRIVER";
+  addNew.textContent = "➕ Add new driver";
+  select.appendChild(addNew);
 }
 
 loadDrivers();
@@ -273,58 +233,41 @@ loadDrivers();
 
 async function loadVehicles(){
 
-  const select =
-    document.getElementById("vehicleSelect");
-
-  const snap =
-    await getDocs(collection(db,"vehicles"));
+  const select = document.getElementById("vehicleSelect");
+  const snap = await getDocs(collection(db,"vehicles"));
 
   snap.forEach(doc => {
-
     const d = doc.data();
 
-    const option =
-      document.createElement("option");
+    const opt = document.createElement("option");
+    opt.value = d.registration;
+    opt.textContent = d.registration;
 
-    option.value =
-      d.registration;
-
-    option.textContent =
-      d.registration;
-
-    select.appendChild(option);
-
+    select.appendChild(opt);
   });
 
+  const addNew = document.createElement("option");
+  addNew.value = "NEW_VEHICLE";
+  addNew.textContent = "➕ Add new vehicle";
+  select.appendChild(addNew);
 }
 
 loadVehicles();
 
-/* ---------------- GENERATE CODE ---------------- */
+/* ---------------- HELPERS ---------------- */
 
 function generateCode(){
-
-  return "PKS-" +
-    Math.floor(100000 + Math.random()*900000);
-
+  return "PKS-" + Math.floor(100000 + Math.random()*900000);
 }
-
-/* ---------------- WEEKEND ---------------- */
 
 function isWeekend(){
-
-  const day = new Date().getDay();
-
-  return day === 0 || day === 6;
-
+  const d = new Date().getDay();
+  return d === 0 || d === 6;
 }
-
-/* ---------------- VEHICLE CHECK ---------------- */
 
 async function countVehicleToday(vehicle){
 
-  const today =
-    new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split("T")[0];
 
   const q = query(
     collection(db,"fuel_vouchers"),
@@ -333,200 +276,116 @@ async function countVehicleToday(vehicle){
   );
 
   const snap = await getDocs(q);
-
   return snap.size;
-
 }
 
 /* ---------------- CREATE VOUCHER ---------------- */
 
 window.createVoucher = async function(){
 
-  const selectedDriver =
-    document.getElementById("driverSelect").value;
+  const driverVal = document.getElementById("driverSelect").value;
+  const vehicleVal = document.getElementById("vehicleSelect").value;
+  const amount = Number(document.getElementById("amount").value);
 
-  const manualDriver =
-    document.getElementById("manualDriver").value;
-
-  const manualPhone =
-    document.getElementById("manualPhone").value;
-
-  let driverName = "";
-  let phone = "";
-
-  if(selectedDriver){
-
-    const parsed =
-      JSON.parse(selectedDriver);
-
-    driverName = parsed.name;
-    phone = parsed.phone;
-
-  }else{
-
-    driverName = manualDriver;
-    phone = manualPhone;
-
-  }
-
-  const vehicle =
-    document.getElementById("vehicleSelect").value ||
-    document.getElementById("manualVehicle").value;
-
-  const amount =
-    Number(document.getElementById("amount").value);
-
-  if(!driverName || !phone || !vehicle || !amount){
-
+  if(!driverVal || !vehicleVal || !amount){
     alert("Complete all fields");
-
     return;
   }
 
-  const repeatCount =
-    await countVehicleToday(vehicle);
+  if(driverVal === "NEW_DRIVER" || vehicleVal === "NEW_VEHICLE"){
+    alert("Add new driver/vehicle via admin setup");
+    return;
+  }
+
+  const driver = JSON.parse(driverVal);
+
+  const repeat = await countVehicleToday(vehicleVal);
 
   const requiresApproval =
-    isWeekend() ||
-    repeatCount >= 1 ||
-    amount >= 1500;
+    isWeekend() || repeat >= 1 || amount >= 1500;
 
   const voucher = {
-
     code: generateCode(),
-
-    driver: driverName,
-
-    phone,
-
-    vehicle: vehicle.toUpperCase(),
-
-    amount: {
-      estimated: amount,
-      actual: null
-    },
-
-    status:
-      requiresApproval
-      ? "PENDING_APPROVAL"
-      : "ISSUED",
-
+    driver: driver.name,
+    phone: driver.phone,
+    vehicle: vehicleVal.toUpperCase(),
+    amount: { estimated: amount, actual: null },
+    status: requiresApproval ? "PENDING_APPROVAL" : "ISSUED",
     requiresApproval,
-
-    date:
-      new Date().toISOString().split("T")[0],
-
-    createdAt:
-      Timestamp.now()
-
+    date: new Date().toISOString().split("T")[0],
+    createdAt: Timestamp.now()
   };
 
-  await addDoc(
-    collection(db,"fuel_vouchers"),
-    voucher
-  );
-
-  /* ---------- APPROVAL REQUIRED ---------- */
+  await addDoc(collection(db,"fuel_vouchers"), voucher);
 
   if(requiresApproval){
 
-    const approvalMessage =
+    const msg =
 `🚨 Fuel Approval Required
+Driver: ${driver.name}
+Vehicle: ${vehicleVal}
+Amount: R${amount}`;
 
-Driver: ${driverName}
-Vehicle: ${vehicle}
-Amount: R${amount}
+    const stanley = "27606527696";
 
-Open approvals:
-https://YOURDOMAIN/fuel/approvals.html`;
+    window.open(
+      `https://wa.me/${stanley}?text=${encodeURIComponent(msg)}`,
+      "_blank"
+    );
 
-    const stanleyPhone =
-      "27606527696";
-
-    const approvalWA =
-`https://wa.me/${stanleyPhone}?text=${encodeURIComponent(approvalMessage)}`;
-
-    window.open(approvalWA,"_blank");
-
-    alert("Approval request sent to Stanley");
-
-  }
-
-  /* ---------- NORMAL VOUCHER ---------- */
-
-  else{
+  } else {
 
     currentVoucher = voucher;
-
-    document.getElementById("sendModal")
-      .style.display = "flex";
-
+    document.getElementById("sendModal").style.display = "flex";
   }
 
   loadVouchers();
+};
 
-}
-
-/* ---------------- SEND WHATSAPP ---------------- */
+/* ---------------- WHATSAPP ---------------- */
 
 window.sendWhatsApp = function(){
 
-  const message =
+  const msg =
 `🚛 Pakisa Fuel Voucher
-
 Code: ${currentVoucher.code}
 Vehicle: ${currentVoucher.vehicle}
-Amount: R${currentVoucher.amount.estimated}
+Amount: R${currentVoucher.amount.estimated}`;
 
-Show this at depot`;
-
-  const wa =
-`https://wa.me/27${currentVoucher.phone.replace(/^0/,"")}?text=${encodeURIComponent(message)}`;
-
-  window.open(wa,"_blank");
+  window.open(
+    `https://wa.me/27${currentVoucher.phone.replace(/^0/,"")}?text=${encodeURIComponent(msg)}`
+  );
 
   closeModal();
+};
 
-}
-
-/* ---------------- SEND SMS ---------------- */
+/* ---------------- SMS ---------------- */
 
 window.sendSMS = function(){
 
-  const sms =
+  window.location.href =
+`sms:${currentVoucher.phone}?body=${encodeURIComponent(
 `Fuel Voucher
-
 Code: ${currentVoucher.code}
 Vehicle: ${currentVoucher.vehicle}
-Amt: R${currentVoucher.amount.estimated}`;
-
-  window.location.href =
-`sms:${currentVoucher.phone}?body=${encodeURIComponent(sms)}`;
+Amount: R${currentVoucher.amount.estimated}`
+)}`;
 
   closeModal();
-
-}
-
-/* ---------------- CLOSE MODAL ---------------- */
+};
 
 window.closeModal = function(){
-
-  document.getElementById("sendModal")
-    .style.display = "none";
-
-}
+  document.getElementById("sendModal").style.display = "none";
+};
 
 /* ---------------- LOAD VOUCHERS ---------------- */
 
 async function loadVouchers(){
 
-  const list =
-    document.getElementById("voucherList");
-
+  const list = document.getElementById("voucherList");
   list.innerHTML = "";
 
-  const snap =
-    await getDocs(collection(db,"fuel_vouchers"));
+  const snap = await getDocs(collection(db,"fuel_vouchers"));
 
   let total = 0;
 
@@ -534,53 +393,28 @@ async function loadVouchers(){
 
     const d = doc.data();
 
-    total +=
-      d.amount.actual ||
-      d.amount.estimated ||
-      0;
+    total += d.amount.actual || d.amount.estimated || 0;
 
-    const div =
-      document.createElement("div");
+    const div = document.createElement("div");
 
-    let statusClass = "";
+    let cls =
+      d.status === "VERIFIED" ? "verified" :
+      d.status === "ISSUED" ? "issued" :
+      d.status === "REJECTED" ? "rejected" : "pending";
 
-    if(d.status === "VERIFIED"){
-
-      statusClass = "verified";
-
-    }else if(d.status === "ISSUED"){
-
-      statusClass = "issued";
-
-    }else if(d.status === "REJECTED"){
-
-      statusClass = "rejected";
-
-    }else{
-
-      statusClass = "pending";
-
-    }
-
-    div.className =
-      `voucher ${statusClass}`;
+    div.className = `voucher ${cls}`;
 
     div.innerHTML =
-`
-<b>${d.vehicle}</b><br>
+`<b>${d.vehicle}</b><br>
 ${d.driver}<br>
-Estimated: R${d.amount.estimated}<br>
+R${d.amount.estimated}<br>
 Status: ${d.status}<br>
-Code: ${d.code}
-`;
+Code: ${d.code}`;
 
     list.appendChild(div);
-
   });
 
-  document.getElementById("totalFuel")
-    .innerText = "R" + total;
-
+  document.getElementById("totalFuel").innerText = "R" + total;
 }
 
 loadVouchers();
