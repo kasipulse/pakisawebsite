@@ -17,40 +17,47 @@
     header{
       background:#072760;
       color:white;
-      padding:18px;
-      text-align:center;
-      font-size:20px;
+      padding:12px 18px;
+      font-size:18px;
+      font-weight:bold;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .topbar-left{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .topbar-title{
+      font-size:18px;
       font-weight:bold;
     }
 
-    /* TOP MENU */
-    .top-nav{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      background: #072760;
-      overflow-x: auto;
+    .topbar-user{
+      font-size:12px;
+      opacity:0.9;
+      margin-top:2px;
     }
 
-    .top-nav button{
-      flex: 1;
-      min-width: 120px;
-      padding: 10px;
-      font-size: 13px;
-      border: none;
-      border-radius: 8px;
-      background: white;
-      color: #072760;
-      font-weight: bold;
-      cursor: pointer;
+    .topbar-links{
+      display:flex;
+      gap:10px;
+      font-size:13px;
     }
 
-    .top-nav button:hover{
-      background: #0F99DA;
-      color: white;
+    .topbar-links a{
+      color:white;
+      text-decoration:none;
+      background:rgba(255,255,255,0.15);
+      padding:6px 10px;
+      border-radius:6px;
+    }
+
+    .topbar-links a:hover{
+      background:rgba(255,255,255,0.3);
     }
 
     .container{
@@ -138,24 +145,27 @@
 <body>
 
 <header>
-  Pakisa Fuel Dashboard
-</header>
 
-<!-- TOP MENU -->
-<div class="top-nav">
-  <button onclick="scrollToSection('topTotal')">Total</button>
-  <button onclick="scrollToSection('createSection')">Create Voucher</button>
-  <button onclick="scrollToSection('listSection')">Vouchers</button>
-</div>
+  <div class="topbar-left">
+    <div class="topbar-title">Pakisa Fuel Dashboard</div>
+    <div class="topbar-user" id="loggedUser">Logged in: loading...</div>
+  </div>
+
+  <div class="topbar-links">
+    <a href="setup.html">Setup</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+</header>
 
 <div class="container">
 
-  <div class="card total" id="topTotal">
+  <div class="card total">
     Total Fuel Today:
     <div id="totalFuel">R0</div>
   </div>
 
-  <div class="card" id="createSection">
+  <div class="card">
 
     <h3>Create Fuel Voucher</h3>
 
@@ -179,7 +189,7 @@
 
   </div>
 
-  <div class="card" id="listSection">
+  <div class="card">
 
     <h3>Today's Vouchers</h3>
     <div id="voucherList"></div>
@@ -223,8 +233,6 @@ import {
   Timestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* ---------------- FIREBASE ---------------- */
-
 const firebaseConfig = {
   apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
   authDomain: "fuel-management-system-7784c.firebaseapp.com",
@@ -239,9 +247,13 @@ const db = getFirestore(app);
 
 let currentVoucher = null;
 
-/* ---------------- NAV SCROLL ---------------- */
-window.scrollToSection = function(id){
-  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+/* ---------------- USER DISPLAY (PLACEHOLDER) ---------------- */
+document.getElementById("loggedUser").innerText =
+  "Logged in: Admin";
+
+/* ---------------- LOGOUT (PLACEHOLDER) ---------------- */
+window.logout = function(){
+  alert("Logout not linked yet");
 };
 
 /* ---------------- LOAD DRIVERS ---------------- */
@@ -291,8 +303,7 @@ function generateCode(){
 }
 
 function isWeekend(){
-  const d = new Date().getDay();
-  return d === 0 || d === 6;
+  return [0,6].includes(new Date().getDay());
 }
 
 async function countVehicleToday(vehicle){
@@ -367,7 +378,7 @@ Amount: R${amount}`;
   loadVouchers();
 };
 
-/* ---------------- SEND WHATSAPP ---------------- */
+/* ---------------- WHATSAPP ---------------- */
 
 window.sendWhatsApp = function(){
 
