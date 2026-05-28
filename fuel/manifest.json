@@ -1,0 +1,31 @@
+{
+  "name": "Pakisa Fuel Dashboard",
+  "short_name": "Fuel App",
+  "description": "Internal fuel voucher and approval system for Pakisa Express Logistics",
+
+  "start_url": "/fuel/dashboard.html",
+  "scope": "/fuel/",
+
+  "display": "standalone",
+  "orientation": "portrait",
+
+  "background_color": "#072760",
+  "theme_color": "#072760",
+
+  "icons": [
+    {
+      "src": "/fuel/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/fuel/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+
+  "categories": ["business", "productivity"],
+
+  "lang": "en-ZA"
+}
