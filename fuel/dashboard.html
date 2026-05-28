@@ -24,6 +24,7 @@
       justify-content:space-between;
       align-items:center;
       flex-wrap:wrap;
+      gap:10px;
     }
 
     .topbar-left{
@@ -46,6 +47,7 @@
       display:flex;
       gap:10px;
       font-size:13px;
+      align-items:center;
     }
 
     .topbar-links a{
@@ -148,11 +150,12 @@
 
   <div class="topbar-left">
     <div class="topbar-title">Pakisa Fuel Dashboard</div>
-    <div class="topbar-user" id="loggedUser">Logged in: loading...</div>
+    <div class="topbar-user" id="loggedUser">Loading user...</div>
   </div>
 
   <div class="topbar-links">
     <a href="setup.html">Setup</a>
+    <a href="../downloads.html">Downloads</a>
     <a href="#" onclick="logout()">Logout</a>
   </div>
 
@@ -204,17 +207,9 @@
 
     <h3>Send Voucher</h3>
 
-    <button onclick="sendWhatsApp()">
-      Send via WhatsApp
-    </button>
-
-    <button onclick="sendSMS()">
-      Send via SMS
-    </button>
-
-    <button onclick="closeModal()">
-      Cancel
-    </button>
+    <button onclick="sendWhatsApp()">Send via WhatsApp</button>
+    <button onclick="sendSMS()">Send via SMS</button>
+    <button onclick="closeModal()">Cancel</button>
 
   </div>
 </div>
@@ -222,7 +217,6 @@
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
   getFirestore,
   collection,
@@ -239,8 +233,6 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-/* ---------------- FIREBASE ---------------- */
-
 const firebaseConfig = {
   apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
   authDomain: "fuel-management-system-7784c.firebaseapp.com",
@@ -256,41 +248,33 @@ const auth = getAuth(app);
 
 let currentVoucher = null;
 
-/* ---------------- AUTH DISPLAY ---------------- */
+/* ---------------- AUTH ---------------- */
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById("loggedUser").innerText =
-      "Logged in: " + (user.email || user.uid);
+      "Logged in: " + user.email;
   } else {
-    document.getElementById("loggedUser").innerText =
-      "Not logged in";
-
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
   }
 });
 
-/* ---------------- LOGOUT ---------------- */
-
-window.logout = async function () {
+window.logout = async function(){
   await signOut(auth);
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
 };
 
 /* ---------------- LOAD DRIVERS ---------------- */
 
 async function loadDrivers(){
-
   const select = document.getElementById("driverSelect");
   const snap = await getDocs(collection(db,"drivers"));
 
   snap.forEach(doc => {
     const d = doc.data();
-
     const opt = document.createElement("option");
     opt.value = JSON.stringify(d);
     opt.textContent = `${d.name} (${d.phone})`;
-
     select.appendChild(opt);
   });
 }
@@ -300,17 +284,14 @@ loadDrivers();
 /* ---------------- LOAD VEHICLES ---------------- */
 
 async function loadVehicles(){
-
   const select = document.getElementById("vehicleSelect");
   const snap = await getDocs(collection(db,"vehicles"));
 
   snap.forEach(doc => {
     const d = doc.data();
-
     const opt = document.createElement("option");
     opt.value = d.registration;
     opt.textContent = d.registration;
-
     select.appendChild(opt);
   });
 }
@@ -328,7 +309,6 @@ function isWeekend(){
 }
 
 async function countVehicleToday(vehicle){
-
   const today = new Date().toISOString().split("T")[0];
 
   const q = query(
@@ -341,7 +321,7 @@ async function countVehicleToday(vehicle){
   return snap.size;
 }
 
-/* ---------------- CREATE VOUCHER ---------------- */
+/* ---------------- CREATE ---------------- */
 
 window.createVoucher = async function(){
 
@@ -355,7 +335,6 @@ window.createVoucher = async function(){
   }
 
   const driver = JSON.parse(driverVal);
-
   const repeat = await countVehicleToday(vehicleVal);
 
   const requiresApproval =
@@ -376,63 +355,23 @@ window.createVoucher = async function(){
   await addDoc(collection(db,"fuel_vouchers"), voucher);
 
   if(requiresApproval){
-
     const msg =
 `Fuel Approval Required
 Driver: ${driver.name}
 Vehicle: ${vehicleVal}
 Amount: R${amount}`;
 
-    const stanley = "27606527696";
-
     window.open(
-      `https://wa.me/${stanley}?text=${encodeURIComponent(msg)}`,
+      `https://wa.me/27606527696?text=${encodeURIComponent(msg)}`,
       "_blank"
     );
 
   } else {
-
     currentVoucher = voucher;
     document.getElementById("sendModal").style.display = "flex";
   }
 
   loadVouchers();
-};
-
-/* ---------------- WHATSAPP ---------------- */
-
-window.sendWhatsApp = function(){
-
-  const msg =
-`Fuel Voucher
-Code: ${currentVoucher.code}
-Vehicle: ${currentVoucher.vehicle}
-Amount: R${currentVoucher.amount.estimated}`;
-
-  window.open(
-    `https://wa.me/27${currentVoucher.phone.replace(/^0/,"")}?text=${encodeURIComponent(msg)}`
-  );
-
-  closeModal();
-};
-
-/* ---------------- SMS ---------------- */
-
-window.sendSMS = function(){
-
-  window.location.href =
-`sms:${currentVoucher.phone}?body=${encodeURIComponent(
-`Fuel Voucher
-Code: ${currentVoucher.code}
-Vehicle: ${currentVoucher.vehicle}
-Amount: R${currentVoucher.amount.estimated}`
-)}`;
-
-  closeModal();
-};
-
-window.closeModal = function(){
-  document.getElementById("sendModal").style.display = "none";
 };
 
 /* ---------------- LOAD VOUCHERS ---------------- */
@@ -449,7 +388,6 @@ async function loadVouchers(){
   snap.forEach(doc => {
 
     const d = doc.data();
-
     total += d.amount.actual || d.amount.estimated || 0;
 
     const div = document.createElement("div");
