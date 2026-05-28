@@ -7,7 +7,6 @@
   <title>Pakisa Fuel Setup</title>
 
   <style>
-
     body{
       font-family: Arial, sans-serif;
       background:#f4f6f8;
@@ -50,7 +49,6 @@
       white-space:pre-line;
       font-weight:bold;
     }
-
   </style>
 </head>
 
@@ -70,17 +68,13 @@
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
   getFirestore,
   collection,
   addDoc
-}
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-/* ---------------- FIREBASE ---------------- */
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
@@ -92,13 +86,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 /* ---------------- MASTER DATA ---------------- */
 
 const DRIVERS = [
-
   { name: "Mpho Mahlaba", phone: "0658177124" },
   { name: "Shadrack Buthelezi", phone: "0736864465" },
   { name: "Jerry Gambu", phone: "0824323950" },
@@ -115,96 +107,71 @@ const DRIVERS = [
   { name: "Tebogo", phone: "0679108285" },
   { name: "Tumelo", phone: "0672060870" },
   { name: "Thabang", phone: "0732075609" }
-
 ];
 
 const VEHICLES = [
+  "ZBJ475GP","MK51ZRGP","KJ54TJGP","KL08LPGP",
+  "VDH195GP","DD59NRGP","FK91MWGP","HR68HRGP",
+  "KF66JPGP","KK81BPGP","VFR558GP","KV30DMGP",
+  "KY28LGGP","LR48HRGP","LW47BHGP"
+];
 
-  "ZBJ475GP",
-  "MK51ZRGP",
-  "KJ54TJGP",
-  "KL08LPGP",
-  "VDH195GP",
-  "DD59NRGP",
-  "FK91MWGP",
-  "HR68HRGP",
-  "KF66JPGP",
-  "KK81BPGP",
-  "VFR558GP",
-  "KV30DMGP",
-  "KY28LGGP",
-  "LR48HRGP",
-  "LW47BHGP"
+/* ---------------- USERS (ROLES) ---------------- */
 
+const USERS = [
+  {
+    name: "Stanley",
+    email: "stanley@pakisa.co.za",
+    phone: "0606527696",
+    role: "super_admin"
+  }
 ];
 
 /* ---------------- SETUP ---------------- */
 
 window.runSetup = async function(){
 
-  const status =
-    document.getElementById("status");
-
-  status.innerText =
-    "Running setup...";
+  const status = document.getElementById("status");
+  status.innerText = "Running setup...";
 
   try{
 
-    /* ---------- DRIVERS ---------- */
-
-    for(const driver of DRIVERS){
-
-      await addDoc(
-        collection(db, "drivers"),
-        {
-          ...driver,
-          active: true,
-          createdAt: new Date()
-        }
-      );
-
+    // DRIVERS
+    for(const d of DRIVERS){
+      await addDoc(collection(db,"drivers"),{
+        ...d,
+        active:true,
+        createdAt:new Date()
+      });
     }
 
-    /* ---------- VEHICLES ---------- */
-
-    for(const reg of VEHICLES){
-
-      await addDoc(
-        collection(db, "vehicles"),
-        {
-          registration: reg,
-          active: true,
-          createdAt: new Date()
-        }
-      );
-
+    // VEHICLES
+    for(const v of VEHICLES){
+      await addDoc(collection(db,"vehicles"),{
+        registration:v,
+        active:true,
+        createdAt:new Date()
+      });
     }
 
-    /* ---------- SUPER ADMIN ---------- */
-
-    await addDoc(
-      collection(db, "admins"),
-      {
-        name: "Stanley",
-        phone: "0606527696",
-        role: "SUPER_ADMIN",
-        active: true,
-        createdAt: new Date()
-      }
-    );
+    // USERS (AUTH ROLES SYSTEM)
+    for(const u of USERS){
+      await addDoc(collection(db,"users"),{
+        ...u,
+        active:true,
+        createdAt:new Date()
+      });
+    }
 
     status.innerText =
 `✅ Setup Complete
 
-Drivers Added
-Vehicles Added
-Super Admin Added`;
+✔ Drivers added
+✔ Vehicles added
+✔ Users (roles) added`;
 
   }catch(err){
-
-    status.innerText =
-      err.message;
-
+    status.innerText = err.message;
   }
 
 }
