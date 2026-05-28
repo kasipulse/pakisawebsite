@@ -91,6 +91,28 @@
       border-left:5px solid red;
     }
 
+    #sendModal{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(0,0,0,0.5);
+      justify-content:center;
+      align-items:center;
+      z-index:999;
+    }
+
+    .modal-box{
+      background:white;
+      width:90%;
+      max-width:350px;
+      border-radius:12px;
+      padding:20px;
+      text-align:center;
+    }
+
   </style>
 </head>
 
@@ -159,6 +181,30 @@
 
 </div>
 
+<!-- SEND MODAL -->
+
+<div id="sendModal">
+
+  <div class="modal-box">
+
+    <h3>Send Voucher</h3>
+
+    <button onclick="sendWhatsApp()">
+      Send via WhatsApp
+    </button>
+
+    <button onclick="sendSMS()">
+      Send via SMS
+    </button>
+
+    <button onclick="closeModal()">
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp }
@@ -189,6 +235,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+
+let currentVoucher = null;
 
 /* ---------------- LOAD DRIVERS ---------------- */
 
@@ -408,25 +456,63 @@ https://YOURDOMAIN/fuel/approvals.html`;
 
   else{
 
-    const message =
-`🚛 Pakisa Fuel Voucher
+    currentVoucher = voucher;
 
-Code: ${voucher.code}
-Vehicle: ${voucher.vehicle}
-Amount: R${amount}
-
-Show this at depot`;
-
-    const wa =
-`https://wa.me/27${phone.replace(/^0/,"")}?text=${encodeURIComponent(message)}`;
-
-    window.open(wa,"_blank");
-
-    alert("Voucher created");
+    document.getElementById("sendModal")
+      .style.display = "flex";
 
   }
 
   loadVouchers();
+
+}
+
+/* ---------------- SEND WHATSAPP ---------------- */
+
+window.sendWhatsApp = function(){
+
+  const message =
+`🚛 Pakisa Fuel Voucher
+
+Code: ${currentVoucher.code}
+Vehicle: ${currentVoucher.vehicle}
+Amount: R${currentVoucher.amount.estimated}
+
+Show this at depot`;
+
+  const wa =
+`https://wa.me/27${currentVoucher.phone.replace(/^0/,"")}?text=${encodeURIComponent(message)}`;
+
+  window.open(wa,"_blank");
+
+  closeModal();
+
+}
+
+/* ---------------- SEND SMS ---------------- */
+
+window.sendSMS = function(){
+
+  const sms =
+`Fuel Voucher
+
+Code: ${currentVoucher.code}
+Vehicle: ${currentVoucher.vehicle}
+Amt: R${currentVoucher.amount.estimated}`;
+
+  window.location.href =
+`sms:${currentVoucher.phone}?body=${encodeURIComponent(sms)}`;
+
+  closeModal();
+
+}
+
+/* ---------------- CLOSE MODAL ---------------- */
+
+window.closeModal = function(){
+
+  document.getElementById("sendModal")
+    .style.display = "none";
 
 }
 
