@@ -1,30 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <title>Pakisa Fuel Dashboard</title>
 
   <style>
 
+    *{
+      box-sizing:border-box;
+    }
+
     body{
       margin:0;
       font-family:Arial,sans-serif;
-      background:#f4f6f8;
+      background:
+      linear-gradient(135deg,#d7dce2 0%,#f5f7fa 35%,#c5ccd4 100%);
+      min-height:100vh;
+      color:#1d1d1d;
     }
 
+    /* ---------------- HEADER ---------------- */
+
     header{
-      background:#072760;
+      background:
+      linear-gradient(145deg,#1b2d4f,#30486f,#1b2d4f);
+
       color:white;
-      padding:12px 18px;
-      font-size:18px;
-      font-weight:bold;
+      padding:14px 18px;
+
       display:flex;
       justify-content:space-between;
       align-items:center;
       flex-wrap:wrap;
       gap:10px;
+
+      border-bottom:1px solid rgba(255,255,255,0.15);
+
+      box-shadow:
+      0 8px 25px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.25);
     }
 
     .topbar-left{
@@ -33,112 +49,266 @@
     }
 
     .topbar-title{
-      font-size:18px;
+      font-size:20px;
       font-weight:bold;
+      letter-spacing:.3px;
     }
 
     .topbar-user{
       font-size:12px;
-      opacity:0.9;
-      margin-top:2px;
+      opacity:0.85;
+      margin-top:4px;
     }
 
     .topbar-links{
       display:flex;
       gap:10px;
-      font-size:13px;
       align-items:center;
+      flex-wrap:wrap;
     }
 
     .topbar-links a{
       color:white;
       text-decoration:none;
-      background:rgba(255,255,255,0.15);
-      padding:6px 10px;
-      border-radius:6px;
+      padding:8px 12px;
+      border-radius:10px;
+
+      background:
+      linear-gradient(
+        145deg,
+        rgba(255,255,255,0.20),
+        rgba(255,255,255,0.08)
+      );
+
+      border:1px solid rgba(255,255,255,0.15);
+
+      box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.15),
+      0 2px 6px rgba(0,0,0,0.15);
+
+      font-size:13px;
+      transition:.2s;
     }
 
     .topbar-links a:hover{
-      background:rgba(255,255,255,0.3);
+      transform:translateY(-1px);
+      background:
+      linear-gradient(
+        145deg,
+        rgba(255,255,255,0.28),
+        rgba(255,255,255,0.12)
+      );
     }
+
+    /* ---------------- CONTAINER ---------------- */
 
     .container{
-      padding:15px;
-      max-width:700px;
+      max-width:760px;
       margin:auto;
+      padding:18px;
     }
+
+    /* ---------------- CARDS ---------------- */
 
     .card{
-      background:white;
+      background:
+      linear-gradient(
+        145deg,
+        rgba(255,255,255,0.98),
+        rgba(233,237,242,0.98)
+      );
+
+      border:1px solid rgba(255,255,255,0.8);
+
+      border-radius:18px;
+
       padding:18px;
-      border-radius:12px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.08);
-      margin-bottom:15px;
+
+      margin-bottom:16px;
+
+      box-shadow:
+      0 10px 30px rgba(0,0,0,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.9);
     }
 
+    /* ---------------- TOTAL ---------------- */
+
     .total{
-      background:#0F99DA;
+      background:
+      linear-gradient(
+        145deg,
+        #0d7db5,
+        #14a8ea,
+        #0d7db5
+      );
+
       color:white;
       text-align:center;
-      font-size:24px;
+
+      box-shadow:
+      0 10px 25px rgba(15,153,218,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    .total-label{
+      font-size:15px;
+      opacity:.9;
+    }
+
+    .total-amount{
+      font-size:34px;
       font-weight:bold;
+      margin-top:6px;
+    }
+
+    /* ---------------- MONTHLY ---------------- */
+
+    .monthly-box{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:13px;
+      color:#666;
+    }
+
+    .monthly-box strong{
+      color:#072760;
+      font-size:18px;
+    }
+
+    /* ---------------- FORM ---------------- */
+
+    h3{
+      margin-top:0;
+      color:#072760;
     }
 
     select,input,button{
       width:100%;
       padding:14px;
       margin-top:12px;
-      border-radius:8px;
-      border:1px solid #ccc;
-      font-size:16px;
-      box-sizing:border-box;
+      border-radius:12px;
+      font-size:15px;
+      border:none;
+      outline:none;
+    }
+
+    select,input{
+      background:
+      linear-gradient(
+        145deg,
+        #ffffff,
+        #eef2f5
+      );
+
+      border:1px solid #d7dde4;
+
+      box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.05);
     }
 
     button{
-      background:#072760;
+      background:
+      linear-gradient(
+        145deg,
+        #1a2f57,
+        #072760
+      );
+
       color:white;
-      border:none;
       font-weight:bold;
       cursor:pointer;
+
+      box-shadow:
+      0 6px 16px rgba(7,39,96,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+
+      transition:.2s;
     }
 
     button:hover{
-      background:#0F99DA;
+      transform:translateY(-1px);
+
+      background:
+      linear-gradient(
+        145deg,
+        #14a8ea,
+        #0F99DA
+      );
     }
+
+    /* ---------------- VOUCHERS ---------------- */
 
     .voucher{
-      background:#eef4ff;
-      padding:12px;
-      border-radius:10px;
-      margin-top:10px;
+      padding:14px;
+      border-radius:12px;
+      margin-top:12px;
       font-size:14px;
+
+      background:
+      linear-gradient(
+        145deg,
+        #ffffff,
+        #eef3f7
+      );
+
+      box-shadow:
+      0 4px 10px rgba(0,0,0,0.05);
     }
 
-    .pending{ border-left:5px solid orange; }
-    .verified{ border-left:5px solid green; }
-    .issued{ border-left:5px solid #0F99DA; }
-    .rejected{ border-left:5px solid red; }
+    .pending{
+      border-left:5px solid orange;
+    }
+
+    .verified{
+      border-left:5px solid green;
+    }
+
+    .issued{
+      border-left:5px solid #0F99DA;
+    }
+
+    .rejected{
+      border-left:5px solid red;
+    }
+
+    /* ---------------- MODAL ---------------- */
 
     #sendModal{
       display:none;
       position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      bottom:0;
-      background:rgba(0,0,0,0.5);
+      inset:0;
+      background:rgba(0,0,0,0.55);
       justify-content:center;
       align-items:center;
       z-index:999;
+      backdrop-filter:blur(3px);
     }
 
     .modal-box{
-      background:white;
       width:90%;
-      max-width:350px;
-      border-radius:12px;
-      padding:20px;
+      max-width:360px;
+
+      background:
+      linear-gradient(
+        145deg,
+        #ffffff,
+        #eef2f6
+      );
+
+      border-radius:18px;
+
+      padding:22px;
+
+      box-shadow:
+      0 20px 40px rgba(0,0,0,0.25);
+
       text-align:center;
+    }
+
+    .modal-box h3{
+      margin-top:0;
+      margin-bottom:15px;
     }
 
   </style>
@@ -149,24 +319,51 @@
 <header>
 
   <div class="topbar-left">
-    <div class="topbar-title">Pakisa Fuel Dashboard</div>
-    <div class="topbar-user" id="loggedUser">Loading user...</div>
+    <div class="topbar-title">
+      ⛽ Pakisa Fuel Dashboard
+    </div>
+
+    <div class="topbar-user" id="loggedUser">
+      Loading user...
+    </div>
   </div>
 
   <div class="topbar-links">
-    <a href="setup.html">Setup</a>
-    <a href="../downloads.html">Downloads</a>
-    <a href="#" onclick="logout()">Logout</a>
+    <a href="setup.html">⚙ Setup</a>
+    <a href="../downloads.html">⬇ Downloads</a>
+    <a href="#" onclick="logout()">🚪 Logout</a>
   </div>
 
 </header>
 
 <div class="container">
 
+  <!-- TOTAL TODAY -->
+
   <div class="card total">
-    Total Fuel Today:
-    <div id="totalFuel">R0</div>
+
+    <div class="total-label">
+      Total Fuel Today
+    </div>
+
+    <div class="total-amount" id="totalFuel">
+      R0
+    </div>
+
   </div>
+
+  <!-- MONTHLY -->
+
+  <div class="card">
+
+    <div class="monthly-box">
+      <span>Monthly Fuel Balance</span>
+      <strong id="monthlyFuel">R0</strong>
+    </div>
+
+  </div>
+
+  <!-- CREATE -->
 
   <div class="card">
 
@@ -192,31 +389,47 @@
 
   </div>
 
+  <!-- VOUCHERS -->
+
   <div class="card">
 
     <h3>Today's Vouchers</h3>
+
     <div id="voucherList"></div>
 
   </div>
 
 </div>
 
-<!-- SEND MODAL -->
+<!-- MODAL -->
+
 <div id="sendModal">
+
   <div class="modal-box">
 
     <h3>Send Voucher</h3>
 
-    <button onclick="sendWhatsApp()">Send via WhatsApp</button>
-    <button onclick="sendSMS()">Send via SMS</button>
-    <button onclick="closeModal()">Cancel</button>
+    <button onclick="sendWhatsApp()">
+      Send via WhatsApp
+    </button>
+
+    <button onclick="sendSMS()">
+      Send via SMS
+    </button>
+
+    <button onclick="closeModal()">
+      Cancel
+    </button>
 
   </div>
+
 </div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
 import {
   getFirestore,
   collection,
@@ -225,25 +438,33 @@ import {
   query,
   where,
   Timestamp
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import {
   getAuth,
   onAuthStateChanged,
   signOut
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+/* ---------------- FIREBASE ---------------- */
 
 const firebaseConfig = {
+
   apiKey: "AIzaSyC-tNc4sqO0gAstGxRXAkx4CR1xG2e831o",
   authDomain: "fuel-management-system-7784c.firebaseapp.com",
   projectId: "fuel-management-system-7784c",
   storageBucket: "fuel-management-system-7784c.firebasestorage.app",
   messagingSenderId: "718691738844",
   appId: "1:718691738844:web:a590ae6d2c734ffa1f4019"
+
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+
 const auth = getAuth(app);
 
 let currentVoucher = null;
@@ -251,31 +472,56 @@ let currentVoucher = null;
 /* ---------------- AUTH ---------------- */
 
 onAuthStateChanged(auth, (user) => {
-  if (user) {
+
+  if(user){
+
     document.getElementById("loggedUser").innerText =
-      "Logged in: " + user.email;
+      "👤 " + user.email;
+
   } else {
+
     window.location.href = "../index.html";
+
   }
+
 });
 
+/* ---------------- LOGOUT ---------------- */
+
 window.logout = async function(){
+
   await signOut(auth);
+
   window.location.href = "../index.html";
 };
 
 /* ---------------- LOAD DRIVERS ---------------- */
 
 async function loadDrivers(){
-  const select = document.getElementById("driverSelect");
-  const snap = await getDocs(collection(db,"drivers"));
+
+  const select =
+    document.getElementById("driverSelect");
+
+  select.innerHTML =
+    `<option value="">Select Driver</option>`;
+
+  const snap =
+    await getDocs(collection(db,"drivers"));
 
   snap.forEach(doc => {
+
     const d = doc.data();
-    const opt = document.createElement("option");
+
+    const opt =
+      document.createElement("option");
+
     opt.value = JSON.stringify(d);
-    opt.textContent = `${d.name} (${d.phone})`;
+
+    opt.textContent =
+      `${d.name} (${d.phone})`;
+
     select.appendChild(opt);
+
   });
 }
 
@@ -284,15 +530,29 @@ loadDrivers();
 /* ---------------- LOAD VEHICLES ---------------- */
 
 async function loadVehicles(){
-  const select = document.getElementById("vehicleSelect");
-  const snap = await getDocs(collection(db,"vehicles"));
+
+  const select =
+    document.getElementById("vehicleSelect");
+
+  select.innerHTML =
+    `<option value="">Select Vehicle</option>`;
+
+  const snap =
+    await getDocs(collection(db,"vehicles"));
 
   snap.forEach(doc => {
+
     const d = doc.data();
-    const opt = document.createElement("option");
+
+    const opt =
+      document.createElement("option");
+
     opt.value = d.registration;
+
     opt.textContent = d.registration;
+
     select.appendChild(opt);
+
   });
 }
 
@@ -301,23 +561,35 @@ loadVehicles();
 /* ---------------- HELPERS ---------------- */
 
 function generateCode(){
-  return "PKS-" + Math.floor(100000 + Math.random()*900000);
+
+  return "PKS-" +
+    Math.floor(100000 + Math.random()*900000);
+
 }
 
 function isWeekend(){
+
   return [0,6].includes(new Date().getDay());
+
 }
 
 async function countVehicleToday(vehicle){
-  const today = new Date().toISOString().split("T")[0];
+
+  const today =
+    new Date().toISOString().split("T")[0];
 
   const q = query(
+
     collection(db,"fuel_vouchers"),
+
     where("vehicle","==",vehicle),
+
     where("date","==",today)
+
   );
 
   const snap = await getDocs(q);
+
   return snap.size;
 }
 
@@ -325,36 +597,68 @@ async function countVehicleToday(vehicle){
 
 window.createVoucher = async function(){
 
-  const driverVal = document.getElementById("driverSelect").value;
-  const vehicleVal = document.getElementById("vehicleSelect").value;
-  const amount = Number(document.getElementById("amount").value);
+  const driverVal =
+    document.getElementById("driverSelect").value;
+
+  const vehicleVal =
+    document.getElementById("vehicleSelect").value;
+
+  const amount =
+    Number(document.getElementById("amount").value);
 
   if(!driverVal || !vehicleVal || !amount){
+
     alert("Complete all fields");
+
     return;
   }
 
   const driver = JSON.parse(driverVal);
-  const repeat = await countVehicleToday(vehicleVal);
+
+  const repeat =
+    await countVehicleToday(vehicleVal);
 
   const requiresApproval =
-    isWeekend() || repeat >= 1 || amount >= 1500;
+    isWeekend() ||
+    repeat >= 1 ||
+    amount >= 1500;
 
   const voucher = {
+
     code: generateCode(),
+
     driver: driver.name,
+
     phone: driver.phone,
+
     vehicle: vehicleVal.toUpperCase(),
-    amount: { estimated: amount, actual: null },
-    status: requiresApproval ? "PENDING_APPROVAL" : "ISSUED",
+
+    amount: {
+      estimated: amount,
+      actual: null
+    },
+
+    status:
+      requiresApproval
+      ? "PENDING_APPROVAL"
+      : "ISSUED",
+
     requiresApproval,
-    date: new Date().toISOString().split("T")[0],
+
+    date:
+      new Date().toISOString().split("T")[0],
+
     createdAt: Timestamp.now()
+
   };
 
-  await addDoc(collection(db,"fuel_vouchers"), voucher);
+  await addDoc(
+    collection(db,"fuel_vouchers"),
+    voucher
+  );
 
   if(requiresApproval){
+
     const msg =
 `Fuel Approval Required
 Driver: ${driver.name}
@@ -362,54 +666,182 @@ Vehicle: ${vehicleVal}
 Amount: R${amount}`;
 
     window.open(
+
       `https://wa.me/27606527696?text=${encodeURIComponent(msg)}`,
+
       "_blank"
+
     );
 
   } else {
+
     currentVoucher = voucher;
-    document.getElementById("sendModal").style.display = "flex";
+
+    document.getElementById("sendModal").style.display =
+      "flex";
   }
 
+  document.getElementById("amount").value = "";
+
   loadVouchers();
+};
+
+/* ---------------- WHATSAPP ---------------- */
+
+window.sendWhatsApp = function(){
+
+  const msg =
+`Fuel Voucher
+Code: ${currentVoucher.code}
+Vehicle: ${currentVoucher.vehicle}
+Amount: R${currentVoucher.amount.estimated}`;
+
+  window.open(
+
+`https://wa.me/27${currentVoucher.phone.replace(/^0/,"")}?text=${encodeURIComponent(msg)}`
+
+  );
+
+  closeModal();
+};
+
+/* ---------------- SMS ---------------- */
+
+window.sendSMS = function(){
+
+  window.location.href =
+
+`sms:${currentVoucher.phone}?body=${encodeURIComponent(
+
+`Fuel Voucher
+Code: ${currentVoucher.code}
+Vehicle: ${currentVoucher.vehicle}
+Amount: R${currentVoucher.amount.estimated}`
+
+)}`;
+
+  closeModal();
+};
+
+window.closeModal = function(){
+
+  document.getElementById("sendModal").style.display =
+    "none";
 };
 
 /* ---------------- LOAD VOUCHERS ---------------- */
 
 async function loadVouchers(){
 
-  const list = document.getElementById("voucherList");
+  const list =
+    document.getElementById("voucherList");
+
   list.innerHTML = "";
 
-  const snap = await getDocs(collection(db,"fuel_vouchers"));
+  const snap =
+    await getDocs(collection(db,"fuel_vouchers"));
 
-  let total = 0;
+  let todayTotal = 0;
+
+  let monthlyTotal = 0;
+
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  const currentMonth =
+    new Date().getMonth();
+
+  const currentYear =
+    new Date().getFullYear();
+
+  const todayVouchers = [];
 
   snap.forEach(doc => {
 
     const d = doc.data();
-    total += d.amount.actual || d.amount.estimated || 0;
 
-    const div = document.createElement("div");
+    if(!d.date) return;
+
+    const voucherDate =
+      new Date(d.date);
+
+    const amount =
+      d.amount?.actual ||
+      d.amount?.estimated ||
+      0;
+
+    /* MONTH */
+
+    if(
+
+      voucherDate.getMonth() === currentMonth &&
+      voucherDate.getFullYear() === currentYear
+
+    ){
+
+      monthlyTotal += amount;
+    }
+
+    /* TODAY */
+
+    if(d.date === today){
+
+      todayTotal += amount;
+
+      todayVouchers.push(d);
+
+    }
+
+  });
+
+  /* NEWEST FIRST */
+
+  todayVouchers.reverse();
+
+  /* RENDER */
+
+  todayVouchers.forEach(d => {
+
+    const div =
+      document.createElement("div");
 
     const cls =
-      d.status === "VERIFIED" ? "verified" :
-      d.status === "ISSUED" ? "issued" :
-      d.status === "REJECTED" ? "rejected" : "pending";
+
+      d.status === "VERIFIED"
+      ? "verified"
+
+      : d.status === "ISSUED"
+      ? "issued"
+
+      : d.status === "REJECTED"
+      ? "rejected"
+
+      : "pending";
 
     div.className = `voucher ${cls}`;
 
     div.innerHTML =
-`<b>${d.vehicle}</b><br>
+
+`
+<b>${d.vehicle}</b><br>
 ${d.driver}<br>
 R${d.amount.estimated}<br>
 Status: ${d.status}<br>
-Code: ${d.code}`;
+Code: ${d.code}
+`;
 
     list.appendChild(div);
+
   });
 
-  document.getElementById("totalFuel").innerText = "R" + total;
+  document.getElementById("totalFuel").innerText =
+
+    "R" + todayTotal.toLocaleString();
+
+  document.getElementById("monthlyFuel").innerText =
+
+    "R" + monthlyTotal.toLocaleString();
+
 }
 
 loadVouchers();
