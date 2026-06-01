@@ -1,1 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8" />
+  <title>Pakisa Access Booking</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      padding: 15px;
+      background: #111827;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .container {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #1f2937;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+    }
+
+    button {
+      padding: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
+    th, td {
+      border: 1px solid #374151;
+      padding: 5px;
+    }
+
+    .admin {
+      display: none;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div>📦 Pakisa Access Booking System</div>
+  <button onclick="enableAdmin()">Admin</button>
+</header>
+
+<div class="container">
+
+  <!-- BOOKING FORM -->
+  <div class="card">
+    <h3>🚚 Create Booking</h3>
+
+    <select id="depot">
+      <option value="FedEx">FedEx</option>
+      <option value="Brima">Brima</option>
+    </select>
+
+    <select id="shift">
+      <option value="Morning">Morning</option>
+      <option value="Night">Night</option>
+    </select>
+
+    <input id="vehicle" placeholder="Vehicle Registration">
+
+    <input id="driver1" placeholder="Driver 1 Name">
+    <input id="driver1id" placeholder="Driver 1 ID">
+
+    <input id="driver2" placeholder="Driver 2 Name (optional)">
+    <input id="driver2id" placeholder="Driver 2 ID">
+
+    <button onclick="submitBooking()">Submit Booking</button>
+  </div>
+
+  <!-- QUICK INFO -->
+  <div class="card">
+    <h3>ℹ️ System Info</h3>
+    <p>Depot-based booking system</p>
+    <p>Emails auto-send to FedEx / Brima</p>
+    <p>Logs saved to Firebase</p>
+  </div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin" id="adminPanel">
+
+  <div class="card">
+    <h3>📊 Admin Dashboard</h3>
+    <button onclick="loadBookings()">Refresh</button>
+
+    <table id="bookingsTable">
+      <tr>
+        <th>Depot</th>
+        <th>Shift</th>
+        <th>Vehicle</th>
+        <th>Drivers</th>
+        <th>Date</th>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const ADMIN_PASS = "pakisa123";
+
+/* =========================
+   SUBMIT BOOKING
+========================= */
+async function submitBooking() {
+
+  const booking = {
+    depot: depot.value,
+    shift: shift.value,
+    vehicle: vehicle.value,
+    drivers: [
+      {
+        name: driver1.value,
+        id: driver1id.value
+      }
+    ],
+    createdAt: new Date().toISOString()
+  };
+
+  if (driver2.value) {
+    booking.drivers.push({
+      name: driver2.value,
+      id: driver2id.value
+    });
+  }
+
+  const res = await fetch("/api/book", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(booking)
+  });
+
+  if (res.ok) {
+    alert("Booking sent successfully!");
+  } else {
+    alert("Error sending booking");
+  }
+}
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+function enableAdmin() {
+  const pass = prompt("Enter Admin Password:");
+
+  if (pass === ADMIN_PASS) {
+    document.getElementById("adminPanel").style.display = "block";
+    loadBookings();
+  } else {
+    alert("Access denied");
+  }
+}
+
+/* =========================
+   LOAD BOOKINGS
+========================= */
+async function loadBookings() {
+  const res = await fetch("/api/bookings");
+  const data = await res.json();
+
+  const table = document.getElementById("bookingsTable");
+
+  table.innerHTML = `
+    <tr>
+      <th>Depot</th>
+      <th>Shift</th>
+      <th>Vehicle</th>
+      <th>Drivers</th>
+      <th>Date</th>
+    </tr>
+  `;
+
+  data.forEach(b => {
+    const drivers = b.drivers
+      .map(d => d.name)
+      .join(", ");
+
+    table.innerHTML += `
+      <tr>
+        <td>${b.depot}</td>
+        <td>${b.shift}</td>
+        <td>${b.vehicle}</td>
+        <td>${drivers}</td>
+        <td>${new Date(b.createdAt).toLocaleString()}</td>
+      </tr>
+    `;
+  });
+}
+</script>
+
+</body>
+</html>
