@@ -1,19 +1,139 @@
-<h2>Pakisa System Setup</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pakisa Setup</title>
 
-<h3>Add Driver</h3>
-<input id="name" placeholder="Name" />
-<input id="surname" placeholder="Surname" />
-<input id="idNumber" placeholder="ID Number" />
-<button onclick="addDriver()">Add Driver</button>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
 
-<hr>
+    .card {
+      background: #1f2937;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
 
-<h3>Add Vehicle</h3>
-<input id="vehicle" placeholder="Registration" />
-<button onclick="addVehicle()">Add Vehicle</button>
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
 
-<hr>
+    pre {
+      background: #111827;
+      padding: 10px;
+      overflow: auto;
+    }
+  </style>
+</head>
 
-<button onclick="initSystem()">Initialize Firestore System</button>
+<body>
 
-<script src="setup.js"></script>
+<h1>Pakisa System Setup</h1>
+
+<div class="card">
+  <h3>1. Initialize System</h3>
+  <button onclick="initSystem()">Run Setup</button>
+</div>
+
+<div class="card">
+  <h3>2. Load Drivers (Bulk)</h3>
+  <button onclick="loadDrivers()">Insert All Drivers</button>
+  <pre id="driverLog"></pre>
+</div>
+
+<div class="card">
+  <h3>3. Load Vehicles (Bulk)</h3>
+  <button onclick="loadVehicles()">Insert All Vehicles</button>
+  <pre id="vehicleLog"></pre>
+</div>
+
+<script>
+/* =========================
+   DRIVER DATA (YOUR LIST)
+========================= */
+const drivers = [
+  { name: "William", surname: "Msiza", idNumber: "6301195663089" },
+  { name: "Jonathan", surname: "Mashele", idNumber: "7401135639089" },
+  { name: "Happy", surname: "Mdhluli", idNumber: "8012245688087" },
+  { name: "Tumelo", surname: "Molelwa", idNumber: "0302185438082" },
+  { name: "Tebogo", surname: "Mofokeng", idNumber: "9206075329080" },
+  { name: "Mpho", surname: "Mahlaba", idNumber: "8710065876084" },
+  { name: "Thulani", surname: "Madhlala", idNumber: "8008215463489" },
+  { name: "Jess", surname: "Molaba", idNumber: "7801135811085" },
+  { name: "Joseph", surname: "Moagi", idNumber: "8809045582083" },
+  { name: "Vishnu", surname: "Pillay", idNumber: "6603175045082" },
+  { name: "Stanley", surname: "Mofokeng", idNumber: "6502035306082" },
+  { name: "Sesi", surname: "Magongwa", idNumber: "8703180458086" }
+];
+
+/* =========================
+   VEHICLE DATA
+========================= */
+const vehicles = [
+  "ZBJ475GP",
+  "KV30DMGP",
+  "KK81BPGP",
+  "LW47BHGP",
+  "KF66JPGP",
+  "KL08LPGP",
+  "JX24LLGP"
+];
+
+/* =========================
+   INIT SYSTEM
+========================= */
+async function initSystem() {
+  await fetch("/api/setup", { method: "POST" });
+  alert("System Initialized");
+}
+
+/* =========================
+   LOAD DRIVERS
+========================= */
+async function loadDrivers() {
+  const log = document.getElementById("driverLog");
+  log.innerText = "Loading drivers...\n";
+
+  for (const d of drivers) {
+    const res = await fetch("/api/add-driver", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(d)
+    });
+
+    log.innerText += `Added: ${d.name} ${d.surname}\n`;
+  }
+
+  log.innerText += "\nDONE";
+}
+
+/* =========================
+   LOAD VEHICLES
+========================= */
+async function loadVehicles() {
+  const log = document.getElementById("vehicleLog");
+  log.innerText = "Loading vehicles...\n";
+
+  for (const v of vehicles) {
+    const res = await fetch("/api/add-vehicle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ registration: v })
+    });
+
+    log.innerText += `Added: ${v}\n`;
+  }
+
+  log.innerText += "\nDONE";
+}
+</script>
+
+</body>
+</html>
