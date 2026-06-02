@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   ADD DRIVER (SETUP PAGE)
+   ADD DRIVER
 ========================= */
 app.post("/api/add-driver", async (req, res) => {
   try {
@@ -82,7 +82,7 @@ app.post("/api/add-driver", async (req, res) => {
 });
 
 /* =========================
-   ADD VEHICLE (SETUP PAGE)
+   ADD VEHICLE
 ========================= */
 app.post("/api/add-vehicle", async (req, res) => {
   try {
@@ -100,7 +100,7 @@ app.post("/api/add-vehicle", async (req, res) => {
 });
 
 /* =========================
-   INIT SYSTEM (ONE TIME)
+   INIT SYSTEM
 ========================= */
 app.post("/api/setup", async (req, res) => {
   try {
@@ -115,27 +115,70 @@ app.post("/api/setup", async (req, res) => {
 });
 
 /* =========================
+   GET DRIVERS (NEW)
+========================= */
+app.get("/api/drivers", async (req, res) => {
+  try {
+    const snapshot = await db.collection("drivers").get();
+
+    const drivers = snapshot.docs
+      .filter(doc => doc.id !== "_init")
+      .map(doc => doc.data());
+
+    res.json(drivers);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   GET VEHICLES (NEW)
+========================= */
+app.get("/api/vehicles", async (req, res) => {
+  try {
+    const snapshot = await db.collection("vehicles").get();
+
+    const vehicles = snapshot.docs
+      .filter(doc => doc.id !== "_init")
+      .map(doc => doc.data());
+
+    res.json(vehicles);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   GET BOOKINGS (NEW)
+========================= */
+app.get("/api/bookings", async (req, res) => {
+  try {
+    const snapshot = await db.collection("bookings")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    const bookings = snapshot.docs
+      .filter(doc => doc.id !== "_init")
+      .map(doc => doc.data());
+
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
    MAIN BOOKING ENDPOINT
 ========================= */
 app.post("/api/send-booking", async (req, res) => {
   try {
     const { rawText, depot, shift } = req.body;
 
-    /* -------------------------
-       1. PARSE EMAIL TEXT
-    --------------------------*/
     const parsed = parseEmail(rawText);
-
     const recipient = getRecipient(depot, shift);
 
-    /* -------------------------
-       2. BUILD EMAIL BODY
-    --------------------------*/
     const driverText = parsed.drivers
-      .map(
-        (d) =>
-          `Driver: ${d.name} ${d.surname}\nID: ${d.idNumber}`
-      )
+      .map(d => `Driver: ${d.name} ${d.surname}\nID: ${d.idNumber}`)
       .join("\n\n");
 
     const emailBody = `
@@ -151,9 +194,6 @@ Kind Regards
 Pakisa Access
     `;
 
-    /* -------------------------
-       3. SEND EMAIL
-    --------------------------*/
     await transporter.sendMail({
       from: `"Pakisa Access" <${process.env.EMAIL_USER}>`,
       to: recipient,
@@ -161,9 +201,6 @@ Pakisa Access
       text: emailBody
     });
 
-    /* -------------------------
-       4. SAVE TO FIREBASE
-    --------------------------*/
     await db.collection("bookings").add({
       drivers: parsed.drivers,
       vehicle: parsed.vehicle,
@@ -180,7 +217,7 @@ Pakisa Access
     });
 
   } catch (err) {
-    console.error("ERROR:", err);
+    console.error(err);
     res.status(500).json({
       error: "Failed to process booking"
     });
