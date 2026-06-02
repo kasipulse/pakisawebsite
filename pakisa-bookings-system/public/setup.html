@@ -29,7 +29,11 @@
       background: #111827;
       padding: 10px;
       overflow: auto;
+      min-height: 80px;
     }
+
+    .success { color: #22c55e; }
+    .error { color: #ef4444; }
   </style>
 </head>
 
@@ -55,8 +59,9 @@
 </div>
 
 <script>
+
 /* =========================
-   DRIVER DATA (YOUR LIST)
+   DRIVER DATA
 ========================= */
 const drivers = [
   { name: "William", surname: "Msiza", idNumber: "6301195663089" },
@@ -90,49 +95,74 @@ const vehicles = [
    INIT SYSTEM
 ========================= */
 async function initSystem() {
-  await fetch("/api/setup", { method: "POST" });
-  alert("System Initialized");
+  const res = await fetch("/api/setup", { method: "POST" });
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("System Initialized");
+  } else {
+    alert("Setup failed: " + data.error);
+  }
 }
 
 /* =========================
-   LOAD DRIVERS
+   LOAD DRIVERS (FIXED)
 ========================= */
 async function loadDrivers() {
   const log = document.getElementById("driverLog");
   log.innerText = "Loading drivers...\n";
 
   for (const d of drivers) {
-    const res = await fetch("/api/add-driver", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(d)
-    });
+    try {
+      const res = await fetch("/api/add-driver", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(d)
+      });
 
-    log.innerText += `Added: ${d.name} ${d.surname}\n`;
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed");
+
+      log.innerHTML += `<span class="success">SUCCESS:</span> ${d.name} ${d.surname}\n`;
+
+    } catch (err) {
+      log.innerHTML += `<span class="error">FAILED:</span> ${d.name} ${d.surname} → ${err.message}\n`;
+    }
   }
 
-  log.innerText += "\nDONE";
+  log.innerHTML += "\nDONE\n";
 }
 
 /* =========================
-   LOAD VEHICLES
+   LOAD VEHICLES (FIXED)
 ========================= */
 async function loadVehicles() {
   const log = document.getElementById("vehicleLog");
   log.innerText = "Loading vehicles...\n";
 
   for (const v of vehicles) {
-    const res = await fetch("/api/add-vehicle", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ registration: v })
-    });
+    try {
+      const res = await fetch("/api/add-vehicle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registration: v })
+      });
 
-    log.innerText += `Added: ${v}\n`;
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed");
+
+      log.innerHTML += `<span class="success">SUCCESS:</span> ${v}\n`;
+
+    } catch (err) {
+      log.innerHTML += `<span class="error">FAILED:</span> ${v} → ${err.message}\n`;
+    }
   }
 
-  log.innerText += "\nDONE";
+  log.innerHTML += "\nDONE\n";
 }
+
 </script>
 
 </body>
