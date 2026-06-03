@@ -41,7 +41,36 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+
+console.log("PROJECT ID:", serviceAccount.project_id);
+console.log("CLIENT EMAIL:", serviceAccount.client_email);
+
+console.log("✅ Firebase key parsed successfully");
+
 app.get("/api/debug-firebase", async (req, res) => {
+  try {
+    const ref = await db.collection("debug").add({
+      test: true,
+      createdAt: Date.now()
+    });
+
+    res.json({
+      success: true,
+      id: ref.id,
+      project: serviceAccount.project_id,
+      client: serviceAccount.client_email
+    });
+
+  } catch (err) {
+    console.error("DEBUG FIREBASE ERROR:", err);
+
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
   try {
     console.log("PROJECT:", serviceAccount.project_id);
     console.log("CLIENT:", serviceAccount.client_email);
@@ -121,7 +150,6 @@ app.get("/", (req, res) => {
 /* =========================
    FIRESTORE DEBUG TEST
 ========================= */
-app.get("/api/debug-firebase", async (req, res) => {
   try {
     const ref = await db.collection("drivers").add({
       test: "working",
