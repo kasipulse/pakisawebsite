@@ -13,15 +13,32 @@ app.use(express.json());
 app.use(express.static("public"));
 
 /* =========================
-   FIREBASE INIT
+   FIREBASE INIT (SAFE)
 ========================= */
+let serviceAccount;
+
+try {
+  serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+  console.log("Firebase key parsed successfully");
+} catch (err) {
+  console.error("FIREBASE_KEY ERROR:", err.message);
+}
+
 admin.initializeApp({
-  credential: admin.credential.cert(
-    JSON.parse(process.env.FIREBASE_KEY)
-  )
+  credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
+
+/* =========================
+   VERIFY FIRESTORE ON START
+========================= */
+db.collection("system").doc("status").set({
+  status: "online",
+  timestamp: Date.now()
+})
+.then(() => console.log("Firestore write OK"))
+.catch(err => console.error("Firestore WRITE FAILED:", err));
 
 /* =========================
    EMAIL TRANSPORT (M365)
@@ -37,7 +54,7 @@ const transporter = nodemailer.createTransport({
 });
 
 /* =========================
-   ROUTING LOGIC
+   ROUTING
 ========================= */
 function getRecipient(depot, shift) {
   if (depot === "FedEx" && shift === "Morning")
@@ -56,7 +73,28 @@ function getRecipient(depot, shift) {
    HEALTH CHECK
 ========================= */
 app.get("/", (req, res) => {
-  res.send("Pakisa Booking System Running");
+  res.send("Pakisa System Running");
+});
+
+/* =========================
+   DEBUG FIRESTORE TEST
+========================= */
+app.get("/api/test-firestore", async (req, res) => {
+  try {
+    const ref = await db.collection("drivers").add({
+      test: true,
+      createdAt: Date.now()
+    });
+
+    res.json({
+      success: true,
+      id: ref.id
+    });
+
+  } catch (err) {
+    console.error("Firestore test error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /* =========================
@@ -66,17 +104,17 @@ app.post("/api/add-driver", async (req, res) => {
   try {
     const { name, surname, idNumber } = req.body;
 
-    const docId = `${name}_${surname}_${Date.now()}`;
-
-    await db.collection("drivers").doc(docId).set({
+    const ref = await db.collection("drivers").add({
       name,
       surname,
       idNumber,
       createdAt: Date.now()
     });
 
-    res.json({ success: true });
+    res.json({ success: true, id: ref.id });
+
   } catch (err) {
+    console.error("Add driver error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -88,139 +126,34 @@ app.post("/api/add-vehicle", async (req, res) => {
   try {
     const { registration } = req.body;
 
-    await db.collection("vehicles").doc(registration).set({
+    const ref = await db.collection("vehicles").add({
       registration,
       createdAt: Date.now()
     });
 
-    res.json({ success: true });
+    res.json({ success: true, id: ref.id });
+
   } catch (err) {
+    console.error("Add vehicle error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
 /* =========================
-   INIT SYSTEM
+   SETUP
 ========================= */
 app.post("/api/setup", async (req, res) => {
   try {
-    await db.collection("drivers").doc("_init").set({ created: Date.now() });
-    await db.collection("vehicles").doc("_init").set({ created: Date.now() });
-    await db.collection("bookings").doc("_init").set({ created: Date.now() });
+    await db.collection("system").doc("setup").set({
+      initialized: true,
+      timestamp: Date.now()
+    });
 
     res.json({ success: true });
+
   } catch (err) {
+    console.error("Setup error:", err);
     res.status(500).json({ error: err.message });
-  }
-});
-
-/* =========================
-   GET DRIVERS (NEW)
-========================= */
-app.get("/api/drivers", async (req, res) => {
-  try {
-    const snapshot = await db.collection("drivers").get();
-
-    const drivers = snapshot.docs
-      .filter(doc => doc.id !== "_init")
-      .map(doc => doc.data());
-
-    res.json(drivers);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* =========================
-   GET VEHICLES (NEW)
-========================= */
-app.get("/api/vehicles", async (req, res) => {
-  try {
-    const snapshot = await db.collection("vehicles").get();
-
-    const vehicles = snapshot.docs
-      .filter(doc => doc.id !== "_init")
-      .map(doc => doc.data());
-
-    res.json(vehicles);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* =========================
-   GET BOOKINGS (NEW)
-========================= */
-app.get("/api/bookings", async (req, res) => {
-  try {
-    const snapshot = await db.collection("bookings")
-      .orderBy("createdAt", "desc")
-      .get();
-
-    const bookings = snapshot.docs
-      .filter(doc => doc.id !== "_init")
-      .map(doc => doc.data());
-
-    res.json(bookings);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* =========================
-   MAIN BOOKING ENDPOINT
-========================= */
-app.post("/api/send-booking", async (req, res) => {
-  try {
-    const { rawText, depot, shift } = req.body;
-
-    const parsed = parseEmail(rawText);
-    const recipient = getRecipient(depot, shift);
-
-    const driverText = parsed.drivers
-      .map(d => `Driver: ${d.name} ${d.surname}\nID: ${d.idNumber}`)
-      .join("\n\n");
-
-    const emailBody = `
-DEPOT ACCESS REQUEST
-
-${driverText}
-
-Vehicle: ${parsed.vehicle}
-Depot: ${depot}
-Shift: ${shift}
-
-Kind Regards
-Pakisa Access
-    `;
-
-    await transporter.sendMail({
-      from: `"Pakisa Access" <${process.env.EMAIL_USER}>`,
-      to: recipient,
-      subject: "Pakisa Access",
-      text: emailBody
-    });
-
-    await db.collection("bookings").add({
-      drivers: parsed.drivers,
-      vehicle: parsed.vehicle,
-      depot,
-      shift,
-      recipient,
-      createdAt: Date.now(),
-      status: "sent"
-    });
-
-    res.json({
-      success: true,
-      message: "Booking sent successfully"
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Failed to process booking"
-    });
   }
 });
 
