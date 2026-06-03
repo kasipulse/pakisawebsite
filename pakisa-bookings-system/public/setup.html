@@ -30,6 +30,7 @@
       padding: 10px;
       overflow: auto;
       min-height: 80px;
+      white-space: pre-wrap;
     }
 
     .success { color: #22c55e; }
@@ -95,22 +96,24 @@ const vehicles = [
    INIT SYSTEM
 ========================= */
 async function initSystem() {
-  const res = await fetch("/api/setup", { method: "POST" });
-  const data = await res.json();
+  try {
+    const res = await fetch("/api/setup", { method: "POST" });
+    const data = await res.json();
 
-  if (res.ok) {
+    if (!res.ok) throw new Error(data.error || "Setup failed");
+
     alert("System Initialized");
-  } else {
-    alert("Setup failed: " + data.error);
+  } catch (err) {
+    alert("Setup failed: " + err.message);
   }
 }
 
 /* =========================
-   LOAD DRIVERS (FIXED)
+   LOAD DRIVERS (SAFE FIXED)
 ========================= */
 async function loadDrivers() {
   const log = document.getElementById("driverLog");
-  log.innerText = "Loading drivers...\n";
+  log.innerHTML = "Loading drivers...\n\n";
 
   for (const d of drivers) {
     try {
@@ -135,11 +138,11 @@ async function loadDrivers() {
 }
 
 /* =========================
-   LOAD VEHICLES (FIXED)
+   LOAD VEHICLES (SAFE FIXED)
 ========================= */
 async function loadVehicles() {
   const log = document.getElementById("vehicleLog");
-  log.innerText = "Loading vehicles...\n";
+  log.innerHTML = "Loading vehicles...\n\n";
 
   for (const v of vehicles) {
     try {
