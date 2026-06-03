@@ -13,15 +13,26 @@ app.use(express.json());
 app.use(express.static("public"));
 
 /* =========================
-   FIREBASE INIT (SAFE)
+   FIREBASE INIT (ROBUST)
 ========================= */
-let serviceAccount;
+
+let serviceAccount = null;
 
 try {
+  if (!process.env.FIREBASE_KEY) {
+    throw new Error("FIREBASE_KEY is missing in environment variables");
+  }
+
   serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-  console.log("Firebase key parsed successfully");
+  console.log("✅ Firebase key parsed successfully");
+
 } catch (err) {
-  console.error("FIREBASE_KEY ERROR:", err.message);
+  console.error("❌ FIREBASE_KEY ERROR:", err.message);
+}
+
+if (!serviceAccount) {
+  console.error("❌ Firebase cannot initialize without service account");
+  process.exit(1);
 }
 
 admin.initializeApp({
@@ -31,14 +42,20 @@ admin.initializeApp({
 const db = admin.firestore();
 
 /* =========================
-   VERIFY FIRESTORE ON START
+   FIRESTORE STARTUP TEST
 ========================= */
-db.collection("system").doc("status").set({
-  status: "online",
-  timestamp: Date.now()
-})
-.then(() => console.log("Firestore write OK"))
-.catch(err => console.error("Firestore WRITE FAILED:", err));
+(async () => {
+  try {
+    await db.collection("system").doc("status").set({
+      status: "online",
+      timestamp: Date.now()
+    });
+
+    console.log("✅ Firestore write OK");
+  } catch (err) {
+    console.error("❌ Firestore WRITE FAILED:", err.message);
+  }
+})();
 
 /* =========================
    EMAIL TRANSPORT (M365)
@@ -77,14 +94,16 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   DEBUG FIRESTORE TEST
+   FIRESTORE DEBUG TEST
 ========================= */
-app.get("/api/test-firestore", async (req, res) => {
+app.get("/api/debug-firebase", async (req, res) => {
   try {
     const ref = await db.collection("drivers").add({
-      test: true,
+      test: "working",
       createdAt: Date.now()
     });
+
+    console.log("🔥 Test write success:", ref.id);
 
     res.json({
       success: true,
@@ -92,8 +111,10 @@ app.get("/api/test-firestore", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Firestore test error:", err);
-    res.status(500).json({ error: err.message });
+    console.error("❌ Firebase test error:", err);
+    res.status(500).json({
+      error: err.message
+    });
   }
 });
 
@@ -114,7 +135,7 @@ app.post("/api/add-driver", async (req, res) => {
     res.json({ success: true, id: ref.id });
 
   } catch (err) {
-    console.error("Add driver error:", err);
+    console.error("❌ Add driver error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -134,13 +155,13 @@ app.post("/api/add-vehicle", async (req, res) => {
     res.json({ success: true, id: ref.id });
 
   } catch (err) {
-    console.error("Add vehicle error:", err);
+    console.error("❌ Add vehicle error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
 /* =========================
-   SETUP
+   SETUP SYSTEM
 ========================= */
 app.post("/api/setup", async (req, res) => {
   try {
@@ -152,7 +173,7 @@ app.post("/api/setup", async (req, res) => {
     res.json({ success: true });
 
   } catch (err) {
-    console.error("Setup error:", err);
+    console.error("❌ Setup error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -163,5 +184,5 @@ app.post("/api/setup", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Pakisa System running on port ${PORT}`);
+  console.log(`🚀 Pakisa System running on port ${PORT}`);
 });
