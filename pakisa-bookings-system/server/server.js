@@ -41,6 +41,31 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+app.get("/api/debug-firebase", async (req, res) => {
+  try {
+    console.log("PROJECT:", serviceAccount.project_id);
+    console.log("CLIENT:", serviceAccount.client_email);
+
+    const ref = await db.collection("debug").add({
+      test: true,
+      createdAt: Date.now()
+    });
+
+    res.json({
+      success: true,
+      id: ref.id,
+      project: serviceAccount.project_id,
+      client: serviceAccount.client_email
+    });
+
+  } catch (err) {
+    console.error("DEBUG FIREBASE ERROR:", err);
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
 /* =========================
    FIRESTORE STARTUP TEST
 ========================= */
