@@ -93,12 +93,25 @@ const vehicles = [
 ];
 
 /* =========================
+   SAFE RESPONSE PARSER
+========================= */
+async function safeJson(res) {
+  const text = await res.text();
+
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch (err) {
+    throw new Error("Server did not return JSON: " + text);
+  }
+}
+
+/* =========================
    INIT SYSTEM
 ========================= */
 async function initSystem() {
   try {
     const res = await fetch("/api/setup", { method: "POST" });
-    const data = await res.json();
+    const data = await safeJson(res);
 
     if (!res.ok) throw new Error(data.error || "Setup failed");
 
@@ -109,7 +122,7 @@ async function initSystem() {
 }
 
 /* =========================
-   LOAD DRIVERS (SAFE FIXED)
+   LOAD DRIVERS
 ========================= */
 async function loadDrivers() {
   const log = document.getElementById("driverLog");
@@ -123,7 +136,7 @@ async function loadDrivers() {
         body: JSON.stringify(d)
       });
 
-      const data = await res.json();
+      const data = await safeJson(res);
 
       if (!res.ok) throw new Error(data.error || "Failed");
 
@@ -138,7 +151,7 @@ async function loadDrivers() {
 }
 
 /* =========================
-   LOAD VEHICLES (SAFE FIXED)
+   LOAD VEHICLES
 ========================= */
 async function loadVehicles() {
   const log = document.getElementById("vehicleLog");
@@ -152,7 +165,7 @@ async function loadVehicles() {
         body: JSON.stringify({ registration: v })
       });
 
-      const data = await res.json();
+      const data = await safeJson(res);
 
       if (!res.ok) throw new Error(data.error || "Failed");
 
