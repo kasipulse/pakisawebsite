@@ -13,25 +13,20 @@ app.use(express.json());
 app.use(express.static("public"));
 
 /* =========================
-   FIREBASE INIT (ROBUST)
+   FIREBASE INIT (SAFE)
 ========================= */
-
-let serviceAccount = null;
+let serviceAccount;
 
 try {
   if (!process.env.FIREBASE_KEY) {
-    throw new Error("FIREBASE_KEY is missing in environment variables");
+    throw new Error("FIREBASE_KEY missing");
   }
 
   serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-  console.log("✅ Firebase key parsed successfully");
+  console.log("Firebase key parsed OK");
 
 } catch (err) {
-  console.error("❌ FIREBASE_KEY ERROR:", err.message);
-}
-
-if (!serviceAccount) {
-  console.error("❌ Firebase cannot initialize without service account");
+  console.error("Firebase init error:", err.message);
   process.exit(1);
 }
 
@@ -41,62 +36,8 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-
-console.log("PROJECT ID:", serviceAccount.project_id);
-console.log("CLIENT EMAIL:", serviceAccount.client_email);
-
-console.log("✅ Firebase key parsed successfully");
-
-app.get("/api/debug-firebase", async (req, res) => {
-  try {
-    const ref = await db.collection("debug").add({
-      test: true,
-      createdAt: Date.now()
-    });
-
-    res.json({
-      success: true,
-      id: ref.id,
-      project: serviceAccount.project_id,
-      client: serviceAccount.client_email
-    });
-
-  } catch (err) {
-    console.error("DEBUG FIREBASE ERROR:", err);
-
-    res.status(500).json({
-      error: err.message
-    });
-  }
-});
-
-  try {
-    console.log("PROJECT:", serviceAccount.project_id);
-    console.log("CLIENT:", serviceAccount.client_email);
-
-    const ref = await db.collection("debug").add({
-      test: true,
-      createdAt: Date.now()
-    });
-
-    res.json({
-      success: true,
-      id: ref.id,
-      project: serviceAccount.project_id,
-      client: serviceAccount.client_email
-    });
-
-  } catch (err) {
-    console.error("DEBUG FIREBASE ERROR:", err);
-    res.status(500).json({
-      error: err.message
-    });
-  }
-});
-
 /* =========================
-   FIRESTORE STARTUP TEST
+   STARTUP FIRESTORE TEST
 ========================= */
 (async () => {
   try {
@@ -105,14 +46,14 @@ app.get("/api/debug-firebase", async (req, res) => {
       timestamp: Date.now()
     });
 
-    console.log("✅ Firestore write OK");
+    console.log("Firestore OK");
   } catch (err) {
-    console.error("❌ Firestore WRITE FAILED:", err.message);
+    console.error("Firestore FAILED:", err.message);
   }
 })();
 
 /* =========================
-   EMAIL TRANSPORT (M365)
+   EMAIL (M365)
 ========================= */
 const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
@@ -148,26 +89,24 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   FIRESTORE DEBUG TEST
+   DEBUG FIRESTORE (REAL TEST)
 ========================= */
+app.get("/api/debug-firebase", async (req, res) => {
   try {
-    const ref = await db.collection("drivers").add({
-      test: "working",
+    const ref = await db.collection("debug").add({
+      test: true,
       createdAt: Date.now()
     });
 
-    console.log("🔥 Test write success:", ref.id);
-
     res.json({
       success: true,
-      id: ref.id
+      id: ref.id,
+      project: serviceAccount.project_id
     });
 
   } catch (err) {
-    console.error("❌ Firebase test error:", err);
-    res.status(500).json({
-      error: err.message
-    });
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -188,7 +127,6 @@ app.post("/api/add-driver", async (req, res) => {
     res.json({ success: true, id: ref.id });
 
   } catch (err) {
-    console.error("❌ Add driver error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -208,7 +146,6 @@ app.post("/api/add-vehicle", async (req, res) => {
     res.json({ success: true, id: ref.id });
 
   } catch (err) {
-    console.error("❌ Add vehicle error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -226,7 +163,44 @@ app.post("/api/setup", async (req, res) => {
     res.json({ success: true });
 
   } catch (err) {
-    console.error("❌ Setup error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   BOOKING (OPTIONAL SAFE PLACEHOLDER)
+========================= */
+app.post("/api/book", async (req, res) => {
+  try {
+    const booking = req.body;
+
+    const ref = await db.collection("bookings").add({
+      ...booking,
+      createdAt: Date.now()
+    });
+
+    res.json({ success: true, id: ref.id });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   GET BOOKINGS (ADMIN PAGE)
+========================= */
+app.get("/api/bookings", async (req, res) => {
+  try {
+    const snap = await db.collection("bookings").get();
+
+    const data = snap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    res.json(data);
+
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
@@ -237,5 +211,5 @@ app.post("/api/setup", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Pakisa System running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
