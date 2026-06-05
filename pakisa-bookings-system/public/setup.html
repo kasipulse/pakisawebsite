@@ -60,6 +60,10 @@
 </div>
 
 <script>
+/* =========================
+   CONFIGURATION
+========================= */
+const API_BASE = "https://pakisa-booking-system.onrender.com";
 
 /* =========================
    DRIVER DATA
@@ -97,7 +101,6 @@ const vehicles = [
 ========================= */
 async function safeJson(res) {
   const text = await res.text();
-
   try {
     return text ? JSON.parse(text) : {};
   } catch (err) {
@@ -110,11 +113,9 @@ async function safeJson(res) {
 ========================= */
 async function initSystem() {
   try {
-    const res = await fetch("/api/setup", { method: "POST" });
+    const res = await fetch(`${API_BASE}/api/setup`, { method: "POST" });
     const data = await safeJson(res);
-
     if (!res.ok) throw new Error(data.error || "Setup failed");
-
     alert("System Initialized");
   } catch (err) {
     alert("Setup failed: " + err.message);
@@ -130,23 +131,19 @@ async function loadDrivers() {
 
   for (const d of drivers) {
     try {
-      const res = await fetch("/api/add-driver", {
+      const res = await fetch(`${API_BASE}/api/add-driver`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(d)
       });
 
       const data = await safeJson(res);
-
       if (!res.ok) throw new Error(data.error || "Failed");
-
       log.innerHTML += `<span class="success">SUCCESS:</span> ${d.name} ${d.surname}\n`;
-
     } catch (err) {
       log.innerHTML += `<span class="error">FAILED:</span> ${d.name} ${d.surname} → ${err.message}\n`;
     }
   }
-
   log.innerHTML += "\nDONE\n";
 }
 
@@ -159,26 +156,21 @@ async function loadVehicles() {
 
   for (const v of vehicles) {
     try {
-      const res = await fetch("/api/add-vehicle", {
+      const res = await fetch(`${API_BASE}/api/add-vehicle`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ registration: v })
       });
 
       const data = await safeJson(res);
-
       if (!res.ok) throw new Error(data.error || "Failed");
-
       log.innerHTML += `<span class="success">SUCCESS:</span> ${v}\n`;
-
     } catch (err) {
       log.innerHTML += `<span class="error">FAILED:</span> ${v} → ${err.message}\n`;
     }
   }
-
   log.innerHTML += "\nDONE\n";
 }
-
 </script>
 
 </body>
