@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -11,15 +12,27 @@ app.use(express.json());
 app.use(express.static("public"));
 
 /* =========================
-   FIREBASE INIT (CLEAN)
+   FIREBASE INIT
 ========================= */
 const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
+
+/* =========================
+   EMAIL CONFIG (Office 365)
+========================= */
+const transporter = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  secure: false, // Office 365 uses STARTTLS
+  auth: {
+    user: "ops1@pakisalogistics.co.za",
+    pass: "YOUR_APP_PASSWORD_HERE" 
+  }
+});
 
 /* =========================
    ROOT ROUTE
@@ -29,7 +42,7 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   TEST ROUTE (MUST WORK)
+   TEST ROUTE
 ========================= */
 app.get("/api/test", async (req, res) => {
   try {
@@ -37,7 +50,6 @@ app.get("/api/test", async (req, res) => {
       message: "firestore working",
       createdAt: Date.now()
     });
-
     res.json({ success: true, id: ref.id });
   } catch (err) {
     console.error(err);
@@ -77,8 +89,8 @@ app.get("/api/bootstrap", async (req, res) => {
     const driversSnap = await db.collection("drivers").get();
     const vehiclesSnap = await db.collection("vehicles").get();
 
-    const drivers = driversSnap.docs.map(d => d.data());
-    const vehicles = vehiclesSnap.docs.map(v => v.data());
+    const drivers = driversSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const vehicles = vehiclesSnap.docs.map(v => ({ id: v.id, ...v.data() }));
 
     res.json({ drivers, vehicles });
   } catch (err) {
@@ -87,13 +99,34 @@ app.get("/api/bootstrap", async (req, res) => {
 });
 
 /* =========================
-   BOOKINGS (STORE + FETCH)
+   BOOKINGS (STORE + EMAIL)
 ========================= */
 app.post("/api/book", async (req, res) => {
   try {
-    const ref = await db.collection("bookings").add(req.body);
-    res.json({ success: true, id: ref.id });
+    const { depot, shift, vehicle, drivers } = req.body;
+
+    // 1. Format Driver List exactly as requested
+    const driverList = drivers
+      .map(d => `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`)
+      .join("\n\n");
+
+    const emailBody = `Hi Team\n\n${driverList}\n\nVehicle Reg: ${vehicle}`;
+
+    // 2. Send Email
+    await transporter.sendMail({
+      from: '"Pakisa System" <ops1@pakisalogistics.co.za>',
+      to: "mahlabampho01@gmail.com", // Test recipient
+      cc: "tebogo@pakisalogistics.co.za",
+      subject: "PAKISA ACCESS TO DEPOT",
+      text: emailBody
+    });
+
+    // 3. Save to Firestore
+    await db.collection("bookings").add(req.body);
+
+    res.json({ success: true });
   } catch (err) {
+    console.error("Booking Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
