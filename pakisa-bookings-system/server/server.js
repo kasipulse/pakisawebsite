@@ -22,6 +22,13 @@ admin.initializeApp({
 const db = admin.firestore();
 
 /* =========================
+   ROOT ROUTE
+========================= */
+app.get("/", (req, res) => {
+  res.send("Pakisa Logistics Backend is Online 🚀");
+});
+
+/* =========================
    TEST ROUTE (MUST WORK)
 ========================= */
 app.get("/api/test", async (req, res) => {
