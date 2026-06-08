@@ -22,15 +22,13 @@ admin.initializeApp({
 const db = admin.firestore();
 
 /* =========================
-   EMAIL CONFIG (Office 365)
+   EMAIL CONFIG (Gmail)
 ========================= */
 const transporter = nodemailer.createTransport({
-  host: "smtp.office365.com",
-  port: 587,
-  secure: false, // Office 365 uses STARTTLS
+  service: 'gmail',
   auth: {
-    user: "ops1@pakisalogistics.co.za",
-    pass: "YOUR_APP_PASSWORD_HERE" 
+    user: "driver1.pakisa@gmail.com",
+    pass: process.env.EMAIL_PASS // Ensure EMAIL_PASS is set in Render
   }
 });
 
@@ -114,7 +112,8 @@ app.post("/api/book", async (req, res) => {
 
     // 2. Send Email
     await transporter.sendMail({
-      from: '"Pakisa System" <ops1@pakisalogistics.co.za>',
+      from: '"Pakisa Logistics Ops" <driver1.pakisa@gmail.com>',
+      replyTo: "ops1@pakisalogistics.co.za",
       to: "mahlabampho01@gmail.com", // Test recipient
       cc: "tebogo@pakisalogistics.co.za",
       subject: "PAKISA ACCESS TO DEPOT",
