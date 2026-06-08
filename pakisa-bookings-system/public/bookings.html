@@ -39,7 +39,7 @@
     }
 
     label { display: block; margin-top: 10px; font-size: 14px; color: #9ca3af; }
-    select, input {
+    select {
       width: 100%;
       padding: 12px;
       margin-top: 6px;
@@ -47,7 +47,7 @@
       border: 1px solid #4b5563;
       color: white;
       border-radius: 6px;
-      box-sizing: border-box; /* Prevents padding from breaking layout */
+      box-sizing: border-box;
     }
 
     button {
@@ -100,17 +100,20 @@
   <div class="card">
     <h3>System Info</h3>
     <p>✔ Mobile optimized interface</p>
-    <p>✔ API connected to server</p>
+    <p>✔ API connected to Render</p>
   </div>
 </div>
 
 <script>
+// Define your base URL
+const BASE_URL = "https://pakisa-booking-system.onrender.com";
+
 /* =========================
    INITIALIZATION
 ========================= */
 async function initUI() {
   try {
-    const res = await fetch("/api/bootstrap");
+    const res = await fetch(`${BASE_URL}/api/bootstrap`);
     const data = await res.json(); 
 
     const driver1 = document.getElementById("driver1");
@@ -137,6 +140,7 @@ async function initUI() {
     });
   } catch (err) {
     console.error("UI Load Error:", err);
+    alert("Error connecting to server. Check logs.");
   }
 }
 
@@ -144,7 +148,10 @@ async function initUI() {
    SUBMIT
 ========================= */
 async function submitBooking() {
-  const d1 = JSON.parse(document.getElementById("driver1").value);
+  const d1Val = document.getElementById("driver1").value;
+  if (!d1Val) return alert("Please select Driver 1");
+  
+  const d1 = JSON.parse(d1Val);
   const d2Val = document.getElementById("driver2").value;
   
   const payload = {
@@ -154,7 +161,7 @@ async function submitBooking() {
     drivers: d2Val ? [d1, JSON.parse(d2Val)] : [d1]
   };
 
-  const res = await fetch("/api/book", {
+  const res = await fetch(`${BASE_URL}/api/book`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
