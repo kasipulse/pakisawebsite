@@ -73,7 +73,7 @@ app.post("/api/book", async (req, res) => {
       to: 'mahlabampho01@gmail.com',
       cc: 'tebogo@pakisalogistics.co.za',
       replyTo: 'ops1@pakisalogistics.co.za',
-      from: 'bookings@pakisalogistics.co.za', // MUST match your SendGrid verified sender
+      from: 'driver1.pakisa@gmail.com', // <--- MUST BE THIS EXACT EMAIL
       subject: 'PAKISA ACCESS TO DEPOT',
       text: emailBody,
     };
