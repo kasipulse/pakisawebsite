@@ -71,10 +71,16 @@ app.post("/api/book", async (req, res) => {
     // Send email using SendGrid API
     const msg = {
       to: 'mahlabampho01@gmail.com',
-      cc: 'tebogo@pakisalogistics.co.za',
+      cc: [
+        'tebogo@pakisalogistics.co.za', 
+        'ops1@pakisalogistics.co.za'
+      ],
       replyTo: 'ops1@pakisalogistics.co.za',
-      from: 'driver1.pakisa@gmail.com', // <--- MUST BE THIS EXACT EMAIL
-      subject: 'PAKISA ACCESS TO DEPOT',
+      from: {
+        email: 'driver1.pakisa@gmail.com',
+        name: 'Pakisa' // This ensures the sender appears as "Pakisa"
+      },
+      subject: 'Pakisa Access', // Updated subject line
       text: emailBody,
     };
 
