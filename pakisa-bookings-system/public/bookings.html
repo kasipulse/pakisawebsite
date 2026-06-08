@@ -105,7 +105,7 @@
 </div>
 
 <script>
-// Define your base URL
+// Pointing directly to your live backend
 const BASE_URL = "https://pakisa-booking-system.onrender.com";
 
 /* =========================
@@ -167,8 +167,11 @@ async function submitBooking() {
     body: JSON.stringify(payload)
   });
 
-  if (res.ok) alert("Booking submitted!");
-  else alert("Failed to submit.");
+  if (res.ok) {
+    alert("Booking submitted!");
+  } else {
+    alert("Failed to submit. Please check the logs.");
+  }
 }
 
 initUI();
