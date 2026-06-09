@@ -68,16 +68,16 @@ app.post("/api/book", async (req, res) => {
 
     const emailBody = `Hi Team,\n\nA new booking has been created for the depot.\n\n${driverList}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}`;
 
-    // Send email using Resend
+       // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: 'Pakisa <bookings@pakisalogistics.co.za>',
+      from: 'Pakisa <driver1@pakisalogistics.co.za>',
       to: ['mahlabampho01@gmail.com'],
       cc: ['tebogo@pakisalogistics.co.za', 'ops1@pakisalogistics.co.za'],
       reply_to: 'ops1@pakisalogistics.co.za',
       subject: 'PAKISA ACCESS TO DEPOT',
       text: emailBody,
     });
-
+     
     if (error) {
       console.error("Resend Error:", error);
       return res.status(500).json({ error: error.message });
