@@ -4,77 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pakisa Booking System</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    
+    // Add your Firebase Config here
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Toggle Login/App visibility
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('login-card').style.display = 'none';
+        document.getElementById('app-container').style.display = 'block';
+        initUI();
+      } else {
+        document.getElementById('login-card').style.display = 'block';
+        document.getElementById('app-container').style.display = 'none';
+      }
+    });
+
+    window.login = async () => {
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
+      try { await signInWithEmailAndPassword(auth, email, pass); }
+      catch (e) { alert("Login failed: " + e.message); }
+    };
+  </script>
+
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background: #0f172a; color: white; }
-    header { padding: 15px; background: #111827; font-size: 18px; font-weight: bold; text-align: center; }
-    .container { padding: 15px; display: grid; gap: 20px; }
-    @media (min-width: 768px) { .container { grid-template-columns: 1fr 1fr; } }
-    .card { background: #1f2937; padding: 20px; border-radius: 12px; }
-    label { display: block; margin-top: 10px; font-size: 14px; color: #9ca3af; }
-    select { width: 100%; padding: 12px; margin-top: 6px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 6px; }
-    button { padding: 15px; width: 100%; margin-top: 20px; cursor: pointer; background: #2563eb; border: none; color: white; border-radius: 8px; font-weight: bold; }
+    body { font-family: -apple-system, sans-serif; margin: 0; background: #0f172a; color: white; }
+    .card { background: #1f2937; padding: 20px; border-radius: 12px; margin: 20px; }
+    input { width: 100%; padding: 12px; margin-top: 10px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 6px; box-sizing: border-box; }
+    button { padding: 15px; width: 100%; margin-top: 20px; background: #2563eb; border: none; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
+
 <body>
-<header>📦 Pakisa Booking System</header>
-<div class="container">
-  <div class="card">
-    <h3>Create Booking</h3>
-    <label>Depot</label>
-    <select id="depot"><option value="FedEx">FedEx</option><option value="Brima">Brima</option></select>
-    <label>Shift</label>
-    <select id="shift"><option value="Morning">Morning</option><option value="Night">Night</option></select>
-    <label>Vehicle</label>
-    <select id="vehicle"></select>
-    <label>Driver 1</label>
-    <select id="driver1"></select>
-    <label>Driver 2 (optional)</label>
-    <select id="driver2"></select>
-    <label>Driver 3 (optional)</label>
-    <select id="driver3"></select>
-    <button onclick="submitBooking()">Submit Booking</button>
+  <div id="login-card" class="card" style="display:none; max-width: 400px; margin: 100px auto;">
+    <h3>Pakisa Access Login</h3>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
   </div>
-</div>
-<script>
-const BASE_URL = "https://pakisa-booking-system.onrender.com";
-async function initUI() {
-  try {
-    const res = await fetch(`${BASE_URL}/api/bootstrap`);
-    const data = await res.json(); 
-    const drivers = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
-    drivers.forEach(sel => {
-      sel.innerHTML = '<option value="">Select Driver</option>';
-      data.drivers.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = JSON.stringify(d);
-        opt.textContent = `${d.name} ${d.surname}`;
-        sel.appendChild(opt);
-      });
-    });
-    data.vehicles.forEach(v => {
-      const opt = document.createElement("option");
-      opt.value = v.registration;
-      opt.textContent = v.registration;
-      vehicleSelect.appendChild(opt);
-    });
-  } catch (err) { alert("Error loading data"); }
-}
-async function submitBooking() {
-  const d1Val = document.getElementById("driver1").value;
-  if (!d1Val) return alert("Please select Driver 1");
-  const payload = {
-    depot: document.getElementById("depot").value,
-    shift: document.getElementById("shift").value,
-    vehicle: document.getElementById("vehicle").value,
-    drivers: [JSON.parse(d1Val)]
-  };
-  if (document.getElementById("driver2").value) payload.drivers.push(JSON.parse(document.getElementById("driver2").value));
-  if (document.getElementById("driver3").value) payload.drivers.push(JSON.parse(document.getElementById("driver3").value));
-  
-  const res = await fetch(`${BASE_URL}/api/book`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-  if (res.ok) alert("Booking submitted!"); else alert("Failed to submit.");
-}
-initUI();
-</script>
+
+  <div id="app-container" style="display:none;">
+    <header>📦 Pakisa Booking System</header>
+    <div class="container">
+      <div class="card">
+        <h3>Create Booking</h3>
+        <label>Depot</label>
+        <select id="depot">
+          <option value="FedEx">FedEx</option>
+          <option value="Brima">Brima</option>
+        </select>
+        <button onclick="submitBooking()">Submit Booking</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
