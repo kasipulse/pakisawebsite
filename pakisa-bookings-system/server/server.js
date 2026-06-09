@@ -6,7 +6,6 @@ import { Resend } from "resend";
 
 dotenv.config();
 
-// Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
@@ -14,9 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* =========================
-   FIREBASE INIT
-========================= */
 const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -24,12 +20,8 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-/* =========================
-   ROUTES
-========================= */
 app.get("/", (req, res) => res.send("Pakisa Logistics Backend is Online 🚀"));
 
-// Add Driver Route
 app.post("/api/add-driver", async (req, res) => {
   try {
     const ref = await db.collection("drivers").add(req.body);
@@ -37,7 +29,6 @@ app.post("/api/add-driver", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Add Vehicle Route
 app.post("/api/add-vehicle", async (req, res) => {
   try {
     const ref = await db.collection("vehicles").add(req.body);
@@ -45,7 +36,6 @@ app.post("/api/add-vehicle", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Bootstrap Dropdown Data
 app.get("/api/bootstrap", async (req, res) => {
   try {
     const driversSnap = await db.collection("drivers").get();
@@ -56,36 +46,42 @@ app.get("/api/bootstrap", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Bookings Route (Store + Email via Resend API)
 app.post("/api/book", async (req, res) => {
   try {
     const { depot, shift, vehicle, drivers } = req.body;
     
-    // Format the driver list string
     const driverList = drivers
       .map(d => `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`)
       .join("\n\n");
 
-    const emailBody = `Hi Team,\n\nA new booking has been created for the depot.\n\n${driverList}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}`;
+    let toList = [];
+    const ccList = ['tebogo@pakisalogistics.co.za', 'ops1@pakisalogistics.co.za'];
 
-       // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: 'Pakisa <driver1@pakisalogistics.co.za>',
-      to: ['mahlabampho01@gmail.com'],
-      cc: ['tebogo@pakisalogistics.co.za', 'ops1@pakisalogistics.co.za'],
-      reply_to: 'ops1@pakisalogistics.co.za',
-      subject: 'PAKISA ACCESS TO DEPOT',
-      text: emailBody,
-    });
-     
-    if (error) {
-      console.error("Resend Error:", error);
-      return res.status(500).json({ error: error.message });
+    if (depot === 'FedEx') {
+      if (shift === 'Night') {
+        toList = ["stanleym@pakisalogistics.co.za", "ambani.muilambudzi@fedex.com", "lucky.mokoena@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com"];
+      } else {
+        toList = ["SSASecurityControlRoom@corp.ds.fedex.com", "petrus.mphutlane@fedex.com", "moeketsi.malema@fedex.com"];
+      }
+    } else {
+      // Brima
+      toList = ["richard.mohlala@brima.com", "gauteng.collections@brima.com", "rebecca.ndhlovu@brima.com"];
     }
 
-    // Save the booking to Firestore
+    const emailBody = `${driverList}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}\n\n---\nSystem Generated Message: This is an automated notification for site access verification.`;
+
+    const { data, error } = await resend.emails.send({
+      from: 'Pakisa <driver1@pakisalogistics.co.za>',
+      to: toList,
+      cc: ccList,
+      reply_to: 'ops1@pakisalogistics.co.za',
+      subject: 'Pakisa Access',
+      text: emailBody,
+    });
+
+    if (error) throw error;
+
     await db.collection("bookings").add(req.body);
-    
     res.json({ success: true, id: data.id });
   } catch (err) {
     console.error("Booking Error:", err);
@@ -93,8 +89,5 @@ app.post("/api/book", async (req, res) => {
   }
 });
 
-/* =========================
-   START SERVER
-========================= */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server running on", PORT));
