@@ -9,7 +9,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     
-    // Replace these with your actual Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDlRegs0tOy3YENNf7A12Gnxb_Plvyvi7E",
       authDomain: "pakisa-bookings.firebaseapp.com",
@@ -23,13 +22,11 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Handle Login
     window.login = async () => {
       try { await signInWithPopup(auth, provider); }
       catch (e) { alert("Login failed: " + e.message); }
     };
 
-    // UI Toggle
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('login-screen').style.display = 'none';
@@ -72,10 +69,10 @@
       <select id="depot"><option value="FedEx">FedEx</option><option value="Brima">Brima</option></select>
       <label>Shift</label>
       <select id="shift"><option value="Morning">Morning</option><option value="Night">Night</option></select>
-      <label>Vehicle</label><select id="vehicle"></select>
-      <label>Driver 1</label><select id="driver1"></select>
-      <label>Driver 2 (optional)</label><select id="driver2"></select>
-      <label>Driver 3 (optional)</label><select id="driver3"></select>
+      <label>Vehicle</label><select id="vehicle"><option>Loading...</option></select>
+      <label>Driver 1</label><select id="driver1"><option>Loading...</option></select>
+      <label>Driver 2 (optional)</label><select id="driver2"><option>Loading...</option></select>
+      <label>Driver 3 (optional)</label><select id="driver3"><option>Loading...</option></select>
       <button onclick="submitBooking()">Submit Booking</button>
     </div>
   </div>
@@ -84,11 +81,8 @@
 <script>
 const BASE_URL = "https://pakisa-booking-system.onrender.com";
 
-async function initUI() {
-  const res = await fetch(`${BASE_URL}/api/bootstrap`);
-  const data = await res.json(); 
+async function populateUI(data) {
   const drivers = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
-  
   drivers.forEach(sel => {
     sel.innerHTML = '<option value="">Select Driver</option>';
     data.drivers.forEach(d => {
@@ -100,12 +94,27 @@ async function initUI() {
   });
 
   const vehicleSelect = document.getElementById("vehicle");
+  vehicleSelect.innerHTML = '<option value="">Select Vehicle</option>';
   data.vehicles.forEach(v => {
     const opt = document.createElement("option");
     opt.value = v.registration;
     opt.textContent = v.registration;
     vehicleSelect.appendChild(opt);
   });
+}
+
+async function initUI() {
+  // 1. Try to load from cache instantly
+  const cached = localStorage.getItem('pakisa_cache');
+  if (cached) populateUI(JSON.parse(cached));
+
+  // 2. Fetch fresh data
+  try {
+    const res = await fetch(`${BASE_URL}/api/bootstrap`);
+    const data = await res.json(); 
+    localStorage.setItem('pakisa_cache', JSON.stringify(data));
+    populateUI(data);
+  } catch (err) { console.error("Update failed"); }
 }
 
 async function submitBooking() {
