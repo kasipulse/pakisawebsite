@@ -6,23 +6,35 @@ import { Resend } from "resend";
 
 dotenv.config();
 
-// Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* =========================
-   FIREBASE INIT
-========================= */
-const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const db = admin.firestore();
+/* =========================
+   FIREBASE INIT (WITH SAFETY WRAPPER)
+========================= */
+let db;
+try {
+  if (!process.env.FIREBASE_KEY) {
+    throw new Error("FIREBASE_KEY is missing from environment variables!");
+  }
+  const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+  
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+  
+  db = admin.firestore();
+  console.log("Firebase initialized successfully");
+} catch (err) {
+  console.error("FATAL ERROR: Firebase failed to initialize:", err.message);
+  // We don't exit here so that the app stays alive for logs, 
+  // but DB calls will fail gracefully in routes
+}
 
 /* =========================
    ROUTES
@@ -32,6 +44,7 @@ app.get("/", (req, res) => res.send("Pakisa Logistics Backend is Online 🚀"));
 // Add Driver Route
 app.post("/api/add-driver", async (req, res) => {
   try {
+    if (!db) throw new Error("Database not initialized");
     const ref = await db.collection("drivers").add(req.body);
     res.json({ success: true, id: ref.id });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -40,6 +53,7 @@ app.post("/api/add-driver", async (req, res) => {
 // Add Vehicle Route
 app.post("/api/add-vehicle", async (req, res) => {
   try {
+    if (!db) throw new Error("Database not initialized");
     const ref = await db.collection("vehicles").add(req.body);
     res.json({ success: true, id: ref.id });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -48,6 +62,7 @@ app.post("/api/add-vehicle", async (req, res) => {
 // Bootstrap Dropdown Data
 app.get("/api/bootstrap", async (req, res) => {
   try {
+    if (!db) throw new Error("Database not initialized");
     const driversSnap = await db.collection("drivers").get();
     const vehiclesSnap = await db.collection("vehicles").get();
     const drivers = driversSnap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -56,34 +71,29 @@ app.get("/api/bootstrap", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Bookings Route (Store + Email via Resend API)
+// Bookings Route
 app.post("/api/book", async (req, res) => {
   try {
+    if (!db) throw new Error("Database not initialized");
     const { depot, shift, vehicle, drivers } = req.body;
     
-    // 1. Format the driver list string
     const driverList = drivers
       .map(d => `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`)
       .join("\n\n");
 
-    // 2. Determine Recipients based on Depot and Shift
     let toList = [];
     const ccList = ['tebogo@pakisalogistics.co.za', 'ops1@pakisalogistics.co.za'];
 
     if (depot === 'FedEx') {
-      if (shift === 'Night') {
-        toList = ["stanleym@pakisalogistics.co.za", "ambani.muilambudzi@fedex.com", "lucky.mokoena@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com"];
-      } else {
-        toList = ["SSASecurityControlRoom@corp.ds.fedex.com", "petrus.mphutlane@fedex.com", "moeketsi.malema@fedex.com"];
-      }
+      toList = shift === 'Night' 
+        ? ["stanleym@pakisalogistics.co.za", "ambani.muilambudzi@fedex.com", "lucky.mokoena@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com"]
+        : ["SSASecurityControlRoom@corp.ds.fedex.com", "petrus.mphutlane@fedex.com", "moeketsi.malema@fedex.com"];
     } else if (depot === 'Brima') {
       toList = ["richard.mohlala@brima.com", "gauteng.collections@brima.com", "rebecca.ndhlovu@brima.com"];
     }
 
-    // 3. Construct Email Body with footer message
     const emailBody = `${driverList}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}\n\n---\nSystem Generated Message: This is an automated notification for site access verification.`;
 
-    // 4. Send email using Resend
     const { data, error } = await resend.emails.send({
       from: 'Pakisa <driver1@pakisalogistics.co.za>',
       to: toList,
@@ -93,14 +103,9 @@ app.post("/api/book", async (req, res) => {
       text: emailBody,
     });
 
-    if (error) {
-      console.error("Resend Error:", error);
-      return res.status(500).json({ error: error.message });
-    }
+    if (error) throw new Error(error.message);
 
-    // 5. Save the booking to Firestore
     await db.collection("bookings").add(req.body);
-    
     res.json({ success: true, id: data.id });
   } catch (err) {
     console.error("Booking Error:", err);
@@ -109,7 +114,12 @@ app.post("/api/book", async (req, res) => {
 });
 
 /* =========================
-   START SERVER
+   GLOBAL ERROR HANDLER & START
 ========================= */
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running on", PORT));
+app.use((err, req, res, next) => {
+  console.error("Unhandled Error:", err.stack);
+  res.status(500).send({ error: 'Internal Server Error' });
+});
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => console.log("Server running on port", PORT));
