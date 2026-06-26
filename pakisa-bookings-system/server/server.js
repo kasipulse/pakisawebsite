@@ -54,28 +54,22 @@ try {
    ROUTES
 ====================================== */
 
-app.get("/", (req, res) => {
-    res.send("Pakisa Logistics Backend is Online 🚀");
-});
-
-app.get("/health", async (req, res) => {
-    try {
-
-        await db.collection("drivers").limit(1).get();
-
-        res.json({
-            status: "healthy",
-            firestore: "connected"
-        });
-
-    } catch (err) {
-
-        res.status(500).json({
-            status: "unhealthy",
-            error: err.message
-        });
-
-    }
+app.get("/api/version", (req, res) => {
+    res.json({
+        version: "debug-2026-06-26",
+        server: "pakisa-bookings-system",
+        node: process.version,
+        cwd: process.cwd(),
+        dirname: __dirname,
+        routes: [
+            "/",
+            "/health",
+            "/api/version",
+            "/api/bootstrap",
+            "/api/add-driver",
+            "/api/book"
+        ]
+    });
 });
 
 /* ======================================
