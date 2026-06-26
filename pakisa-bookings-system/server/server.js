@@ -25,13 +25,17 @@ try {
   const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
   
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
+    projectId: serviceAccount.project_id // Explicitly set the Project ID
   });
   
   db = admin.firestore();
-  console.log("Firebase initialized successfully");
+  // Force a test connection to ensure credentials are valid
+  await db.collection("drivers").limit(1).get(); 
+  console.log("Firebase initialized and connection tested successfully");
 } catch (err) {
   console.error("FATAL ERROR: Firebase failed to initialize:", err.message);
+  process.exit(1); // Force a crash so Render restarts and shows the error clearly
 }
 
 /* =========================
