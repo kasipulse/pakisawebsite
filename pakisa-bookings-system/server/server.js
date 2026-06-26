@@ -3,6 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
 import { Resend } from "resend";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
 
@@ -15,31 +20,27 @@ app.use(express.static("public"));
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 /* =========================
-   FIREBASE INIT
+   FIREBASE INIT (FILE-BASED)
 ========================= */
 let db;
 try {
-  if (!process.env.FIREBASE_KEY) {
-    throw new Error("FIREBASE_KEY is missing from environment variables!");
-  }
-  const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+  // Read the key from the serviceAccountKey.json file in your project folder
+  const keyPath = path.join(__dirname, 'serviceAccountKey.json');
+  const serviceAccount = JSON.parse(fs.readFileSync(keyPath, "utf8"));
   
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId: serviceAccount.project_id // Explicitly set the Project ID
+    credential: admin.credential.cert(serviceAccount)
   });
   
   db = admin.firestore();
-  // Force a test connection to ensure credentials are valid
-  await db.collection("drivers").limit(1).get(); 
-  console.log("Firebase initialized and connection tested successfully");
+  console.log("Firebase initialized successfully from local file");
 } catch (err) {
-  console.error("FATAL ERROR: Firebase failed to initialize:", err.message);
-  process.exit(1); // Force a crash so Render restarts and shows the error clearly
+  console.error("FATAL ERROR: Could not load serviceAccountKey.json:", err.message);
+  process.exit(1); 
 }
 
 /* =========================
-   ROUTES WITH DEBUGGING
+   ROUTES
 ========================= */
 app.get("/", (req, res) => res.send("Pakisa Logistics Backend is Online 🚀"));
 
@@ -47,11 +48,9 @@ app.get("/", (req, res) => res.send("Pakisa Logistics Backend is Online 🚀"));
 app.post("/api/add-driver", async (req, res) => {
   try {
     if (!db) throw new Error("Database not initialized");
-    console.log("Adding driver...");
     const ref = await db.collection("drivers").add(req.body);
     res.json({ success: true, id: ref.id });
   } catch (err) { 
-    console.error("ADD DRIVER ERROR:", err.message);
     res.status(500).json({ error: err.message }); 
   }
 });
@@ -60,20 +59,14 @@ app.post("/api/add-driver", async (req, res) => {
 app.get("/api/bootstrap", async (req, res) => {
   try {
     if (!db) throw new Error("Database not initialized");
-    
-    console.log("Attempting to fetch drivers...");
     const driversSnap = await db.collection("drivers").get();
-    
-    console.log("Attempting to fetch vehicles...");
     const vehiclesSnap = await db.collection("vehicles").get();
     
     const drivers = driversSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     const vehicles = vehiclesSnap.docs.map(v => ({ id: v.id, ...v.data() }));
     
-    console.log(`Bootstrap fetch successful: ${drivers.length} drivers, ${vehicles.length} vehicles.`);
     res.json({ drivers, vehicles });
   } catch (err) { 
-    console.error("BOOTSTRAP ROUTE ERROR:", err); // Logs the full stack trace
     res.status(500).json({ error: err.message }); 
   }
 });
@@ -82,8 +75,6 @@ app.get("/api/bootstrap", async (req, res) => {
 app.post("/api/book", async (req, res) => {
   try {
     if (!db) throw new Error("Database not initialized");
-    console.log("Processing booking request...");
-    
     const { depot, shift, vehicle, drivers } = req.body;
     
     const driverList = drivers
@@ -103,7 +94,6 @@ app.post("/api/book", async (req, res) => {
 
     const emailBody = `${driverList}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}\n\n---\nSystem Generated Message: This is an automated notification for site access verification.`;
 
-    console.log("Sending email via Resend...");
     const { data, error } = await resend.emails.send({
       from: 'Pakisa <driver1@pakisalogistics.co.za>',
       to: toList,
@@ -115,22 +105,11 @@ app.post("/api/book", async (req, res) => {
 
     if (error) throw new Error(error.message);
 
-    console.log("Saving booking to Firestore...");
     await db.collection("bookings").add(req.body);
-    
     res.json({ success: true, id: data.id });
   } catch (err) {
-    console.error("BOOKING ROUTE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
-});
-
-/* =========================
-   GLOBAL ERROR HANDLER
-========================= */
-app.use((err, req, res, next) => {
-  console.error("GLOBAL UNHANDLED ERROR:", err.stack);
-  res.status(500).send({ error: 'Internal Server Error' });
 });
 
 const PORT = process.env.PORT || 10000;
