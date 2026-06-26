@@ -55,18 +55,32 @@ app.post("/api/add-driver", async (req, res) => {
   }
 });
 
-// Bootstrap Dropdown Data
 app.get("/api/bootstrap", async (req, res) => {
   try {
     if (!db) throw new Error("Database not initialized");
+    
+    console.log("Fetching drivers...");
     const driversSnap = await db.collection("drivers").get();
+    console.log(`Found ${driversSnap.size} driver docs`);
+
+    console.log("Fetching vehicles...");
     const vehiclesSnap = await db.collection("vehicles").get();
+    console.log(`Found ${vehiclesSnap.size} vehicle docs`);
+    
+    // Debug: Check the first document structure
+    if (!driversSnap.empty) {
+        console.log("Sample driver doc:", driversSnap.docs[0].data());
+    }
+    if (!vehiclesSnap.empty) {
+        console.log("Sample vehicle doc:", vehiclesSnap.docs[0].data());
+    }
     
     const drivers = driversSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     const vehicles = vehiclesSnap.docs.map(v => ({ id: v.id, ...v.data() }));
     
     res.json({ drivers, vehicles });
   } catch (err) { 
+    console.error("BOOTSTRAP ROUTE ERROR:", err);
     res.status(500).json({ error: err.message }); 
   }
 });
