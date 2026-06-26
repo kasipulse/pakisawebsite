@@ -32,8 +32,6 @@ try {
   console.log("Firebase initialized successfully");
 } catch (err) {
   console.error("FATAL ERROR: Firebase failed to initialize:", err.message);
-  // We don't exit here so that the app stays alive for logs, 
-  // but DB calls will fail gracefully in routes
 }
 
 /* =========================
@@ -114,12 +112,7 @@ app.post("/api/book", async (req, res) => {
 });
 
 /* =========================
-   GLOBAL ERROR HANDLER & START
+   START SERVER
 ========================= */
-app.use((err, req, res, next) => {
-  console.error("Unhandled Error:", err.stack);
-  res.status(500).send({ error: 'Internal Server Error' });
-});
-
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => console.log("Server running on port", PORT));
