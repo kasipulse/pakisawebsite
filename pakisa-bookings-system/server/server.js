@@ -7,125 +7,310 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 dotenv.config();
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-/* =========================
-   FIREBASE INIT (STRICT)
-========================= */
+/* ======================================
+   FIREBASE INITIALIZATION
+====================================== */
+
 let db;
+
 try {
-  const keyPath = path.join(__dirname, 'serviceAccountKey.json');
-  const serviceAccount = JSON.parse(fs.readFileSync(keyPath, "utf8"));
-  
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-  
-  db = admin.firestore();
-  console.log("Firebase initialized successfully");
-} catch (err) {
-  console.error("FATAL ERROR: Firebase failed to initialize:", err.message);
-  // CRITICAL: Exit the process so Render knows the service is unhealthy 
-  // and won't keep trying to serve requests with a broken database.
-  process.exit(1); 
-}
+    const keyPath = path.join(__dirname, "serviceAccountKey.json");
 
-/* =========================
-   ROUTES
-========================= */
-app.get("/", (req, res) => res.send("Pakisa Logistics Backend is Online 🚀"));
+    console.log("Loading Firebase key from:", keyPath);
 
-// Add Driver Route
-app.post("/api/add-driver", async (req, res) => {
-  try {
-    if (!db) throw new Error("Database not initialized");
-    const ref = await db.collection("drivers").add(req.body);
-    res.json({ success: true, id: ref.id });
-  } catch (err) { 
-    res.status(500).json({ error: err.message }); 
-  }
-});
+    const serviceAccount = JSON.parse(
+        fs.readFileSync(keyPath, "utf8")
+    );
 
-app.get("/api/bootstrap", async (req, res) => {
-  try {
-    if (!db) throw new Error("Database not initialized");
-    
-    console.log("Fetching drivers...");
-    const driversSnap = await db.collection("drivers").get();
-    console.log(`Found ${driversSnap.size} driver docs`);
-
-    console.log("Fetching vehicles...");
-    const vehiclesSnap = await db.collection("vehicles").get();
-    console.log(`Found ${vehiclesSnap.size} vehicle docs`);
-    
-    // Debug: Check the first document structure
-    if (!driversSnap.empty) {
-        console.log("Sample driver doc:", driversSnap.docs[0].data());
-    }
-    if (!vehiclesSnap.empty) {
-        console.log("Sample vehicle doc:", vehiclesSnap.docs[0].data());
-    }
-    
-    const drivers = driversSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-    const vehicles = vehiclesSnap.docs.map(v => ({ id: v.id, ...v.data() }));
-    
-    res.json({ drivers, vehicles });
-  } catch (err) { 
-    console.error("BOOTSTRAP ROUTE ERROR:", err);
-    res.status(500).json({ error: err.message }); 
-  }
-});
-
-// Bookings Route
-app.post("/api/book", async (req, res) => {
-  try {
-    if (!db) throw new Error("Database not initialized");
-    const { depot, shift, vehicle, drivers } = req.body;
-    
-    const driverList = drivers
-      .map(d => `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`)
-      .join("\n\n");
-
-    let toList = [];
-    const ccList = ['tebogo@pakisalogistics.co.za', 'ops1@pakisalogistics.co.za'];
-
-    if (depot === 'FedEx') {
-      toList = shift === 'Night' 
-        ? ["stanleym@pakisalogistics.co.za", "ambani.muilambudzi@fedex.com", "lucky.mokoena@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com"]
-        : ["SSASecurityControlRoom@corp.ds.fedex.com", "petrus.mphutlane@fedex.com", "moeketsi.malema@fedex.com"];
-    } else if (depot === 'Brima') {
-      toList = ["richard.mohlala@brima.com", "gauteng.collections@brima.com", "rebecca.ndhlovu@brima.com"];
-    }
-
-    const emailBody = `${driverList}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}\n\n---\nSystem Generated Message: This is an automated notification for site access verification.`;
-
-    const { data, error } = await resend.emails.send({
-      from: 'Pakisa <driver1@pakisalogistics.co.za>',
-      to: toList,
-      cc: ccList,
-      reply_to: 'ops1@pakisalogistics.co.za',
-      subject: 'Pakisa Access',
-      text: emailBody,
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
     });
 
-    if (error) throw new Error(error.message);
+    db = admin.firestore();
 
-    await db.collection("bookings").add(req.body);
-    res.json({ success: true, id: data.id });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    console.log("✅ Firebase initialized successfully");
+
+} catch (err) {
+
+    console.error("❌ FIREBASE INITIALIZATION FAILED");
+    console.error(err);
+    process.exit(1);
+
+}
+
+/* ======================================
+   ROUTES
+====================================== */
+
+app.get("/", (req, res) => {
+    res.send("Pakisa Logistics Backend is Online 🚀");
 });
 
+app.get("/health", async (req, res) => {
+    try {
+
+        await db.collection("drivers").limit(1).get();
+
+        res.json({
+            status: "healthy",
+            firestore: "connected"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            status: "unhealthy",
+            error: err.message
+        });
+
+    }
+});
+
+/* ======================================
+   ADD DRIVER
+====================================== */
+
+app.post("/api/add-driver", async (req, res) => {
+
+    try {
+
+        const ref = await db.collection("drivers").add(req.body);
+
+        res.json({
+            success: true,
+            id: ref.id
+        });
+
+    } catch (err) {
+
+        console.error("ADD DRIVER ERROR");
+        console.error(err);
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
+
+});
+
+/* ======================================
+   BOOTSTRAP
+====================================== */
+
+app.get("/api/bootstrap", async (req, res) => {
+
+    try {
+
+        console.log("========== BOOTSTRAP ==========");
+
+        if (!db)
+            throw new Error("Firestore not initialized");
+
+        console.log("Loading collections...");
+
+        const [
+            driversSnap,
+            vehiclesSnap
+        ] = await Promise.all([
+            db.collection("drivers").get(),
+            db.collection("vehicles").get()
+        ]);
+
+        console.log(`Drivers: ${driversSnap.size}`);
+        console.log(`Vehicles: ${vehiclesSnap.size}`);
+
+        const drivers = [];
+        const vehicles = [];
+
+        driversSnap.forEach(doc => {
+
+            try {
+
+                drivers.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+
+            } catch (e) {
+
+                console.error("Bad driver document:", doc.id);
+                console.error(e);
+
+            }
+
+        });
+
+        vehiclesSnap.forEach(doc => {
+
+            try {
+
+                vehicles.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+
+            } catch (e) {
+
+                console.error("Bad vehicle document:", doc.id);
+                console.error(e);
+
+            }
+
+        });
+
+        console.log("Sending bootstrap response");
+
+        res.json({
+            success: true,
+            drivers,
+            vehicles
+        });
+
+    } catch (err) {
+
+        console.error("========== BOOTSTRAP FAILED ==========");
+        console.error(err);
+        console.error(err.stack);
+
+        res.status(500).json({
+            success: false,
+            error: err.message,
+            stack:
+                process.env.NODE_ENV === "development"
+                    ? err.stack
+                    : undefined
+        });
+
+    }
+
+});
+
+/* ======================================
+   BOOKINGS
+====================================== */
+
+app.post("/api/book", async (req, res) => {
+
+    try {
+
+        const {
+            depot,
+            shift,
+            vehicle,
+            drivers = []
+        } = req.body;
+
+        if (!drivers.length)
+            throw new Error("No drivers supplied.");
+
+        const driverList = drivers
+            .map(d =>
+                `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`
+            )
+            .join("\n\n");
+
+        let toList = [];
+
+        const ccList = [
+            "tebogo@pakisalogistics.co.za",
+            "ops1@pakisalogistics.co.za"
+        ];
+
+        if (depot === "FedEx") {
+
+            toList =
+                shift === "Night"
+                    ? [
+                          "stanleym@pakisalogistics.co.za",
+                          "ambani.muilambudzi@fedex.com",
+                          "lucky.mokoena@fedex.com",
+                          "SSASecurityControlRoom@corp.ds.fedex.com"
+                      ]
+                    : [
+                          "SSASecurityControlRoom@corp.ds.fedex.com",
+                          "petrus.mphutlane@fedex.com",
+                          "moeketsi.malema@fedex.com"
+                      ];
+
+        } else if (depot === "Brima") {
+
+            toList = [
+                "richard.mohlala@brima.com",
+                "gauteng.collections@brima.com",
+                "rebecca.ndhlovu@brima.com"
+            ];
+
+        }
+
+        const emailBody = `${driverList}
+
+Vehicle Reg: ${vehicle}
+Shift: ${shift}
+
+---
+System Generated Message: This is an automated notification for site access verification.`;
+
+        const { data, error } = await resend.emails.send({
+
+            from: "Pakisa <driver1@pakisalogistics.co.za>",
+            to: toList,
+            cc: ccList,
+            reply_to: "ops1@pakisalogistics.co.za",
+            subject: "Pakisa Access",
+            text: emailBody
+
+        });
+
+        if (error)
+            throw new Error(error.message);
+
+        const booking = await db.collection("bookings").add(req.body);
+
+        res.json({
+
+            success: true,
+            bookingId: booking.id,
+            emailId: data?.id
+
+        });
+
+    } catch (err) {
+
+        console.error("BOOKING ERROR");
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+
+/* ======================================
+   SERVER
+====================================== */
+
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => console.log("Server running on port", PORT));
+
+app.listen(PORT, "0.0.0.0", () => {
+
+    console.log(`🚀 Server running on port ${PORT}`);
+
+});
