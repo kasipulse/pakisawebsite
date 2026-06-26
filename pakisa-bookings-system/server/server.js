@@ -20,11 +20,10 @@ app.use(express.static("public"));
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 /* =========================
-   FIREBASE INIT (FILE-BASED)
+   FIREBASE INIT (STRICT)
 ========================= */
 let db;
 try {
-  // Read the key from the serviceAccountKey.json file in your project folder
   const keyPath = path.join(__dirname, 'serviceAccountKey.json');
   const serviceAccount = JSON.parse(fs.readFileSync(keyPath, "utf8"));
   
@@ -33,9 +32,11 @@ try {
   });
   
   db = admin.firestore();
-  console.log("Firebase initialized successfully from local file");
+  console.log("Firebase initialized successfully");
 } catch (err) {
-  console.error("FATAL ERROR: Could not load serviceAccountKey.json:", err.message);
+  console.error("FATAL ERROR: Firebase failed to initialize:", err.message);
+  // CRITICAL: Exit the process so Render knows the service is unhealthy 
+  // and won't keep trying to serve requests with a broken database.
   process.exit(1); 
 }
 
