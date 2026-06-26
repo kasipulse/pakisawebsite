@@ -82,55 +82,98 @@
 const BASE_URL = "https://pakisa-booking-system.onrender.com";
 
 async function populateUI(data) {
-  const drivers = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
-  drivers.forEach(sel => {
+  // Defensive check: ensure data and arrays exist before iterating
+  if (!data || !Array.isArray(data.drivers) || !Array.isArray(data.vehicles)) {
+    console.warn("UI update skipped: Data received was incomplete.");
+    return;
+  }
+
+  const driverSelectors = [
+    document.getElementById("driver1"), 
+    document.getElementById("driver2"), 
+    document.getElementById("driver3")
+  ];
+
+  driverSelectors.forEach(sel => {
+    if (!sel) return;
     sel.innerHTML = '<option value="">Select Driver</option>';
     data.drivers.forEach(d => {
       const opt = document.createElement("option");
       opt.value = JSON.stringify(d);
-      opt.textContent = `${d.name} ${d.surname}`;
+      opt.textContent = `${d.name || ''} ${d.surname || ''}`.trim();
       sel.appendChild(opt);
     });
   });
 
   const vehicleSelect = document.getElementById("vehicle");
-  vehicleSelect.innerHTML = '<option value="">Select Vehicle</option>';
-  data.vehicles.forEach(v => {
-    const opt = document.createElement("option");
-    opt.value = v.registration;
-    opt.textContent = v.registration;
-    vehicleSelect.appendChild(opt);
-  });
+  if (vehicleSelect) {
+    vehicleSelect.innerHTML = '<option value="">Select Vehicle</option>';
+    data.vehicles.forEach(v => {
+      const opt = document.createElement("option");
+      opt.value = v.registration;
+      opt.textContent = v.registration;
+      vehicleSelect.appendChild(opt);
+    });
+  }
 }
 
 async function initUI() {
-  // 1. Try to load from cache instantly
+  // 1. Load from cache instantly
   const cached = localStorage.getItem('pakisa_cache');
-  if (cached) populateUI(JSON.parse(cached));
+  if (cached) {
+    try {
+      populateUI(JSON.parse(cached));
+    } catch (e) {
+      console.error("Cache corrupted, clearing...");
+      localStorage.removeItem('pakisa_cache');
+    }
+  }
 
-  // 2. Fetch fresh data
+  // 2. Fetch fresh data with error handling
   try {
     const res = await fetch(`${BASE_URL}/api/bootstrap`);
-    const data = await res.json(); 
+    if (!res.ok) throw new Error(`Server status: ${res.status}`);
+    
+    const data = await res.json();
     localStorage.setItem('pakisa_cache', JSON.stringify(data));
     populateUI(data);
-  } catch (err) { console.error("Update failed"); }
+  } catch (err) { 
+    console.error("Update failed:", err.message); 
+  }
 }
 
 async function submitBooking() {
-  const d1Val = document.getElementById("driver1").value;
-  if (!d1Val) return alert("Please select Driver 1");
+  const d1 = document.getElementById("driver1").value;
+  if (!d1) return alert("Please select Driver 1");
+
   const payload = {
     depot: document.getElementById("depot").value,
     shift: document.getElementById("shift").value,
     vehicle: document.getElementById("vehicle").value,
-    drivers: [JSON.parse(d1Val)]
+    drivers: [JSON.parse(d1)]
   };
-  if (document.getElementById("driver2").value) payload.drivers.push(JSON.parse(document.getElementById("driver2").value));
-  if (document.getElementById("driver3").value) payload.drivers.push(JSON.parse(document.getElementById("driver3").value));
+
+  const d2 = document.getElementById("driver2").value;
+  const d3 = document.getElementById("driver3").value;
+  if (d2) payload.drivers.push(JSON.parse(d2));
+  if (d3) payload.drivers.push(JSON.parse(d3));
   
-  const res = await fetch(`${BASE_URL}/api/book`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-  if (res.ok) alert("Booking submitted!"); else alert("Failed to submit.");
+  try {
+    const res = await fetch(`${BASE_URL}/api/book`, { 
+      method: "POST", 
+      headers: { "Content-Type": "application/json" }, 
+      body: JSON.stringify(payload) 
+    });
+    
+    if (res.ok) {
+      alert("Booking submitted!");
+    } else {
+      const errData = await res.json();
+      alert("Failed to submit: " + (errData.error || "Unknown error"));
+    }
+  } catch (err) {
+    alert("Network error. Please try again.");
+  }
 }
 </script>
 </body>
