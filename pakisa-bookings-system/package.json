@@ -1,13 +1,9 @@
 {
-  "name": "pakisa-booking-system",
+  "name": "pakisa-bookings-system",
   "version": "1.0.0",
-  "description": "Pakisa Logistics Booking System (Express + Firestore + Email)",
-  "main": "server.js",
   "type": "module",
-"scripts": {
-  "start": "node server/server.js",
-  "dev": "nodemon server/server.js"
-},
+  "scripts": {
+    "start": "node server/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -15,11 +11,5 @@
     "express": "^4.19.2",
     "firebase-admin": "^12.5.0",
     "resend": "^4.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
-  },
-  "engines": {
-    "node": ">=18"
   }
 }
