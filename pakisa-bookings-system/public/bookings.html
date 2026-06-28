@@ -1,180 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pakisa Booking System</title>
-  
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyDlRegs0tOy3YENNf7A12Gnxb_Plvyvi7E",
-      authDomain: "pakisa-bookings.firebaseapp.com",
-      projectId: "pakisa-bookings",
-      storageBucket: "pakisa-bookings.firebasestorage.app",
-      messagingSenderId: "65720853256",
-      appId: "1:65720853256:web:1f3497edd91a38eb1ac2bd"
-    };
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import admin from "firebase-admin";
+import { Resend } from "resend";
+import path from "path";
+import { fileURLToPath } from "url";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
 
-    window.login = async () => {
-      try { await signInWithPopup(auth, provider); }
-      catch (e) { alert("Login failed: " + e.message); }
-    };
+// 1. IMPROVED CORS: Explicitly allow your domain
+app.use(cors({
+    origin: ['https://www.pakisalogistics.co.za', 'https://pakisalogistics.co.za'],
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app-screen').style.display = 'block';
-        initUI();
-      } else {
-        document.getElementById('login-screen').style.display = 'block';
-        document.getElementById('app-screen').style.display = 'none';
-      }
+app.use(express.json());
+app.use(express.static("public"));
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+/* ======================================
+   FIREBASE INITIALIZATION
+====================================== */
+let db;
+try {
+    // SECURITY FIX: If SERVICE_ACCOUNT_JSON is in environment variables, use it.
+    // Otherwise, fallback to the local file (for local development).
+    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON 
+        ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
+        : JSON.parse(fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"), "utf8"));
+
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
     });
-  </script>
-
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: #0f172a; color: white; }
-    header { padding: 15px; background: #111827; font-size: 18px; font-weight: bold; text-align: center; }
-    .container { padding: 15px; display: grid; gap: 20px; }
-    @media (min-width: 768px) { .container { grid-template-columns: 1fr 1fr; } }
-    .card { background: #1f2937; padding: 20px; border-radius: 12px; }
-    label { display: block; margin-top: 10px; font-size: 14px; color: #9ca3af; }
-    select { width: 100%; padding: 12px; margin-top: 6px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 6px; }
-    button { padding: 15px; width: 100%; margin-top: 20px; cursor: pointer; background: #2563eb; border: none; color: white; border-radius: 8px; font-weight: bold; }
-  </style>
-</head>
-
-<body>
-
-<div id="login-screen" style="display:none; text-align: center; margin-top: 100px;">
-  <div class="card" style="max-width: 300px; margin: auto;">
-    <h3>Pakisa Access</h3>
-    <button onclick="login()" style="background: #db4437;">Login with Google</button>
-  </div>
-</div>
-
-<div id="app-screen" style="display:none;">
-  <header>📦 Pakisa Booking System</header>
-  <div class="container">
-    <div class="card">
-      <h3>Create Booking</h3>
-      <label>Depot</label>
-      <select id="depot"><option value="FedEx">FedEx</option><option value="Brima">Brima</option></select>
-      <label>Shift</label>
-      <select id="shift"><option value="Morning">Morning</option><option value="Night">Night</option></select>
-      <label>Vehicle</label><select id="vehicle"><option>Loading...</option></select>
-      <label>Driver 1</label><select id="driver1"><option>Loading...</option></select>
-      <label>Driver 2 (optional)</label><select id="driver2"><option>Loading...</option></select>
-      <label>Driver 3 (optional)</label><select id="driver3"><option>Loading...</option></select>
-      <button onclick="submitBooking()">Submit Booking</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const BASE_URL = "https://pakisa-booking-system.onrender.com";
-
-async function populateUI(data) {
-  // Defensive check: ensure data and arrays exist before iterating
-  if (!data || !Array.isArray(data.drivers) || !Array.isArray(data.vehicles)) {
-    console.warn("UI update skipped: Data received was incomplete.");
-    return;
-  }
-
-  const driverSelectors = [
-    document.getElementById("driver1"), 
-    document.getElementById("driver2"), 
-    document.getElementById("driver3")
-  ];
-
-  driverSelectors.forEach(sel => {
-    if (!sel) return;
-    sel.innerHTML = '<option value="">Select Driver</option>';
-    data.drivers.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = JSON.stringify(d);
-      opt.textContent = `${d.name || ''} ${d.surname || ''}`.trim();
-      sel.appendChild(opt);
-    });
-  });
-
-  const vehicleSelect = document.getElementById("vehicle");
-  if (vehicleSelect) {
-    vehicleSelect.innerHTML = '<option value="">Select Vehicle</option>';
-    data.vehicles.forEach(v => {
-      const opt = document.createElement("option");
-      opt.value = v.registration;
-      opt.textContent = v.registration;
-      vehicleSelect.appendChild(opt);
-    });
-  }
+    db = admin.firestore();
+    console.log("✅ Firebase initialized successfully");
+} catch (err) {
+    console.error("❌ FIREBASE INITIALIZATION FAILED:", err);
+    process.exit(1);
 }
 
-async function initUI() {
-  // 1. Load from cache instantly
-  const cached = localStorage.getItem('pakisa_cache');
-  if (cached) {
+/* ======================================
+   ROUTES
+====================================== */
+app.get("/api/bootstrap", async (req, res) => {
     try {
-      populateUI(JSON.parse(cached));
-    } catch (e) {
-      console.error("Cache corrupted, clearing...");
-      localStorage.removeItem('pakisa_cache');
+        const [driversSnap, vehiclesSnap] = await Promise.all([
+            db.collection("drivers").get(),
+            db.collection("vehicles").get()
+        ]);
+
+        const drivers = driversSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const vehicles = vehiclesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        res.json({ success: true, drivers, vehicles });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
-  }
+});
 
-  // 2. Fetch fresh data with error handling
-  try {
-    const res = await fetch(`${BASE_URL}/api/bootstrap`);
-    if (!res.ok) throw new Error(`Server status: ${res.status}`);
-    
-    const data = await res.json();
-    localStorage.setItem('pakisa_cache', JSON.stringify(data));
-    populateUI(data);
-  } catch (err) { 
-    console.error("Update failed:", err.message); 
-  }
-}
-
-async function submitBooking() {
-  const d1 = document.getElementById("driver1").value;
-  if (!d1) return alert("Please select Driver 1");
-
-  const payload = {
-    depot: document.getElementById("depot").value,
-    shift: document.getElementById("shift").value,
-    vehicle: document.getElementById("vehicle").value,
-    drivers: [JSON.parse(d1)]
-  };
-
-  const d2 = document.getElementById("driver2").value;
-  const d3 = document.getElementById("driver3").value;
-  if (d2) payload.drivers.push(JSON.parse(d2));
-  if (d3) payload.drivers.push(JSON.parse(d3));
-  
-  try {
-    const res = await fetch(`${BASE_URL}/api/book`, { 
-      method: "POST", 
-      headers: { "Content-Type": "application/json" }, 
-      body: JSON.stringify(payload) 
-    });
-    
-    if (res.ok) {
-      alert("Booking submitted!");
-    } else {
-      const errData = await res.json();
-      alert("Failed to submit: " + (errData.error || "Unknown error"));
+app.post("/api/book", async (req, res) => {
+    try {
+        const { depot, shift, vehicle, drivers = [] } = req.body;
+        
+        // ... (Keep your existing Resend and DB booking logic here) ...
+        
+        const booking = await db.collection("bookings").add(req.body);
+        res.json({ success: true, bookingId: booking.id });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
-  } catch (err) {
-    alert("Network error. Please try again.");
-  }
-}
-</script>
-</body>
-</html>
+});
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+});
