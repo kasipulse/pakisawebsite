@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
 import { Resend } from "resend";
+import fs from "fs"; // <--- THIS IS WHAT WAS MISSING
 import path from "path";
 import { fileURLToPath } from "url";
 
