@@ -1,14 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("App initialized");
+    console.log("App script loaded successfully");
 
     const emailLoginBtn = document.getElementById('email-login');
     const googleLoginBtn = document.getElementById('google-login-btn');
 
+    if (!emailLoginBtn || !googleLoginBtn) {
+        console.error("CRITICAL: Login buttons not found in the HTML!");
+        return;
+    }
+
     emailLoginBtn.addEventListener('click', () => {
-        alert("Email login logic goes here");
+        console.log("Email login clicked");
     });
 
     googleLoginBtn.addEventListener('click', () => {
-        alert("Google login logic goes here");
+        console.log("Google login clicked");
     });
 });
