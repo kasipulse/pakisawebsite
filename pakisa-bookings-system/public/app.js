@@ -1,26 +1,39 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const emailLoginBtn = document.getElementById('email-login');
-    const googleLoginBtn = document.getElementById('google-login-btn');
+// Your Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDlRegs0tOy3YENNf7A12Gnxb_Plvyvi7E",
+  authDomain: "pakisa-bookings.firebaseapp.com",
+  projectId: "pakisa-bookings",
+  storageBucket: "pakisa-bookings.firebasestorage.app",
+  messagingSenderId: "65720853256",
+  appId: "1:65720853256:web:1f3497edd91a38eb1ac2bd",
+  measurementId: "G-13TQ98XXTS"
+};
 
-    emailLoginBtn.addEventListener('click', async () => {
-        try {
-            console.log("Email login attempted...");
-            // If you are using Firebase Auth, this is where you call signInWithEmailAndPassword
-            alert("Email login logic is ready to be connected to Firebase.");
-        } catch (error) {
-            console.error("Email Error:", error);
-            alert("Email login failed: " + error.message);
-        }
+// Initialize Firebase (Compat version)
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    const emailLoginBtn = document.getElementById('email-login');
+
+    // Google Login Logic
+    googleLoginBtn.addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                console.log("Logged in:", result.user.email);
+            })
+            .catch((error) => {
+                console.error("Auth Error:", error.message);
+            });
     });
 
-    googleLoginBtn.addEventListener('click', async () => {
-        try {
-            console.log("Google login attempted...");
-            // If you are using Firebase Auth, this is where you call signInWithPopup
-            alert("Google login logic is ready to be connected to Firebase.");
-        } catch (error) {
-            console.error("Google Error:", error);
-            alert("Google login failed: " + error.message);
-        }
+    // Email Login Logic
+    emailLoginBtn.addEventListener('click', () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        auth.signInWithEmailAndPassword(email, password)
+            .catch((error) => alert("Login Error: " + error.message));
     });
 });
