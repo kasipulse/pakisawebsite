@@ -12,18 +12,21 @@
         
         <h2>Sign In</h2>
         
-        <!-- Email Login -->
-        <input type="email" placeholder="Email Address" id="email">
-        <input type="password" placeholder="Password" id="password">
+        <input type="email" placeholder="Email Address" id="email" required>
+        <input type="password" placeholder="Password" id="password" required>
         <button id="email-login">Sign In with Email</button>
         
         <div class="divider"><span>OR</span></div>
         
-        <!-- Google Login -->
         <button id="google-login-btn" class="google-btn">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
             Sign in with Google
         </button>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    
+    <script src="app.js"></script>
 </body>
 </html>
