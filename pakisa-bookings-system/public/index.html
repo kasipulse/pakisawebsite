@@ -1,20 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MM Courier Booking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <h1>Booking System</h1>
-    <button onclick="testAPI()">Test Connection</button>
-    <pre id="output"></pre>
 
-    <script>
-        async function testAPI() {
-            try {
-                const response = await fetch('/api/bootstrap');
-                const data = await response.json();
-                document.getElementById('output').innerText = JSON.stringify(data, null, 2);
-            } catch (err) {
-                document.getElementById('output').innerText = "Error: " + err.message;
-            }
-        }
-    </script>
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="logo">
+        </div>
+
+        <div id="login-section">
+            <button id="google-login-btn">Sign in with Google</button>
+        </div>
+
+        <div id="booking-form-container" style="display:none;">
+            <h2>Create Booking</h2>
+            <form id="bookingForm">
+                <label>Depot</label>
+                <select id="depot"><option>FedEx</option><option>Brima</option></select>
+                
+                <label>Shift</label>
+                <select id="shift"><option>Morning</option><option>Night</option></select>
+                
+                <label>Vehicle</label>
+                <select id="vehicle"><option>Select Vehicle</option></select>
+                
+                <label>Driver 1</label>
+                <select id="driver1"><option>Select Driver</option></select>
+                
+                <button type="submit">Submit Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
