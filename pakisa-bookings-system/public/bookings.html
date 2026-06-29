@@ -1,1 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Booking System</h1>
+    <button onclick="testAPI()">Test Connection</button>
+    <pre id="output"></pre>
 
+    <script>
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/bootstrap');
+                const data = await response.json();
+                document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('output').innerText = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
