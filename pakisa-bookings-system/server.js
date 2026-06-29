@@ -8,12 +8,16 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-// 1. GLOBAL CORS: Explicitly allow your domain
-app.use(cors({
+// 1. IMPROVED CORS: Handle preflight and specific origins
+const corsOptions = {
     origin: ['https://www.pakisalogistics.co.za', 'https://pakisalogistics.co.za'],
     methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Explicitly handle preflight for all routes
 
 app.use(express.json());
 app.use(express.static("public"));
@@ -21,7 +25,7 @@ app.use(express.static("public"));
 // 2. Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// 3. FIREBASE INITIALIZATION (Using Environment Variable)
+// 3. FIREBASE INITIALIZATION
 try {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
     admin.initializeApp({
@@ -55,7 +59,6 @@ app.get("/api/bootstrap", async (req, res) => {
 // 5. BOOKING ROUTE
 app.post("/api/book", async (req, res) => {
     try {
-        // ... (Insert your logic for email and DB booking here)
         const booking = await db.collection("bookings").add(req.body);
         res.json({ success: true, bookingId: booking.id });
     } catch (err) {
