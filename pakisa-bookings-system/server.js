@@ -8,16 +8,16 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-// 1. IMPROVED CORS: Handle preflight and specific origins
-const corsOptions = {
-    origin: ['https://www.pakisalogistics.co.za', 'https://pakisalogistics.co.za'],
+// 1. CORS DISABLED: Allow all origins and disable credential requirements
+app.use(cors({
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-};
+    credentials: false
+}));
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Explicitly handle preflight for all routes
+// Explicitly handle preflight for all routes
+app.options('*', cors()); 
 
 app.use(express.json());
 app.use(express.static("public"));
