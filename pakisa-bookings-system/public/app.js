@@ -17,16 +17,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleLoginBtn = document.getElementById('google-login-btn');
     const emailLoginBtn = document.getElementById('email-login');
 
-    // Google Login Logic
-    googleLoginBtn.addEventListener('click', () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                console.log("Logged in:", result.user.email);
-            })
-            .catch((error) => {
-                console.error("Auth Error:", error.message);
-            });
+   // Change your Google Login button logic to this:
+document.getElementById('google-login-btn').addEventListener('click', () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    // This avoids the "popup" security blocks entirely
+    auth.signInWithRedirect(provider);
+});
+
+// Add this to handle the result when the user returns
+auth.getRedirectResult()
+    .then((result) => {
+        if (result.user) {
+            console.log("Logged in via redirect:", result.user.email);
+            window.location.assign("/dashboard.html");
+        }
+    })
+    .catch((error) => {
+        console.error("Redirect Error:", error.message);
     });
 
     // Email Login Logic
