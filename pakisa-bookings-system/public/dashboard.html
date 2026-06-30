@@ -5,17 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MM Courier Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Hide areas by default to prevent layout flashing */
+        #login-area, #booking-area { display: none; }
+    </style>
 </head>
 <body>
-    <div class="container">
+
+    <div id="login-area" class="container">
+        <h1>Login to Pakisa Hub</h1>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button id="email-login">Sign In</button>
+        <button id="google-login-btn">Sign in with Google</button>
+    </div>
+
+    <div id="booking-area" class="container">
         <h1>Welcome to Pakisa Hub</h1>
         <p id="user-display"></p>
         <button id="logout-btn">Log Out</button>
         
-        <div id="booking-area">
-            <h2>Active Bookings</h2>
-            </div>
-    </div>
+        <h2>Active Bookings</h2>
+        </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
