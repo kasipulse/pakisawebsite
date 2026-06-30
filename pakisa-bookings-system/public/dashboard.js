@@ -1,4 +1,4 @@
-// 1. ADD YOUR CONFIGURATION HERE (MUST BE AT THE TOP)
+// 1. Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDlRegs0tOy3YENNf7A12Gnxb_Plvyvi7E",
   authDomain: "pakisa-bookings.firebaseapp.com",
@@ -9,26 +9,40 @@ const firebaseConfig = {
   measurementId: "G-13TQ98XXTS"
 };
 
-// 2. Initialize Firebase (This fixes the 'no app' error)
+// 2. Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// 3. Now define auth
 const auth = firebase.auth();
 
-// Redirect if not logged in
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        document.getElementById('user-display').innerText = "Logged in as: " + user.email;
-    } else {
-        window.location.href = "/"; // Back to login
-    }
-});
+// 3. Handle Auth State with a Delay Guard
+// We hide the content initially to prevent a "flash" of the login page
+document.addEventListener('DOMContentLoaded', () => {
+    const userDisplay = document.getElementById('user-display');
+    const logoutBtn = document.getElementById('logout-btn');
 
-// Logout functionality
-document.getElementById('logout-btn').addEventListener('click', () => {
-    auth.signOut().then(() => {
-        window.location.href = "/";
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in, display their email
+            if (userDisplay) {
+                userDisplay.innerText = "Logged in as: " + user.email;
+            }
+        } else {
+            // User is not signed in, redirect to login
+            // Only redirect if we aren't already at the root
+            if (window.location.pathname !== "/") {
+                window.location.href = "/";
+            }
+        }
     });
+
+    // 4. Logout functionality
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                window.location.href = "/";
+            });
+        });
+    }
 });
