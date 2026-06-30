@@ -10,37 +10,40 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (Compat version)
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const auth = firebase.auth();
 
 document.addEventListener('DOMContentLoaded', () => {
     const googleLoginBtn = document.getElementById('google-login-btn');
     const emailLoginBtn = document.getElementById('email-login');
 
-   // Change your Google Login button logic to this:
-document.getElementById('google-login-btn').addEventListener('click', () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    // This avoids the "popup" security blocks entirely
-    auth.signInWithRedirect(provider);
-});
-
-// Add this to handle the result when the user returns
-auth.getRedirectResult()
-    .then((result) => {
-        if (result.user) {
-            console.log("Logged in via redirect:", result.user.email);
-            window.location.assign("/dashboard.html");
-        }
-    })
-    .catch((error) => {
-        console.error("Redirect Error:", error.message);
+    // Google Login Logic (Redirect)
+    googleLoginBtn.addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithRedirect(provider);
     });
 
-    // Email Login Logic
+    // Handle Redirect Result
+    auth.getRedirectResult()
+        .then((result) => {
+            if (result.user) {
+                console.log("Logged in via redirect:", result.user.email);
+                window.location.assign("/dashboard.html");
+            }
+        })
+        .catch((error) => console.error("Redirect Error:", error.message));
+
+    // Email Login Logic (With Redirect)
     emailLoginBtn.addEventListener('click', () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        
         auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+                window.location.assign("/dashboard.html");
+            })
             .catch((error) => alert("Login Error: " + error.message));
     });
 });
