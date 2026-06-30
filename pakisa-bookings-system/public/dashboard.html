@@ -2,34 +2,97 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MM Courier Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>MM Courier Hub</title>
     <style>
-        /* Hide areas by default to prevent layout flashing */
-        #login-area, #booking-area { display: none; }
+        body { font-family: -apple-system, sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .card { background: #1f2937; padding: 20px; border-radius: 12px; max-width: 500px; margin: auto; }
+        select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #374151; background: #374151; color: white; }
+        button { background: #2563eb; font-weight: bold; cursor: pointer; }
+        label { font-size: 13px; color: #9ca3af; }
     </style>
 </head>
 <body>
 
-    <div id="login-area" class="container">
-        <h1>Login to Pakisa Hub</h1>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button id="email-login">Sign In</button>
-        <button id="google-login-btn">Sign in with Google</button>
-    </div>
+<div class="card">
+    <h3>MM Courier Booking</h3>
+    
+    <label>Depot</label>
+    <select id="depot" onchange="toggleShift()">
+        <option value="FedEx">FedEx</option>
+        <option value="Brima">Brima</option>
+    </select>
 
-    <div id="booking-area" class="container">
-        <h1>Welcome to Pakisa Hub</h1>
-        <p id="user-display"></p>
-        <button id="logout-btn">Log Out</button>
-        
-        <h2>Active Bookings</h2>
-        </div>
+    <label>Shift</label>
+    <select id="shift">
+        <option value="Morning">Morning</option>
+        <option value="Night">Night</option>
+    </select>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="dashboard.js"></script>
+    <label>Vehicle</label>
+    <select id="vehicle"></select>
+
+    <label>Primary Driver</label>
+    <select id="driver1"></select>
+
+    <label>Assistant 1 (Optional)</label>
+    <select id="driver2"><option value="">None</option></select>
+
+    <label>Assistant 2 (Optional)</label>
+    <select id="driver3"><option value="">None</option></select>
+
+    <button onclick="submitBooking()">Submit Booking</button>
+</div>
+
+<script>
+const API_BASE = ""; // Keep empty to use relative path if served by Express
+
+async function initUI() {
+    const res = await fetch(`${API_BASE}/api/bootstrap`);
+    const data = await res.json();
+    
+    // Populate Vehicles
+    const vSelect = document.getElementById("vehicle");
+    data.vehicles.forEach(v => vSelect.innerHTML += `<option value="${v.registration}">${v.registration}</option>`);
+
+    // Populate Drivers
+    const dSelects = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
+    data.drivers.forEach(d => {
+        const val = JSON.stringify({name: d.name, surname: d.surname, idNumber: d.idNumber});
+        dSelects.forEach(sel => sel.innerHTML += `<option value='${val}'>${d.name} ${d.surname}</option>`);
+    });
+}
+
+function toggleShift() {
+    const depot = document.getElementById("depot").value;
+    const shift = document.getElementById("shift");
+    // Brima only has one shift, FedEx has two
+    shift.disabled = (depot === "Brima");
+    if (depot === "Brima") shift.value = "Morning";
+}
+
+async function submitBooking() {
+    const payload = {
+        depot: document.getElementById("depot").value,
+        shift: document.getElementById("shift").value,
+        vehicle: document.getElementById("vehicle").value,
+        drivers: [
+            JSON.parse(document.getElementById("driver1").value),
+            ...(document.getElementById("driver2").value ? [JSON.parse(document.getElementById("driver2").value)] : []),
+            ...(document.getElementById("driver3").value ? [JSON.parse(document.getElementById("driver3").value)] : [])
+        ]
+    };
+
+    const res = await fetch(`${API_BASE}/api/book`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    if (res.ok) alert("Booking submitted and email sent!");
+    else alert("Failed to submit.");
+}
+
+initUI();
+</script>
 </body>
 </html>
