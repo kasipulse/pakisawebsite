@@ -11,29 +11,21 @@ const firebaseConfig = {
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// Immediately hide content to prevent flicker
-document.documentElement.style.visibility = 'hidden';
-
-// AUTH STATE OBSERVER
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        // User is logged in!
-        document.getElementById('user-display').innerText = "Logged in as: " + user.email;
-        document.documentElement.style.visibility = 'visible';
-    } else {
-        // Not logged in. 
-        // Force-wait 2 seconds to see if a session appears late (due to redirect delay)
-        setTimeout(() => {
-            if (!auth.currentUser) {
-                console.log("No auth detected, forcing redirect to index.");
-                window.location.replace("/");
-            } else {
-                document.documentElement.style.visibility = 'visible';
-            }
-        }, 2000);
-    }
-});
-
-document.getElementById('logout-btn')?.addEventListener('click', () => {
-    auth.signOut().then(() => window.location.replace("/"));
+document.addEventListener('DOMContentLoaded', () => {
+    // Select both the login UI and the dashboard UI
+    const loginArea = document.getElementById('login-area'); // Add this to your HTML
+    const dashboardArea = document.getElementById('booking-area');
+    
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Logged in: Show dashboard, hide login
+            if (loginArea) loginArea.style.display = 'none';
+            if (dashboardArea) dashboardArea.style.display = 'block';
+            document.getElementById('user-display').innerText = "Logged in as: " + user.email;
+        } else {
+            // Not logged in: Show login, hide dashboard
+            if (loginArea) loginArea.style.display = 'block';
+            if (dashboardArea) dashboardArea.style.display = 'none';
+        }
+    });
 });
