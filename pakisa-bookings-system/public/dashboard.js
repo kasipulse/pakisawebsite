@@ -11,17 +11,26 @@ const firebaseConfig = {
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// Force the dashboard to be invisible until we know the user is logged in
+// Immediately hide content to prevent flicker
 document.documentElement.style.visibility = 'hidden';
 
+// AUTH STATE OBSERVER
 auth.onAuthStateChanged((user) => {
     if (user) {
-        // User IS logged in, show the content
+        // User is logged in!
         document.getElementById('user-display').innerText = "Logged in as: " + user.email;
         document.documentElement.style.visibility = 'visible';
     } else {
-        // User IS NOT logged in, perform the forced redirect
-        window.location.replace("/"); 
+        // Not logged in. 
+        // Force-wait 2 seconds to see if a session appears late (due to redirect delay)
+        setTimeout(() => {
+            if (!auth.currentUser) {
+                console.log("No auth detected, forcing redirect to index.");
+                window.location.replace("/");
+            } else {
+                document.documentElement.style.visibility = 'visible';
+            }
+        }, 2000);
     }
 });
 
