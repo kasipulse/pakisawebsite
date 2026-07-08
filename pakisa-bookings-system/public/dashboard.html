@@ -12,9 +12,21 @@
         select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #374151; background: #374151; color: white; }
         button { background: #2563eb; font-weight: bold; cursor: pointer; }
         label { font-size: 13px; color: #9ca3af; }
+        
+        /* Loading Overlay */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+        .loader-logo { width: 150px; height: auto; margin-bottom: 20px; }
+        .loader-bar { width: 200px; height: 4px; background: #374151; border-radius: 2px; overflow: hidden; }
+        .loader-progress { width: 40%; height: 100%; background: #2563eb; animation: load 1.5s infinite; }
+        @keyframes load { 0% { margin-left: -50%; } 100% { margin-left: 100%; } }
     </style>
 </head>
 <body>
+
+<div id="loader">
+    <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="loader-logo">
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+</div>
 
 <div class="card">
     <h3>Pakisa Booking</h3>
@@ -47,28 +59,31 @@
 </div>
 
 <script>
-const API_BASE = ""; // Keep empty to use relative path if served by Express
+const API_BASE = ""; 
 
 async function initUI() {
-    const res = await fetch(`${API_BASE}/api/bootstrap`);
-    const data = await res.json();
-    
-    // Populate Vehicles
-    const vSelect = document.getElementById("vehicle");
-    data.vehicles.forEach(v => vSelect.innerHTML += `<option value="${v.registration}">${v.registration}</option>`);
+    try {
+        const res = await fetch(`${API_BASE}/api/bootstrap`);
+        const data = await res.json();
+        
+        const vSelect = document.getElementById("vehicle");
+        data.vehicles.forEach(v => vSelect.innerHTML += `<option value="${v.registration}">${v.registration}</option>`);
 
-    // Populate Drivers
-    const dSelects = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
-    data.drivers.forEach(d => {
-        const val = JSON.stringify({name: d.name, surname: d.surname, idNumber: d.idNumber});
-        dSelects.forEach(sel => sel.innerHTML += `<option value='${val}'>${d.name} ${d.surname}</option>`);
-    });
+        const dSelects = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
+        data.drivers.forEach(d => {
+            const val = JSON.stringify({name: d.name, surname: d.surname, idNumber: d.idNumber});
+            dSelects.forEach(sel => sel.innerHTML += `<option value='${val}'>${d.name} ${d.surname}</option>`);
+        });
+        
+        document.getElementById("loader").style.display = "none";
+    } catch (e) {
+        console.error("Initialization failed:", e);
+    }
 }
 
 function toggleShift() {
     const depot = document.getElementById("depot").value;
     const shift = document.getElementById("shift");
-    // Brima only has one shift, FedEx has two
     shift.disabled = (depot === "Brima");
     if (depot === "Brima") shift.value = "Morning";
 }
