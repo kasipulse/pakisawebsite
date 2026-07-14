@@ -53,7 +53,7 @@ app.post("/api/book", async (req, res) => {
         if (depot === "FedEx") {
             toRecipients = (shift === "Morning") 
                 ? ["SSASOC@fedex.com", "moeketsi.malema@fedex.com", "petrus.mphutlane@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com", "moeketsi.ncongwane@fedex.com"]
-                : ["SSASOC@fedex.com", "lucky.mokoena@fedex.com", "ntomibikayise.mntande.osv@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com", "ambani.muilambudzi@fedex.com"];
+                : ["SSASOC@fedex.com", "lucky.mokoena@fedex.com", "ntomibikayise.mntande.osv@fedex.com", "SSASecurityControlRoom@corp.ds.fedex.com", "ambani.muilambudzi@fedex.com", "stshabalala@fedex.com", "sipho.manaka@fedex.com", "selby.mufamadi@fedex.com", "valdemiro.macome@fedex.com"];
         } else if (depot === "Brima") {
             toRecipients = ["rebecca.ndhlovu@brima.com", "gauteng.collections@brima.com", "richard.mohlala@brima.com"];
         }
