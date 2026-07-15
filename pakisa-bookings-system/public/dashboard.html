@@ -9,28 +9,28 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
+        // Updated with your correct pakisa-bookings project config
         const firebaseConfig = {
-            apiKey: "AIzaSyBc9Hs-Oef3hSuuRY1KWiP51E8oVy4yKik",
-            authDomain: "tripsheet-9ea74.firebaseapp.com",
-            projectId: "tripsheet-9ea74",
-            storageBucket: "tripsheet-9ea74.firebasestorage.app",
-            messagingSenderId: "610091199059",
-            appId: "1:610091199059:web:99bc24ed74e78d899834a6",
-            measurementId: "G-TVYK9KF102"
+            apiKey: "AIzaSyDlRegs0tOy3YENNf7A12Gnxb_Plvyvi7E",
+            authDomain: "pakisa-bookings.firebaseapp.com",
+            projectId: "pakisa-bookings",
+            storageBucket: "pakisa-bookings.firebasestorage.app",
+            messagingSenderId: "65720853256",
+            appId: "1:65720853256:web:1f3497edd91a38eb1ac2bd",
+            measurementId: "G-13TQ98XXTS"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // Monitor Auth State - No infinite loop here
+        // Monitor Auth State
         onAuthStateChanged(auth, (user) => {
             const userDisplay = document.getElementById("userDisplay");
             if (user) {
                 userDisplay.innerText = "User: " + (user.displayName || user.email);
             } else {
-                // If not logged in, just show the login button, don't redirect
-                userDisplay.innerHTML = '<button onclick="login()" style="padding:5px; font-size:10px;">Sign In with Google</button>';
+                userDisplay.innerHTML = '<button onclick="login()" style="padding:5px; font-size:10px; cursor:pointer;">Sign In with Google</button>';
             }
         });
 
