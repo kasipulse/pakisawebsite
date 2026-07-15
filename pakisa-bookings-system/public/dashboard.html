@@ -4,9 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pakisa Booking</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBc9Hs-Oef3hSuuRY1KWiP51E8oVy4yKik",
+            authDomain: "tripsheet-9ea74.firebaseapp.com",
+            projectId: "tripsheet-9ea74",
+            storageBucket: "tripsheet-9ea74.firebasestorage.app",
+            messagingSenderId: "610091199059",
+            appId: "1:610091199059:web:99bc24ed74e78d899834a6",
+            measurementId: "G-TVYK9KF102"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Monitor Auth
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById("userDisplay").innerText = "User: " + (user.displayName || user.email);
+            } else {
+                window.location.href = "/login.html"; // Update if your login page has a different name
+            }
+        });
+
+        // 4-Hour Logout Timer
+        setTimeout(() => {
+            signOut(auth).then(() => {
+                alert("Session expired.");
+                window.location.reload();
+            });
+        }, 14400000);
+
+        window.logout = () => {
+            signOut(auth);
+        };
+    </script>
     
     <style>
         body { font-family: -apple-system, sans-serif; background: #ffffff; color: #1f2937; padding: 20px; }
@@ -75,31 +111,6 @@
 </div>
 
 <script>
-    // Initialize Firebase (Paste your config here)
-    const firebaseConfig = { /* YOUR_CONFIG_HERE */ };
-    firebase.initializeApp(firebaseConfig);
-
-    // Monitor Auth State
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            document.getElementById("userDisplay").innerText = "User: " + (user.displayName || user.email);
-        } else {
-            window.location.href = "/login.html"; // Adjust to your login page
-        }
-    });
-
-    // 4-Hour Logout Timer
-    setTimeout(() => {
-        firebase.auth().signOut().then(() => {
-            alert("Session expired.");
-            window.location.reload();
-        });
-    }, 14400000);
-
-    function logout() {
-        firebase.auth().signOut();
-    }
-
     const API_BASE = ""; 
 
     async function initUI() {
@@ -136,7 +147,7 @@
             vehicle: document.getElementById("vehicle").value,
             drivers: [
                 JSON.parse(document.getElementById("driver1").value),
-                ...(document.getElementById("driver2").value ? [JSON.parse(document.getElementById("driver2G").value)] : []),
+                ...(document.getElementById("driver2").value ? [JSON.parse(document.getElementById("driver2").value)] : []),
                 ...(document.getElementById("driver3").value ? [JSON.parse(document.getElementById("driver3").value)] : [])
             ]
         };
