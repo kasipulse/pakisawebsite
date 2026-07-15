@@ -23,19 +23,19 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // Monitor Auth State
+        // Monitor Auth State - No infinite loop here
         onAuthStateChanged(auth, (user) => {
             const userDisplay = document.getElementById("userDisplay");
             if (user) {
                 userDisplay.innerText = "User: " + (user.displayName || user.email);
             } else {
-                // Instead of redirecting, show a login button
+                // If not logged in, just show the login button, don't redirect
                 userDisplay.innerHTML = '<button onclick="login()" style="padding:5px; font-size:10px;">Sign In with Google</button>';
             }
         });
 
         window.login = () => {
-            signInWithPopup(auth, provider).then(() => window.location.reload());
+            signInWithPopup(auth, provider).catch((error) => console.error(error));
         };
 
         window.logout = () => {
