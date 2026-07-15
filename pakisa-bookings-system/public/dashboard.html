@@ -7,7 +7,7 @@
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBc9Hs-Oef3hSuuRY1KWiP51E8oVy4yKik",
@@ -21,15 +21,26 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-        // Monitor Auth
+        // Monitor Auth State
         onAuthStateChanged(auth, (user) => {
+            const userDisplay = document.getElementById("userDisplay");
             if (user) {
-                document.getElementById("userDisplay").innerText = "User: " + (user.displayName || user.email);
+                userDisplay.innerText = "User: " + (user.displayName || user.email);
             } else {
-                window.location.href = "/"; // Update if your login page has a different name
+                // Instead of redirecting, show a login button
+                userDisplay.innerHTML = '<button onclick="login()" style="padding:5px; font-size:10px;">Sign In with Google</button>';
             }
         });
+
+        window.login = () => {
+            signInWithPopup(auth, provider).then(() => window.location.reload());
+        };
+
+        window.logout = () => {
+            signOut(auth).then(() => window.location.reload());
+        };
 
         // 4-Hour Logout Timer
         setTimeout(() => {
@@ -38,10 +49,6 @@
                 window.location.reload();
             });
         }, 14400000);
-
-        window.logout = () => {
-            signOut(auth);
-        };
     </script>
     
     <style>
