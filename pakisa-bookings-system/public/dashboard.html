@@ -12,6 +12,7 @@
         .header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; }
         .user-tag { font-size: 12px; color: #2563eb; font-weight: bold; }
         .admin-actions a { margin-left: 10px; text-decoration: none; font-size: 18px; }
+        .logout-btn { background: #ef4444 !important; color: white; font-size: 10px; padding: 5px 10px; border-radius: 4px; cursor: pointer; border: none; }
         select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; }
         button { background: #2563eb; color: white; font-weight: bold; cursor: pointer; border: none; }
         label { font-size: 13px; color: #6b7280; }
@@ -32,7 +33,10 @@
 
 <div class="card">
     <div class="header-info">
-        <div class="user-tag" id="userDisplay">Loading User...</div>
+        <div>
+            <div class="user-tag" id="userDisplay">Loading...</div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
         <div class="admin-actions">
             <a href="tel:0658177124">📞</a>
             <a href="sms:0658177124">💬</a>
@@ -69,20 +73,36 @@
 </div>
 
 <script>
+// Check for user name on load
+function checkUser() {
+    let name = localStorage.getItem("pakisaUser");
+    if (!name) {
+        name = prompt("Please enter your name:");
+        if (name) localStorage.setItem("pakisaUser", name);
+        else name = "Driver";
+    }
+    document.getElementById("userDisplay").innerText = "User: " + name;
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem("pakisaUser");
+    window.location.reload();
+}
+
 // 4-Hour Logout Timer
 setTimeout(() => {
-    alert("Session expired. Please reload to continue.");
-    window.location.reload();
-}, 14400000); 
+    alert("Session expired. Please log in again.");
+    logout();
+}, 14400000);
 
 const API_BASE = ""; 
 
 async function initUI() {
+    checkUser();
     try {
         const res = await fetch(`${API_BASE}/api/bootstrap`);
         const data = await res.json();
-        
-        document.getElementById("userDisplay").innerText = "User: " + (data.currentUser || "Driver");
         
         const vSelect = document.getElementById("vehicle");
         data.vehicles.forEach(v => vSelect.innerHTML += `<option value="${v.registration}">${v.registration}</option>`);
@@ -124,7 +144,7 @@ async function submitBooking() {
         body: JSON.stringify(payload)
     });
 
-    if (res.ok) alert("Booking submitted and email sent!");
+    if (res.ok) alert("Booking submitted!");
     else alert("Failed to submit.");
 }
 
