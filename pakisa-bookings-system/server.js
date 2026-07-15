@@ -27,7 +27,7 @@ try {
 
 const db = admin.firestore();
 
-// 0. LIGHTWEIGHT PING ROUTE (Use this for Cron-job.org)
+// 0. LIGHTWEIGHT PING ROUTE
 app.get("/api/ping", (req, res) => {
     res.status(200).send("OK");
 });
@@ -40,6 +40,7 @@ app.get("/api/bootstrap", async (req, res) => {
             db.collection("vehicles").get()
         ]);
         res.json({ 
+            currentUser: "Driver", // You can update this to dynamic data if you add Auth later
             drivers: driversSnap.docs.map(d => ({ id: d.id, ...d.data() })), 
             vehicles: vehiclesSnap.docs.map(v => ({ id: v.id, ...v.data() })) 
         });
@@ -48,12 +49,10 @@ app.get("/api/bootstrap", async (req, res) => {
     }
 });
 
-// 2. BOOKING ROUTE (With Dynamic Email Routing)
+// 2. BOOKING ROUTE
 app.post("/api/book", async (req, res) => {
     try {
         const { depot, shift, vehicle, drivers } = req.body;
-
-        // Routing Logic
         let toRecipients = [];
         if (depot === "FedEx") {
             toRecipients = (shift === "Morning") 
@@ -63,11 +62,9 @@ app.post("/api/book", async (req, res) => {
             toRecipients = ["rebecca.ndhlovu@brima.com", "gauteng.collections@brima.com", "richard.mohlala@brima.com"];
         }
 
-        // Exact Formatting
         const driverDetails = drivers.map(d => `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`).join("\n\n");
         const emailBody = `${driverDetails}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}\n\n---\nSystem Generated Message: This is an automated notification for site access verification.`;
 
-        // Send Email
         await resend.emails.send({
             from: 'Pakisa Logistics <bookings@pakisalogistics.co.za>',
             to: toRecipients,
@@ -76,9 +73,7 @@ app.post("/api/book", async (req, res) => {
             text: emailBody
         });
 
-        // Save to Firestore
         await db.collection("bookings").add({ ...req.body, timestamp: admin.firestore.FieldValue.serverTimestamp() });
-        
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
