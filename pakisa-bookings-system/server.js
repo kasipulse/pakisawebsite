@@ -27,6 +27,11 @@ try {
 
 const db = admin.firestore();
 
+// 0. LIGHTWEIGHT PING ROUTE (Use this for Cron-job.org)
+app.get("/api/ping", (req, res) => {
+    res.status(200).send("OK");
+});
+
 // 1. BOOTSTRAP ROUTE
 app.get("/api/bootstrap", async (req, res) => {
     try {
