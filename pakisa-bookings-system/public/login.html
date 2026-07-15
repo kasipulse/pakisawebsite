@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pakisa Login</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBc9Hs-Oef3hSuuRY1KWiP51E8oVy4yKik",
+            authDomain: "tripsheet-9ea74.firebaseapp.com",
+            projectId: "tripsheet-9ea74",
+            storageBucket: "tripsheet-9ea74.firebasestorage.app",
+            messagingSenderId: "610091199059",
+            appId: "1:610091199059:web:99bc24ed74e78d899834a6",
+            measurementId: "G-TVYK9KF102"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // If already logged in, send to dashboard
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = "dashboard.html";
+        });
+
+        window.login = () => {
+            signInWithPopup(auth, provider).catch(console.error);
+        };
+    </script>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; background: #f3f4f6; }
+        button { padding: 15px 30px; font-size: 16px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <button onclick="login()">Sign in with Pakisa Google Account</button>
+</body>
+</html>
