@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pakisa Booking</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
     <style>
         body { font-family: -apple-system, sans-serif; background: #ffffff; color: #1f2937; padding: 20px; }
         .card { background: #ffffff; border: 1px solid #e5e7eb; padding: 20px; border-radius: 12px; max-width: 500px; margin: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -34,7 +36,7 @@
 <div class="card">
     <div class="header-info">
         <div>
-            <div class="user-tag" id="userDisplay">Loading...</div>
+            <div class="user-tag" id="userDisplay">Authenticating...</div>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
         <div class="admin-actions">
@@ -73,82 +75,83 @@
 </div>
 
 <script>
-// Check for user name on load
-function checkUser() {
-    let name = localStorage.getItem("pakisaUser");
-    if (!name) {
-        name = prompt("Please enter your name:");
-        if (name) localStorage.setItem("pakisaUser", name);
-        else name = "Driver";
-    }
-    document.getElementById("userDisplay").innerText = "User: " + name;
-}
+    // Initialize Firebase (Paste your config here)
+    const firebaseConfig = { /* YOUR_CONFIG_HERE */ };
+    firebase.initializeApp(firebaseConfig);
 
-// Logout function
-function logout() {
-    localStorage.removeItem("pakisaUser");
-    window.location.reload();
-}
-
-// 4-Hour Logout Timer
-setTimeout(() => {
-    alert("Session expired. Please log in again.");
-    logout();
-}, 14400000);
-
-const API_BASE = ""; 
-
-async function initUI() {
-    checkUser();
-    try {
-        const res = await fetch(`${API_BASE}/api/bootstrap`);
-        const data = await res.json();
-        
-        const vSelect = document.getElementById("vehicle");
-        data.vehicles.forEach(v => vSelect.innerHTML += `<option value="${v.registration}">${v.registration}</option>`);
-
-        const dSelects = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
-        data.drivers.forEach(d => {
-            const val = JSON.stringify({name: d.name, surname: d.surname, idNumber: d.idNumber});
-            dSelects.forEach(sel => sel.innerHTML += `<option value='${val}'>${d.name} ${d.surname}</option>`);
-        });
-        
-        document.getElementById("loader").style.display = "none";
-    } catch (e) {
-        console.error("Initialization failed:", e);
-    }
-}
-
-function toggleShift() {
-    const depot = document.getElementById("depot").value;
-    const shift = document.getElementById("shift");
-    shift.disabled = (depot === "Brima");
-    if (depot === "Brima") shift.value = "Night";
-}
-
-async function submitBooking() {
-    const payload = {
-        depot: document.getElementById("depot").value,
-        shift: document.getElementById("shift").value,
-        vehicle: document.getElementById("vehicle").value,
-        drivers: [
-            JSON.parse(document.getElementById("driver1").value),
-            ...(document.getElementById("driver2").value ? [JSON.parse(document.getElementById("driver2").value)] : []),
-            ...(document.getElementById("driver3").value ? [JSON.parse(document.getElementById("driver3").value)] : [])
-        ]
-    };
-
-    const res = await fetch(`${API_BASE}/api/book`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+    // Monitor Auth State
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            document.getElementById("userDisplay").innerText = "User: " + (user.displayName || user.email);
+        } else {
+            window.location.href = "/login.html"; // Adjust to your login page
+        }
     });
 
-    if (res.ok) alert("Booking submitted!");
-    else alert("Failed to submit.");
-}
+    // 4-Hour Logout Timer
+    setTimeout(() => {
+        firebase.auth().signOut().then(() => {
+            alert("Session expired.");
+            window.location.reload();
+        });
+    }, 14400000);
 
-initUI();
+    function logout() {
+        firebase.auth().signOut();
+    }
+
+    const API_BASE = ""; 
+
+    async function initUI() {
+        try {
+            const res = await fetch(`${API_BASE}/api/bootstrap`);
+            const data = await res.json();
+            
+            const vSelect = document.getElementById("vehicle");
+            data.vehicles.forEach(v => vSelect.innerHTML += `<option value="${v.registration}">${v.registration}</option>`);
+
+            const dSelects = [document.getElementById("driver1"), document.getElementById("driver2"), document.getElementById("driver3")];
+            data.drivers.forEach(d => {
+                const val = JSON.stringify({name: d.name, surname: d.surname, idNumber: d.idNumber});
+                dSelects.forEach(sel => sel.innerHTML += `<option value='${val}'>${d.name} ${d.surname}</option>`);
+            });
+            
+            document.getElementById("loader").style.display = "none";
+        } catch (e) {
+            console.error("Initialization failed:", e);
+        }
+    }
+
+    function toggleShift() {
+        const depot = document.getElementById("depot").value;
+        const shift = document.getElementById("shift");
+        shift.disabled = (depot === "Brima");
+        if (depot === "Brima") shift.value = "Night";
+    }
+
+    async function submitBooking() {
+        const payload = {
+            depot: document.getElementById("depot").value,
+            shift: document.getElementById("shift").value,
+            vehicle: document.getElementById("vehicle").value,
+            drivers: [
+                JSON.parse(document.getElementById("driver1").value),
+                ...(document.getElementById("driver2").value ? [JSON.parse(document.getElementById("driver2G").value)] : []),
+                ...(document.getElementById("driver3").value ? [JSON.parse(document.getElementById("driver3").value)] : [])
+            ]
+        };
+
+        const res = await fetch(`${API_BASE}/api/book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.ok) alert("Booking submitted!");
+        else alert("Failed to submit.");
+    }
+
+    initUI();
 </script>
 </body>
 </html>
