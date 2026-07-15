@@ -32,15 +32,30 @@ app.get("/api/ping", (req, res) => {
     res.status(200).send("OK");
 });
 
-// 1. BOOTSTRAP ROUTE
+// 1. BOOTSTRAP ROUTE (With Firebase Auth Token Verification)
 app.get("/api/bootstrap", async (req, res) => {
     try {
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1];
+        
+        let userEmail = "Driver"; // Default if no auth
+        
+        if (token) {
+            try {
+                const decodedToken = await admin.auth().verifyIdToken(token);
+                userEmail = decodedToken.email;
+            } catch (authError) {
+                console.error("Token verification failed:", authError);
+            }
+        }
+
         const [driversSnap, vehiclesSnap] = await Promise.all([
             db.collection("drivers").get(),
             db.collection("vehicles").get()
         ]);
+        
         res.json({ 
-            currentUser: "Driver", // You can update this to dynamic data if you add Auth later
+            currentUser: userEmail,
             drivers: driversSnap.docs.map(d => ({ id: d.id, ...d.data() })), 
             vehicles: vehiclesSnap.docs.map(v => ({ id: v.id, ...v.data() })) 
         });
