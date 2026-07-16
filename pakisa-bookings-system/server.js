@@ -27,12 +27,17 @@ try {
 
 const db = admin.firestore();
 
-// 1. BOOTSTRAP ROUTE
+// 0. LIGHTWEIGHT PING ROUTE (Use this for cron-job.org)
+app.get("/api/ping", (req, res) => {
+    res.status(200).send("OK");
+});
+
+// 1. BOOTSTRAP ROUTE (Added .limit to prevent 'output too large' errors)
 app.get("/api/bootstrap", async (req, res) => {
     try {
         const [driversSnap, vehiclesSnap] = await Promise.all([
-            db.collection("drivers").get(),
-            db.collection("vehicles").get()
+            db.collection("drivers").limit(100).get(), 
+            db.collection("vehicles").limit(100).get()
         ]);
         res.json({ 
             drivers: driversSnap.docs.map(d => ({ id: d.id, ...d.data() })), 
@@ -43,12 +48,11 @@ app.get("/api/bootstrap", async (req, res) => {
     }
 });
 
-// 2. BOOKING ROUTE (With Dynamic Email Routing)
+// 2. BOOKING ROUTE
 app.post("/api/book", async (req, res) => {
     try {
         const { depot, shift, vehicle, drivers } = req.body;
 
-        // Routing Logic
         let toRecipients = [];
         if (depot === "FedEx") {
             toRecipients = (shift === "Morning") 
@@ -58,11 +62,9 @@ app.post("/api/book", async (req, res) => {
             toRecipients = ["rebecca.ndhlovu@brima.com", "gauteng.collections@brima.com", "richard.mohlala@brima.com"];
         }
 
-        // Exact Formatting
         const driverDetails = drivers.map(d => `Name: ${d.name} ${d.surname}\nID: ${d.idNumber}`).join("\n\n");
         const emailBody = `${driverDetails}\n\nVehicle Reg: ${vehicle}\nShift: ${shift}\n\n---\nSystem Generated Message: This is an automated notification for site access verification.`;
 
-        // Send Email
         await resend.emails.send({
             from: 'Pakisa Logistics <bookings@pakisalogistics.co.za>',
             to: toRecipients,
@@ -71,12 +73,12 @@ app.post("/api/book", async (req, res) => {
             text: emailBody
         });
 
-        // Save to Firestore
         await db.collection("bookings").add({ ...req.body, timestamp: admin.firestore.FieldValue.serverTimestamp() });
         
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error("Booking Error:", err); // Log error locally instead of relying on external output
+        res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 });
 
