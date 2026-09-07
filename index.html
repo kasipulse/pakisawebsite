@@ -160,7 +160,7 @@
         <div class="lg:w-1/2">
           <form class="glass-card p-8 rounded-3xl shadow-xl space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Parcel Description" class="input-field rounded-xl p-4 outline-none md:col-span-2">
+              <input type="text" placeholder="Collection Address (From)" class="input-field rounded-xl p-4 outline-none md:col-span-2">
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input type="text" placeholder="Street Address" class="input-field rounded-xl p-4 outline-none">
@@ -338,7 +338,7 @@
 
       window.addMsg(waybill, "user");
       userInput.value = "";
-      window.addMsg("Checking database for waybill <b>" + waybill + "</b> kilometers...");
+      window.addMsg("Checking database for waybill <b>" + waybill + "</b>...");
 
       try {
         const podRef = ref(db, 'pods');
