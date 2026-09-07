@@ -338,7 +338,7 @@
 
       window.addMsg(waybill, "user");
       userInput.value = "";
-      window.addMsg("Checking database for waybill <b>" + waybill + "</b>...");
+      window.addMsg("Checking database for waybill <b>" + waybill + "</b> kilometers...");
 
       try {
         const podRef = ref(db, 'pods');
@@ -373,7 +373,14 @@
     function calculateCost() {
       const base = 51; const fuel = 14.34; const vat = 0.15;
       const outlyingFee = document.getElementById('outlying').value === 'yes' ? 850 : 0;
-      const total = (base + fuel) * (1 + vat) + outlyingFee;
+      
+      const kgInput = parseFloat(document.getElementById('kg').value) || 0;
+      let weightExtra = 0;
+      if (kgInput > 10) {
+        weightExtra = (kgInput - 10) * 10;
+      }
+
+      const total = ((base + fuel + weightExtra) * (1 + vat)) + outlyingFee;
       document.getElementById('result').innerText = `Est. Total: R${total.toFixed(2)}`;
     }
 
