@@ -158,12 +158,19 @@
           </div>
         </div>
         <div class="lg:w-1/2">
-          <form class="glass-card p-8 rounded-3xl shadow-xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <input type="text" placeholder="Recipient Address" class="input-field rounded-xl p-4 outline-none">
-              <input type="text" placeholder="Parcel Description" class="input-field rounded-xl p-4 outline-none">
+          <form class="glass-card p-8 rounded-3xl shadow-xl space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input type="text" placeholder="Parcel Description" class="input-field rounded-xl p-4 outline-none md:col-span-2">
             </div>
-            <div class="mb-6 p-5 bg-blue-50/50 rounded-2xl border border-blue-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input type="text" placeholder="Street Address" class="input-field rounded-xl p-4 outline-none">
+              <input type="text" placeholder="Suburb / Township" class="input-field rounded-xl p-4 outline-none">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input type="text" placeholder="City" class="input-field rounded-xl p-4 outline-none">
+              <input type="text" placeholder="Postal Code" class="input-field rounded-xl p-4 outline-none">
+            </div>
+            <div class="mb-2 p-5 bg-blue-50/50 rounded-2xl border border-blue-100">
               <p class="text-[10px] font-black uppercase text-royal-blue mb-4 tracking-tighter opacity-60">Volumetric Data</p>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <input type="number" id="l" placeholder="L (cm)" class="input-field rounded-lg p-3 text-sm outline-none">
@@ -172,7 +179,7 @@
                 <input type="number" id="kg" placeholder="Kg" class="input-field rounded-lg p-3 text-sm outline-none">
               </div>
             </div>
-            <select id="outlying" class="w-full input-field rounded-xl p-4 mb-6 outline-none">
+            <select id="outlying" class="w-full input-field rounded-xl p-4 outline-none">
               <option value="no">Standard Delivery Area</option>
               <option value="yes">Outlying Area (+R850)</option>
             </select>
