@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careers | Pakisa Express Logistics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    .gold { color: #C6A75E; }
+    .gold-bg { background-color: #C6A75E; }
+    .royal-blue { color: #0033A0; }
+    .royal-bg { background-color: #0033A0; }
+    .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(0, 51, 160, 0.1); }
+    .input-field { background-color: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+    .input-field:focus { border-color: #0033A0; background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05); outline: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-gray-100">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-10">
+      </a>
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-bold uppercase tracking-wide text-slate-600">
+        <a href="index.html" class="hover:text-royal-blue transition">Home</a>
+        <a href="downloads.html" class="hover:text-royal-blue transition">Downloads</a>
+        <a href="rate-calculator.html" class="hover:text-royal-blue transition">Rates</a>
+        <a href="tracking.html" class="hover:text-royal-blue transition">Track</a>
+        <a href="careers.html" class="royal-blue transition underline decoration-2">Careers</a>
+        <a href="http://www.pakisafloor.site" target="_blank" class="border-2 border-royal-blue royal-blue px-4 py-2 rounded-full hover:bg-royal-blue hover:text-white transition">Pakisa Floor</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="pt-32 pb-24 px-6">
+    <div class="container mx-auto max-w-3xl">
+      <div class="text-center mb-12">
+        <span class="gold font-extrabold tracking-widest uppercase text-xs mb-3 block">Join Our Talent Pool</span>
+        <h1 class="text-4xl md:text-5xl font-black royal-blue mb-4">Build Your Career With Pakisa</h1>
+        <p class="text-slate-600 text-lg">Upload your CV below. Our system will transcribe and index your application so our operations managers can instantly find qualified drivers and staff.</p>
+      </div>
+
+      <!-- Application Form -->
+      <form id="careerForm" class="glass-card p-8 md:p-12 rounded-3xl shadow-xl space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Full Name</label>
+            <input type="text" id="fullName" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="e.g. Sipho Dlamini">
+          </div>
+          <div>
+            <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Email Address</label>
+            <input type="email" id="email" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="name@example.com">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Phone Number</label>
+            <input type="tel" id="phone" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="082 123 4567">
+          </div>
+          <div>
+            <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Applying For Role</label>
+            <select id="roleCategory" class="w-full input-field rounded-xl p-4 text-sm">
+              <option value="Driver">Driver / Code 10 / Code 14</option>
+              <option value="Warehouse">Warehouse Staff / Packer</option>
+              <option value="Operations">Operations / Controller</option>
+              <option value="Admin">Admin / Support</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Upload CV (PDF or Image)</label>
+          <input type="file" id="cvFile" accept=".pdf,.png,.jpg,.jpeg" required class="w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-blue-50 file:text-royal-blue hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-2 bg-slate-50">
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full royal-bg text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-lg text-lg">
+          Submit Application
+        </button>
+        <p id="statusMessage" class="text-center text-sm font-bold mt-4"></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- Firebase Script for CV Parsing & Realtime Database Upload -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBh-KhkmZrS6b97MPv-YTMjU6qTF0qFzbY",
+      authDomain: "pakisa-floor.firebaseapp.com",
+      databaseURL: "https://pakisa-floor-default-rtdb.firebaseio.com",
+      projectId: "pakisa-floor",
+      storageBucket: "pakisa-floor.firebasestorage.app",
+      messagingSenderId: "1003516506618",
+      appId: "1:1003516506618:web:777d702f93616b6e323443",
+      measurementId: "G-JBZ8DYW49B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.getElementById('careerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const status = document.getElementById('statusMessage');
+      
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const roleCategory = document.getElementById('roleCategory').value;
+      const fileInput = document.getElementById('cvFile').files[0];
+
+      if (!fileInput) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Processing & Transcribing CV...';
+      status.textContent = '';
+
+      try {
+        // Read file contents as text (or base64 if PDF binary)
+        const reader = new FileReader();
+        reader.onload = async function(event) {
+          const fileContent = event.target.result;
+
+          // Push record to Firebase Realtime Database under 'candidates'
+          const candidatesRef = ref(db, 'candidates');
+          await push(candidatesRef, {
+            fullName,
+            email,
+            phone,
+            roleCategory: roleCategory.toLowerCase(),
+            primaryRole: roleCategory,
+            cvFileName: fileInput.name,
+            cvTranscription: fileContent.slice(0, 5000), // Stores raw text sample for keyword searching
+            createdAt: new Date().toISOString(),
+            dateFormatted: new Date().toLocaleDateString()
+          });
+
+          status.className = 'text-center text-sm font-bold mt-4 text-emerald-600';
+          status.textContent = '🎉 Application submitted successfully! Your profile has been added to our talent pool.';
+          document.getElementById('careerForm').reset();
+          btn.disabled = false;
+          btn.textContent = 'Submit Application';
+        };
+
+        // Read text/data from uploaded document
+        if (fileInput.type === "application/pdf") {
+          reader.readAsDataURL(fileInput); // Stores base64 representation for PDFs
+        } else {
+          reader.readAsText(fileInput); // Reads text directly for txt/docs
+        }
+
+      } catch (err) {
+        console.error(err);
+        status.className = 'text-center text-sm font-bold mt-4 text-rose-600';
+        status.textContent = '⚠️ Error uploading application. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Submit Application';
+      }
+    });
+  </script>
+</body>
+</html>
