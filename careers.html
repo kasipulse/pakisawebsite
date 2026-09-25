@@ -42,7 +42,7 @@
       <div class="text-center mb-12">
         <span class="gold font-extrabold tracking-widest uppercase text-xs mb-3 block">Join Our Talent Pool</span>
         <h1 class="text-4xl md:text-5xl font-black royal-blue mb-4">Build Your Career With Pakisa</h1>
-        <p class="text-slate-600 text-lg">Upload your CV below. Our system will transcribe and index your application so our operations managers can instantly find qualified drivers and staff.</p>
+        <p class="text-slate-600 text-lg">Submit your details and experience below. Our operations team can instantly index and search applicant profiles for drivers, warehouse staff, and more.</p>
       </div>
 
       <!-- Application Form -->
@@ -64,9 +64,9 @@
             <input type="tel" id="phone" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="082 123 4567">
           </div>
           <div>
-            <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Applying For Role</label>
+            <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Position Applying For</label>
             <select id="roleCategory" class="w-full input-field rounded-xl p-4 text-sm">
-              <option value="Driver">Driver / Code 10 / Code 14</option>
+              <option value="Driver">Driver (Code 10 / Code 14)</option>
               <option value="Warehouse">Warehouse Staff / Packer</option>
               <option value="Operations">Operations / Controller</option>
               <option value="Admin">Admin / Support</option>
@@ -75,8 +75,8 @@
         </div>
 
         <div>
-          <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Upload CV (PDF or Image)</label>
-          <input type="file" id="cvFile" accept=".pdf,.png,.jpg,.jpeg" required class="w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-blue-50 file:text-royal-blue hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-2 bg-slate-50">
+          <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Summary of Experience & Skills</label>
+          <textarea id="experienceSummary" rows="5" required class="w-full input-field rounded-xl p-4 text-sm outline-none" placeholder="Briefly describe your driving licenses, past logistics experience, PDP status, etc..."></textarea>
         </div>
 
         <button type="submit" id="submitBtn" class="w-full royal-bg text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-lg text-lg">
@@ -87,7 +87,7 @@
     </div>
   </main>
 
-  <!-- Firebase Script for CV Parsing & Realtime Database Upload -->
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -115,52 +115,32 @@
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const roleCategory = document.getElementById('roleCategory').value;
-      const fileInput = document.getElementById('cvFile').files[0];
-
-      if (!fileInput) return;
+      const experienceSummary = document.getElementById('experienceSummary').value.trim();
 
       btn.disabled = true;
-      btn.textContent = 'Processing & Transcribing CV...';
+      btn.textContent = 'Submitting Application...';
       status.textContent = '';
 
       try {
-        // Read file contents as text (or base64 if PDF binary)
-        const reader = new FileReader();
-        reader.onload = async function(event) {
-          const fileContent = event.target.result;
+        const candidatesRef = ref(db, 'candidates');
+        await push(candidatesRef, {
+          fullName,
+          email,
+          phone,
+          primaryRole: roleCategory,
+          experienceSummary,
+          createdAt: new Date().toISOString(),
+          dateFormatted: new Date().toLocaleDateString()
+        });
 
-          // Push record to Firebase Realtime Database under 'candidates'
-          const candidatesRef = ref(db, 'candidates');
-          await push(candidatesRef, {
-            fullName,
-            email,
-            phone,
-            roleCategory: roleCategory.toLowerCase(),
-            primaryRole: roleCategory,
-            cvFileName: fileInput.name,
-            cvTranscription: fileContent.slice(0, 5000), // Stores raw text sample for keyword searching
-            createdAt: new Date().toISOString(),
-            dateFormatted: new Date().toLocaleDateString()
-          });
-
-          status.className = 'text-center text-sm font-bold mt-4 text-emerald-600';
-          status.textContent = '🎉 Application submitted successfully! Your profile has been added to our talent pool.';
-          document.getElementById('careerForm').reset();
-          btn.disabled = false;
-          btn.textContent = 'Submit Application';
-        };
-
-        // Read text/data from uploaded document
-        if (fileInput.type === "application/pdf") {
-          reader.readAsDataURL(fileInput); // Stores base64 representation for PDFs
-        } else {
-          reader.readAsText(fileInput); // Reads text directly for txt/docs
-        }
-
+        status.className = 'text-center text-sm font-bold mt-4 text-emerald-600';
+        status.textContent = '🎉 Application submitted successfully! Welcome to the Pakisa talent pool.';
+        document.getElementById('careerForm').reset();
       } catch (err) {
         console.error(err);
         status.className = 'text-center text-sm font-bold mt-4 text-rose-600';
-        status.textContent = '⚠️ Error uploading application. Please try again.';
+        status.textContent = '⚠️ Error submitting application. Please try again.';
+      } finally {
         btn.disabled = false;
         btn.textContent = 'Submit Application';
       }
