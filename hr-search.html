@@ -17,19 +17,22 @@
 
   <div class="max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-black royal-blue">Talent Pool Search</h1>
+      <div>
+        <h1 class="text-3xl font-black royal-blue">Talent Pool Search</h1>
+        <p class="text-slate-500 text-sm mt-1">Search candidate profiles by role (e.g. driver), keyword, or name.</p>
+      </div>
       <a href="index.html" class="text-sm font-bold text-slate-500 hover:text-royal-blue">← Back to Home</a>
     </div>
 
-    <!-- Search Input -->
+    <!-- Search Input Bar -->
     <div class="flex gap-4 mb-8">
-      <input type="text" id="searchKeyword" placeholder="Type keyword (e.g., driver, code 14, warehouse)..." class="flex-1 p-4 rounded-xl border border-slate-200 outline-none focus:border-[#0033A0] bg-white shadow-sm">
+      <input type="text" id="searchKeyword" placeholder="Type keyword (e.g. driver, code 14, code 10)..." class="flex-1 p-4 rounded-xl border border-slate-200 outline-none focus:border-[#0033A0] bg-white shadow-sm text-sm" onkeypress="handleSearchKey(event)">
       <button onclick="searchCandidates()" class="royal-bg text-white px-8 rounded-xl font-bold shadow-md hover:bg-black transition">Search</button>
     </div>
 
-    <!-- Results Box -->
+    <!-- Results Container -->
     <div id="resultsContainer" class="space-y-4">
-      <p class="text-slate-400 text-center py-12">Enter a keyword above to find candidate profiles.</p>
+      <p class="text-slate-400 text-center py-12">Type a keyword above and click search to view profiles.</p>
     </div>
   </div>
 
@@ -51,6 +54,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    window.handleSearchKey = (e) => { if (e.key === 'Enter') window.searchCandidates(); };
+
     window.searchCandidates = async function() {
       const keyword = document.getElementById('searchKeyword').value.toLowerCase().trim();
       const container = document.getElementById('resultsContainer');
@@ -59,7 +64,7 @@
       try {
         const snapshot = await get(ref(db, 'candidates'));
         if (!snapshot.exists()) {
-          container.innerHTML = '<p class="text-center text-slate-500 py-6">No candidates found in the database yet.</p>';
+          container.innerHTML = '<p class="text-center text-slate-500 py-6">No candidate records found in the database yet.</p>';
           return;
         }
 
@@ -67,7 +72,7 @@
         let matches = [];
 
         Object.values(data).forEach(c => {
-          const matchString = `${c.fullName} ${c.roleCategory} ${c.cvTranscription}`.toLowerCase();
+          const matchString = `${c.fullName} ${c.primaryRole} ${c.experienceSummary}`.toLowerCase();
           if (!keyword || matchString.includes(keyword)) {
             matches.push(c);
           }
@@ -82,13 +87,16 @@
         matches.forEach(c => {
           container.innerHTML += `
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
+              <div class="space-y-1">
                 <span class="text-xs font-extrabold uppercase tracking-widest text-[#C6A75E] bg-amber-50 px-2.5 py-1 rounded-md">${c.primaryRole}</span>
                 <h3 class="text-xl font-bold text-slate-900 mt-2">${c.fullName}</h3>
-                <p class="text-slate-500 text-sm">📞 ${c.phone} | ✉️ ${c.email}</p>
-                <p class="text-xs text-slate-400 mt-1">Applied: ${c.dateFormatted || 'Recent'}</p>
+                <p class="text-slate-600 text-sm">📞 <a href="tel:${c.phone}" class="hover:underline">${c.phone}</a> | ✉️ <a href="mailto:${c.email}" class="hover:underline text-royal-blue">${c.email}</a></p>
+                <p class="text-slate-500 text-sm bg-slate-50 p-3 rounded-xl mt-2 border border-slate-100">"${c.experienceSummary}"</p>
+                <p class="text-xs text-slate-400">Applied: ${c.dateFormatted || 'Recent'}</p>
               </div>
-              <a href="mailto:${c.email}" class="royal-bg text-white text-sm px-6 py-2.5 rounded-xl font-bold hover:bg-black transition">Contact Candidate</a>
+              <div class="flex flex-col gap-2 w-full md:w-auto">
+                <a href="mailto:${c.email}?subject=Pakisa%20Express%20Logistics%20-%20Interview%20Invitation&body=Hi%20${encodeURIComponent(c.fullName)},%0D%0A%0D%0AWe%20received%20your%20application%20for%20${encodeURIComponent(c.primaryRole)}.%20Please%20reply%2Dsend%20your%20formal%20CV%20and%20PDP%20documents%20to%20us.%0D%0A%0D%0ARegards,%0D%0APakisa%20HR" class="royal-bg text-white text-sm px-6 py-2.5 rounded-xl font-bold hover:bg-black transition text-center">Request CV & Invite</a>
+              </div>
             </div>
           `;
         });
