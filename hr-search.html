@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Search | Pakisa Express Logistics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .gold { color: #C6A75E; }
+    .royal-blue { color: #0033A0; }
+    .royal-bg { background-color: #0033A0; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 p-6 md:p-12">
+
+  <div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-black royal-blue">Talent Pool Search</h1>
+      <a href="index.html" class="text-sm font-bold text-slate-500 hover:text-royal-blue">← Back to Home</a>
+    </div>
+
+    <!-- Search Input -->
+    <div class="flex gap-4 mb-8">
+      <input type="text" id="searchKeyword" placeholder="Type keyword (e.g., driver, code 14, warehouse)..." class="flex-1 p-4 rounded-xl border border-slate-200 outline-none focus:border-[#0033A0] bg-white shadow-sm">
+      <button onclick="searchCandidates()" class="royal-bg text-white px-8 rounded-xl font-bold shadow-md hover:bg-black transition">Search</button>
+    </div>
+
+    <!-- Results Box -->
+    <div id="resultsContainer" class="space-y-4">
+      <p class="text-slate-400 text-center py-12">Enter a keyword above to find candidate profiles.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBh-KhkmZrS6b97MPv-YTMjU6qTF0qFzbY",
+      authDomain: "pakisa-floor.firebaseapp.com",
+      databaseURL: "https://pakisa-floor-default-rtdb.firebaseio.com",
+      projectId: "pakisa-floor",
+      storageBucket: "pakisa-floor.firebasestorage.app",
+      messagingSenderId: "1003516506618",
+      appId: "1:1003516506618:web:777d702f93616b6e323443",
+      measurementId: "G-JBZ8DYW49B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.searchCandidates = async function() {
+      const keyword = document.getElementById('searchKeyword').value.toLowerCase().trim();
+      const container = document.getElementById('resultsContainer');
+      container.innerHTML = '<p class="text-center text-slate-500 py-6">Searching database...</p>';
+
+      try {
+        const snapshot = await get(ref(db, 'candidates'));
+        if (!snapshot.exists()) {
+          container.innerHTML = '<p class="text-center text-slate-500 py-6">No candidates found in the database yet.</p>';
+          return;
+        }
+
+        const data = snapshot.val();
+        let matches = [];
+
+        Object.values(data).forEach(c => {
+          const matchString = `${c.fullName} ${c.roleCategory} ${c.cvTranscription}`.toLowerCase();
+          if (!keyword || matchString.includes(keyword)) {
+            matches.push(c);
+          }
+        });
+
+        container.innerHTML = '';
+        if (matches.length === 0) {
+          container.innerHTML = `<p class="text-center text-slate-500 py-6">No records matched "${keyword}".</p>`;
+          return;
+        }
+
+        matches.forEach(c => {
+          container.innerHTML += `
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-widest text-[#C6A75E] bg-amber-50 px-2.5 py-1 rounded-md">${c.primaryRole}</span>
+                <h3 class="text-xl font-bold text-slate-900 mt-2">${c.fullName}</h3>
+                <p class="text-slate-500 text-sm">📞 ${c.phone} | ✉️ ${c.email}</p>
+                <p class="text-xs text-slate-400 mt-1">Applied: ${c.dateFormatted || 'Recent'}</p>
+              </div>
+              <a href="mailto:${c.email}" class="royal-bg text-white text-sm px-6 py-2.5 rounded-xl font-bold hover:bg-black transition">Contact Candidate</a>
+            </div>
+          `;
+        });
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-center text-rose-500 py-6">Error loading search results.</p>';
+      }
+    };
+  </script>
+</body>
+</html>
