@@ -122,8 +122,9 @@
       status.textContent = '';
 
       try {
-        const candidatesRef = ref(db, 'candidates');
-        await push(candidatesRef, {
+        // Saves records under the 'careers' node in your Realtime Database
+        const careersRef = ref(db, 'careers');
+        await push(careersRef, {
           fullName,
           email,
           phone,
