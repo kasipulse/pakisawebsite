@@ -20,17 +20,17 @@ app.use(express.static("public"));
 // Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Initialize Firebase
+// Initialize Firebase safely
+let db;
 try {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
     admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+    db = admin.firestore();
     console.log("✅ Firebase initialized");
 } catch (err) {
     console.error("❌ FIREBASE INIT FAILED:", err);
     process.exit(1);
 }
-
-const db = admin.firestore();
 
 // 1. BOOTSTRAP ROUTE (Added .limit to prevent 'output too large' errors)
 app.get("/api/bootstrap", async (req, res) => {
@@ -77,7 +77,7 @@ app.post("/api/book", async (req, res) => {
         
         res.json({ success: true });
     } catch (err) {
-        console.error("Booking Error:", err); // Log error locally instead of relying on external output
+        console.error("Booking Error:", err);
         res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 });
