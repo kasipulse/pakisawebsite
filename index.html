@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pakisa Express Logistics | Same Day & Township Deliveries</title>
+  <title>Owner Driver Registration | Pakisa Express Logistics</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -12,54 +12,14 @@
     .gold-bg { background-color: #C6A75E; }
     .royal-blue { color: #0033A0; }
     .royal-bg { background-color: #0033A0; }
-    
-    .hero-container { 
-        position: relative;
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        background: #0033A0; 
-    }
-
-    .hero-video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        transform: translate(-50%, -50%);
-        object-fit: cover;
-        z-index: 1;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(180deg, rgba(0, 51, 160, 0.70) 0%, rgba(0, 51, 160, 0.80) 100%);
-        z-index: 2;
-    }
-
-    .hero-content { position: relative; z-index: 3; width: 100%; }
-
-    .faded-section { background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); }
     .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(0, 51, 160, 0.1); }
-    
-    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    .logo-track { display: flex; width: calc(250px * 12); animation: scroll 40s linear infinite; }
-    .logo-track:hover { animation-play-state: paused; }
-    
     .input-field { background-color: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
-    .input-field:focus { border-color: #0033A0; background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05); }
+    .input-field:focus { border-color: #0033A0; background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 51, 160, 0.05); outline: none; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
+  <!-- Header -->
   <header class="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-gray-100">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
       <a href="index.html">
@@ -71,36 +31,198 @@
         <a href="rate-calculator.html" class="hover:text-royal-blue transition">Rates</a>
         <a href="tracking.html" class="hover:text-royal-blue transition">Track</a>
         <a href="careers.html" class="hover:text-royal-blue transition">Careers</a>
-        <a href="owner-drivers.html" class="hover:text-royal-blue transition">Owner Drivers</a>
+        <a href="owner-drivers.html" class="royal-blue transition underline decoration-2">Owner Drivers</a>
         <a href="http://www.pakisafloor.site" target="_blank" class="border-2 border-royal-blue royal-blue px-4 py-2 rounded-full hover:bg-royal-blue hover:text-white transition">Pakisa Floor</a>
-        <a href="#contact" class="royal-bg text-white px-6 py-2 rounded-full hover:bg-black transition shadow-md">Get in Touch</a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section class="hero-container">
-      <video autoplay muted loop playsinline class="hero-video">
-        <source src="https://res.cloudinary.com/dwxgkbuln/video/upload/v1774359762/Truck_Dashboard_View_Highway_Loop_kczm1h.mp4" type="video/mp4">
-      </video>
-      <div class="hero-overlay"></div>
-      
-      <div class="container mx-auto text-center hero-content px-6 pt-20">
-        <span class="gold font-extrabold tracking-widest uppercase text-xs mb-4 block">Trusted Courier Partner</span>
-        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
-          Moving your world, <br><span class="gold italic">one mile at a time.</span>
-      </h1>
-        <p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto opacity-90">Reliable logistics for same day, township, and chainstore deliveries across SA.</p>
-        <div class="flex flex-col md:flex-row justify-center gap-4">
-          <a href="tracking.html" class="gold-bg text-white px-10 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition">Track Parcel</a>
-          <a href="#quote" class="bg-white text-royal-blue px-10 py-4 rounded-xl font-bold shadow-md hover:bg-blue-50 transition">Get a Quote</a>
-          <a href="http://www.pakisafloor.site" target="_blank" class="bg-black/20 text-white border border-white/30 backdrop-blur-sm px-10 py-4 rounded-xl font-bold hover:bg-black/40 transition">Pakisa Floor</a>
+  <!-- Main Content -->
+  <main class="pt-32 pb-24 px-6">
+    <div class="container mx-auto max-w-4xl">
+      <div class="text-center mb-12">
+        <span class="gold font-extrabold tracking-widest uppercase text-xs mb-3 block">Subcontractor Portal</span>
+        <h1 class="text-4xl md:text-5xl font-black royal-blue mb-4">Partner With Pakisa</h1>
+        <p class="text-slate-600 text-lg">Register your vehicle as an owner-driver to join our fleet network. Please upload all required compliance documents and clear photos of your vehicle.</p>
       </div>
-      </div>
-    </section>
 
-    <section class="py-12 bg-white overflow-hidden border-b border-slate-50">
-      <h2 class="text-center text-slate-400 font-bold uppercase tracking-[0.2em] text-xs mb-10">Our Clients</h2>
-      <div class="logo-track flex items-center gap-24 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
-        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1772246411/IMG_3645_k5yhro.png" class="h-10">
-        <img src="
+      <form id="ownerDriverForm" class="glass-card p-8 md:p-12 rounded-3xl shadow-xl space-y-8">
+        
+        <!-- Personal & Contact Details -->
+        <div>
+          <h2 class="text-lg font-black royal-blue uppercase tracking-wider mb-4 border-b pb-2 border-slate-100">1. Personal Details</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Full Name & Surname</label>
+              <input type="text" id="fullName" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="e.g. Sipho Dlamini">
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">SA ID / Passport Number</label>
+              <input type="text" id="idNumber" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="e.g. 8801015800088">
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Phone Number</label>
+              <input type="tel" id="phone" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="082 123 4567">
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Email Address</label>
+              <input type="email" id="email" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="driver@example.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Details -->
+        <div>
+          <h2 class="text-lg font-black royal-blue uppercase tracking-wider mb-4 border-b pb-2 border-slate-100">2. Vehicle Information</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Vehicle Type</label>
+              <select id="vehicleType" class="w-full input-field rounded-xl p-4 text-sm">
+                <option value="1-Ton Bakkie (Open)">1-Ton Bakkie (Open)</option>
+                <option value="1-Ton Bakkie (Closed/Canopy)">1-Ton Bakkie (Closed/Canopy)</option>
+                <option value="4-Ton Truck">4-Ton Truck</option>
+                <option value="8-Ton Truck">8-Ton Truck</option>
+                <option value="14-Ton / Superlink">14-Ton / Superlink</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Make & Model</label>
+              <input type="text" id="vehicleMake" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="e.g. Isuzu NPR 400">
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Registration Number</label>
+              <input type="text" id="regNumber" required class="w-full input-field rounded-xl p-4 text-sm" placeholder="e.g. GP 123 BK">
+            </div>
+          </div>
+        </div>
+
+        <!-- Compliance & Uploads -->
+        <div>
+          <h2 class="text-lg font-black royal-blue uppercase tracking-wider mb-4 border-b pb-2 border-slate-100">3. Compliance & Document Uploads</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">ID / Passport Copy (PDF/JPG)</label>
+              <input type="file" id="idDoc" accept=".pdf,image/*" required class="w-full input-field rounded-xl p-3 text-sm">
+            </div>
+
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Driver's License & PrDP (PDF/JPG)</label>
+              <input type="file" id="licenseDoc" accept=".pdf,image/*" required class="w-full input-field rounded-xl p-3 text-sm">
+            </div>
+
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Valid License Disc (PDF/JPG)</label>
+              <input type="file" id="licenseDiscDoc" accept=".pdf,image/*" required class="w-full input-field rounded-xl p-3 text-sm">
+            </div>
+
+            <div>
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Dekra Certificate (PDF/JPG)</label>
+              <input type="file" id="dekraDoc" accept=".pdf,image/*" required class="w-full input-field rounded-xl p-3 text-sm">
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="block text-xs font-black uppercase text-royal-blue mb-2 tracking-wider">Vehicle Photos (Side, Front, Back - Multiple allowed)</label>
+              <input type="file" id="vehiclePhotos" accept="image/*" multiple required class="w-full input-field rounded-xl p-3 text-sm">
+            </div>
+
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full royal-bg text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-lg text-lg">
+          Submit Owner-Driver Application
+        </button>
+        <p id="statusMessage" class="text-center text-sm font-bold mt-4"></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- Firebase Integration Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref as dbRef, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBh-KhkmZrS6b97MPv-YTMjU6qTF0qFzbY",
+      authDomain: "pakisa-floor.firebaseapp.com",
+      databaseURL: "https://pakisa-floor-default-rtdb.firebaseio.com",
+      projectId: "pakisa-floor",
+      storageBucket: "pakisa-floor.firebasestorage.app",
+      messagingSenderId: "1003516506618",
+      appId: "1:1003516506618:web:777d702f93616b6e323443",
+      measurementId: "G-JBZ8DYW49B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+
+    // Helper function to upload single file
+    async function uploadFile(file, path) {
+      if (!file) return null;
+      const fileRef = storageRef(storage, `owner_drivers/${Date.now()}_${path}_${file.name}`);
+      const snapshot = await uploadBytes(fileRef, file);
+      return await getDownloadURL(snapshot.ref);
+    }
+
+    document.getElementById('ownerDriverForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const status = document.getElementById('statusMessage');
+
+      btn.disabled = true;
+      btn.textContent = 'Uploading Documents & Registering...';
+      status.textContent = '';
+
+      try {
+        // 1. Upload Document Files
+        const idDocUrl = await uploadFile(document.getElementById('idDoc').files[0], 'id');
+        const licenseUrl = await uploadFile(document.getElementById('licenseDoc').files[0], 'license');
+        const licenseDiscUrl = await uploadFile(document.getElementById('licenseDiscDoc').files[0], 'disc');
+        const dekraUrl = await uploadFile(document.getElementById('dekraDoc').files[0], 'dekra');
+
+        // 2. Upload Multiple Vehicle Photos
+        const photoFiles = document.getElementById('vehiclePhotos').files;
+        const vehiclePhotoUrls = [];
+        for (let i = 0; i < photoFiles.length; i++) {
+          const photoUrl = await uploadFile(photoFiles[i], `photo_${i}`);
+          vehiclePhotoUrls.push(photoUrl);
+        }
+
+        // 3. Save Form Data + File URLs to Realtime Database
+        const driversRef = dbRef(db, 'owner_drivers');
+        await push(driversRef, {
+          fullName: document.getElementById('fullName').value.trim(),
+          idNumber: document.getElementById('idNumber').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          vehicleType: document.getElementById('vehicleType').value,
+          vehicleMake: document.getElementById('vehicleMake').value.trim(),
+          regNumber: document.getElementById('regNumber').value.trim(),
+          documents: {
+            idCopy: idDocUrl,
+            driversLicense: licenseUrl,
+            licenseDisc: licenseDiscUrl,
+            dekraCertificate: dekraUrl,
+            vehiclePhotos: vehiclePhotoUrls
+          },
+          status: 'Pending Review',
+          createdAt: new Date().toISOString()
+        });
+
+        status.className = 'text-center text-sm font-bold mt-4 text-emerald-600';
+        status.textContent = '🎉 Application and compliance documents uploaded successfully!';
+        document.getElementById('ownerDriverForm').reset();
+      } catch (err) {
+        console.error(err);
+        status.className = 'text-center text-sm font-bold mt-4 text-rose-600';
+        status.textContent = '⚠️ Error uploading files or submitting form. Please check your connection and try again.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit Owner-Driver Application';
+      }
+    });
+  </script>
+</body>
+</html>
