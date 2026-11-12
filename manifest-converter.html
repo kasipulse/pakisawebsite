@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Pakisa Parcel Perfect Manifest Converter</title>
-    <!-- Include SheetJS for Excel & CSV file parsing -->
+    <!-- SheetJS for Excel and CSV parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Tesseract.js for reading handwritten/scanned manifest photos -->
+    <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h2 { margin-top: 0; color: #1a365d; }
-        p { color: #555; }
         textarea { width: 100%; height: 150px; padding: 12px; font-family: monospace; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical; }
-        .upload-box { border: 2px dashed #cbd5e0; padding: 20px; text-align: center; border-radius: 6px; background: #f8fafc; margin-bottom: 20px; cursor: pointer; }
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .upload-box { border: 2px dashed #cbd5e0; padding: 20px; text-align: center; border-radius: 6px; background: #f8fafc; cursor: pointer; }
         .upload-box:hover { border-color: #2b6cb0; background: #edf2f7; }
         .btn-group { margin-top: 15px; display: flex; gap: 10px; }
         button { background: #2b6cb0; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
@@ -27,20 +29,25 @@
 <div class="container">
     <h2>Pakisa Logistics - Manifest Converter</h2>
     <div class="instructions">
-        <strong>Instructions:</strong> Upload an Excel/CSV file or paste your raw manifest data below, enter the Master Consolidation Bag number, and click generate to instantly download your 3 Parcel Perfect CSV files.
+        <strong>Instructions:</strong> Upload a spreadsheet, take/upload a photo of a handwritten manifest sheet, or paste text below to generate your 3 Parcel Perfect CSV files.
     </div>
 
     <label for="consNumber"><strong>Master Consolidation / Bag Number:</strong></label><br>
     <input type="text" id="consNumber" value="305387078957" style="width: 300px; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"><br>
 
-    <label><strong>Upload Excel (.xlsx, .xls) or CSV File:</strong></label>
-    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-        <p style="margin: 0; color: #4a5568; font-weight: bold;">📁 Click here to browse or drop your spreadsheet</p>
-        <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleFileUpload(event)">
+    <div class="upload-grid">
+        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+            <p style="margin: 0; font-weight: bold; color: #2b6cb0;">📄 Upload Excel / CSV</p>
+            <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleSpreadsheetUpload(event)">
+        </div>
+        <div class="upload-box" onclick="document.getElementById('imageInput').click()">
+            <p style="margin: 0; font-weight: bold; color: #b7791f;">📷 Upload Manifest Photo</p>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        </div>
     </div>
 
-    <label for="rawData"><strong>Or Paste Manifest Data:</strong></label><br>
-    <textarea id="rawData" placeholder="Paste rows from manifest here..."></textarea>
+    <label for="rawData"><strong>Parsed Data / Manual Paste Area:</strong></label><br>
+    <textarea id="rawData" placeholder="Manifest data will appear here automatically when you upload a file or photo, or you can paste text directly..."></textarea>
 
     <div class="btn-group">
         <button onclick="processManifest()">Generate & Download CSVs</button>
@@ -51,34 +58,37 @@
 </div>
 
 <script>
-let uploadedRowsData = null;
-
-function handleFileUpload(event) {
+function handleSpreadsheetUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
-    const isExcel = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const csvText = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+        document.getElementById('rawData').value = csvText;
+        document.getElementById('status').innerText = `Spreadsheet loaded: ${file.name}`;
+    };
+    reader.readAsArrayBuffer(file);
+}
 
-    if (isExcel) {
-        reader.onload = function(e) {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
-            // Convert sheet to CSV format
-            const csvText = XLSX.utils.sheet_to_csv(worksheet);
-            document.getElementById('rawData').value = csvText;
-            document.getElementById('status').innerText = `File loaded: ${file.name} (${workbook.SheetNames[0]})`;
-        };
-        reader.readAsArrayBuffer(file);
-    } else {
-        reader.onload = function(e) {
-            document.getElementById('rawData').value = e.target.result;
-            document.getElementById('status').innerText = `File loaded: ${file.name}`;
-        };
-        reader.readAsText(file);
-    }
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    document.getElementById('status').innerText = "Scanning handwritten manifest photo with OCR... Please wait.";
+    
+    Tesseract.recognize(
+        file,
+        'eng',
+        { logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        document.getElementById('rawData').value = text;
+        document.getElementById('status').innerText = `Photo scanned successfully! Review or adjust text below if needed.`;
+    }).catch(err => {
+        console.error(err);
+        document.getElementById('status').innerText = "Error scanning image. Please try a clearer photo or paste text manually.";
+    });
 }
 
 function cleanPhone(val) {
@@ -113,7 +123,7 @@ function processManifest() {
     const consNum = document.getElementById('consNumber').value.trim() || '305387078957';
     
     if (!rawText) {
-        alert("Please upload a spreadsheet or paste manifest data first.");
+        alert("Please upload a file, scan a photo, or paste manifest data first.");
         return;
     }
 
@@ -130,29 +140,18 @@ function processManifest() {
 
     lines.forEach(line => {
         let cols = line.split(/,|\t/);
-        if (cols.length >= 10) {
+        if (cols.length >= 5) {
             let waybill = cols[0].trim().replace(/^"|"$/g, '');
-            if (/^\d{9,15}$/.test(waybill)) {
-                let shipper = cols[1] ? cols[1].trim().replace(/^"|"$/g, '') : '';
-                let origin = cols[2] ? cols[2].trim().replace(/^"|"$/g, '') : '';
-                let consignee = cols[3] ? cols[3].trim().replace(/^"|"$/g, '') : '';
-                let dest = cols[4] ? cols[4].trim().replace(/^"|"$/g, '') : '';
-                let pkgCount = cols[5] ? cols[5].trim().replace(/^"|"$/g, '') : '1';
-                let weight = cols[6] ? cols[6].trim().replace(/^"|"$/g, '') : '1.0';
-                let uom = cols[7] ? cols[7].trim().replace(/^"|"$/g, '') : 'K';
-                let commodity = cols[8] ? cols[8].trim().replace(/^"|"$/g, '') : '';
-                let customsVal = cols[9] ? cols[9].trim().replace(/^"|"$/g, '') : '0';
-                let currency = cols[10] ? cols[10].trim().replace(/^"|"$/g, '') : 'USD';
-                let vat = cols[11] ? cleanVat(cols[11]) : '';
-                let phone = cols[12] ? cleanPhone(cols[12]) : '';
-                let masterTrack = cols[13] ? cols[13].trim().replace(/^"|"$/g, '') : 'No Data';
-                let origCountry = cols[14] ? cols[14].trim().replace(/^"|"$/g, '') : 'CN';
-                let destCountry = cols[15] ? cols[15].trim().replace(/^"|"$/g, '') : 'ZA';
-                let postalCode = cols[16] ? cols[16].trim().replace(/^"|"$/g, '') : '1446';
-                let handling = cols[17] ? cols[17].trim().replace(/^"|"$/g, '') : '';
+            if (/^[A-Za-z0-9]{8,15}$/.test(waybill)) {
+                let shipper = cols[1] ? cols[1].trim().replace(/^"|"$/g, '') : 'W.W.C';
+                let consignee = cols[2] ? cols[2].trim().replace(/^"|"$/g, '') : 'CLIENT';
+                let dest = cols[5] ? cols[5].trim().replace(/^"|"$/g, '') : 'JOHANNESBURG';
+                let pkgCount = cols[3] ? cols[3].trim().replace(/^"|"$/g, '') : '1';
+                let weight = cols[4] ? cols[4].trim().replace(/^"|"$/g, '') : '1.0';
+                let commodity = cols[6] ? cols[6].trim().replace(/^"|"$/g, '') : 'GENERAL CARGO';
 
-                waybillRows.push(`${waybill},${masterTrack},"${shipper}",${origin},"${consignee}",${dest},${pkgCount},${weight},${uom},"${commodity}",${customsVal},${currency},${vat},${phone},${origCountry},${destCountry},${postalCode},"${handling}"`);
-                contentRows.push(`${waybill},1,"${commodity}",${pkgCount},${customsVal},${currency}`);
+                waybillRows.push(`${waybill},No Data,"${shipper}",JNB,"${consignee}",${dest},${pkgCount},${weight},K,"${commodity}",0,USD,, ,CN,ZA,1446,"02,54"`);
+                contentRows.push(`${waybill},1,"${commodity}",${pkgCount},0,USD`);
                 trackRows.push(`${waybill},${consNum},Bag,Sort,MANIFESTED,Manifested into Consolidation Bag,JNB`);
                 count++;
             }
@@ -160,7 +159,7 @@ function processManifest() {
     });
 
     if (count === 0) {
-        alert("No valid tracking rows detected. Check your file format or column order.");
+        alert("No valid waybill rows detected. Check text format or adjust scanned text.");
         return;
     }
 
@@ -174,6 +173,7 @@ function processManifest() {
 function clearAll() {
     document.getElementById('rawData').value = '';
     document.getElementById('fileInput').value = '';
+    document.getElementById('imageInput').value = '';
     document.getElementById('status').innerText = '';
 }
 </script>
