@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pakisa Parcel Perfect Manifest Converter</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #1a365d; }
+        p { color: #555; }
+        textarea { width: 100%; height: 200px; padding: 12px; font-family: monospace; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical; }
+        .btn-group { margin-top: 15px; display: flex; gap: 10px; }
+        button { background: #2b6cb0; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #2c5282; }
+        button.secondary { background: #4a5568; }
+        button.secondary:hover { background: #2d3748; }
+        .status { margin-top: 15px; font-weight: bold; color: #2f855a; }
+        .instructions { background: #edf2f7; padding: 15px; border-left: 4px solid #2b6cb0; margin-bottom: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h2>Pakisa Logistics - Manifest Converter</h2>
+    <div class="instructions">
+        <strong>Instructions:</strong> Paste your raw manifest text or table data below, enter the Master Consolidation Bag number, and click generate to instantly download your 3 Parcel Perfect CSV files.
+    </div>
+
+    <label for="consNumber"><strong>Master Consolidation / Bag Number:</strong></label><br>
+    <input type="text" id="consNumber" value="305387078957" style="width: 300px; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"><br>
+
+    <label for="rawData"><strong>Paste Manifest Data:</strong></label><br>
+    <textarea id="rawData" placeholder="Paste rows from manifest here..."></textarea>
+
+    <div class="btn-group">
+        <button onclick="processManifest()">Generate & Download CSVs</button>
+        <button class="secondary" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div id="status" class="status"></div>
+</div>
+
+<script>
+function cleanPhone(val) {
+    if (!val || val === 'No Data') return '';
+    let s = val.toString().split('.')[0].trim();
+    if (s.startsWith('27')) s = '0' + s.slice(2);
+    else if (s.length === 9 && !s.startsWith('0')) s = '0' + s;
+    return s;
+}
+
+function cleanVat(val) {
+    if (!val || val === 'No Data') return '';
+    let s = val.toString().trim();
+    if (s.toUpperCase().includes('E+')) return '';
+    return s;
+}
+
+function downloadCSV(filename, csvContent) {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function processManifest() {
+    const rawText = document.getElementById('rawData').value.trim();
+    const consNum = document.getElementById('consNumber').value.trim() || '305387078957';
+    
+    if (!rawText) {
+        alert("Please paste manifest data first.");
+        return;
+    }
+
+    const lines = rawText.split('\n');
+    let waybillRows = [];
+    let contentRows = [];
+    let trackRows = [];
+
+    // Basic CSV header definitions
+    waybillRows.push("Waybill Number,Master Tracking No,Shipper Name,Origin,Consignee Name,Destination,Pkg Count,Shipment Weight,Weight Unit,Commodity Desc,Customs Value,Currency,VAT ID / TIN,Consignee Telephone No,Origin Country Code,Destination Country Code,Destination Postal Code,Special Handling Codes");
+    contentRows.push("Waybill Number,Item Line,Commodity Description,Quantity,Unit Value,Currency");
+    trackRows.push("Waybill Number,Cons Number,Cons Type,Cons Category,Status Code,Status Description,Location");
+
+    let count = 0;
+
+    lines.forEach(line => {
+        // Simple comma-separated or tab-separated split
+        let cols = line.split(/,|\t/);
+        if (cols.length >= 10) {
+            let waybill = cols[0].trim();
+            // Check if first column looks like a tracking number (digits)
+            if (/^\d{9,15}$/.test(waybill)) {
+                let shipper = cols[1] ? cols[1].trim().replace(/^"|"$/g, '') : '';
+                let origin = cols[2] ? cols[2].trim() : '';
+                let consignee = cols[3] ? cols[3].trim().replace(/^"|"$/g, '') : '';
+                let dest = cols[4] ? cols[4].trim() : '';
+                let pkgCount = cols[5] ? cols[5].trim() : '1';
+                let weight = cols[6] ? cols[6].trim() : '1.0';
+                let uom = cols[7] ? cols[7].trim() : 'K';
+                let commodity = cols[8] ? cols[8].trim().replace(/^"|"$/g, '') : '';
+                let customsVal = cols[9] ? cols[9].trim() : '0';
+                let currency = cols[10] ? cols[10].trim() : 'USD';
+                let vat = cols[11] ? cleanVat(cols[11]) : '';
+                let phone = cols[12] ? cleanPhone(cols[12]) : '';
+                let masterTrack = cols[13] ? cols[13].trim() : 'No Data';
+                let origCountry = cols[14] ? cols[14].trim() : 'CN';
+                let destCountry = cols[15] ? cols[15].trim() : 'ZA';
+                let postalCode = cols[16] ? cols[16].trim() : '1446';
+                let handling = cols[17] ? cols[17].trim() : '';
+
+                waybillRows.push(`${waybill},${masterTrack},"${shipper}",${origin},"${consignee}",${dest},${pkgCount},${weight},${uom},"${commodity}",${customsVal},${currency},${vat},${phone},${origCountry},${destCountry},${postalCode},"${handling}"`);
+                contentRows.push(`${waybill},1,"${commodity}",${pkgCount},${customsVal},${currency}`);
+                trackRows.push(`${waybill},${consNum},Bag,Sort,MANIFESTED,Manifested into Consolidation Bag,JNB`);
+                count++;
+            }
+        }
+    });
+
+    if (count === 0) {
+        alert("No valid tracking rows detected. Ensure you are pasting comma-separated or tab-separated manifest data.");
+        return;
+    }
+
+    // Trigger downloads
+    downloadCSV("JNB26509Waybill.csv", waybillRows.join("\n"));
+    setTimeout(() => downloadCSV("JNB26509Content.csv", contentRows.join("\n")), 300);
+    setTimeout(() => downloadCSV("JNB26509Track.csv", trackRows.join("\n")), 600);
+
+    document.getElementById('status').innerText = `Success! Generated 3 CSV files for ${count} waybills.`;
+}
+
+function clearAll() {
+    document.getElementById('rawData').value = '';
+    document.getElementById('status').innerText = '';
+}
+</script>
+
+</body>
+</html>
