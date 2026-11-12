@@ -2,181 +2,286 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pakisa Parcel Perfect Manifest Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pakisa Express Logistics | Manifest Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- SheetJS for Excel and CSV parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Tesseract.js for reading handwritten/scanned manifest photos -->
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; color: #1a365d; }
-        textarea { width: 100%; height: 150px; padding: 12px; font-family: monospace; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical; }
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .upload-box { border: 2px dashed #cbd5e0; padding: 20px; text-align: center; border-radius: 6px; background: #f8fafc; cursor: pointer; }
-        .upload-box:hover { border-color: #2b6cb0; background: #edf2f7; }
-        .btn-group { margin-top: 15px; display: flex; gap: 10px; }
-        button { background: #2b6cb0; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
-        button:hover { background: #2c5282; }
-        button.secondary { background: #4a5568; }
-        button.secondary:hover { background: #2d3748; }
-        .status { margin-top: 15px; font-weight: bold; color: #2f855a; }
-        .instructions { background: #edf2f7; padding: 15px; border-left: 4px solid #2b6cb0; margin-bottom: 20px; font-size: 14px; }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .gold { color: #C6A75E; }
+        .gold-bg { background-color: #C6A75E; }
+        .royal-blue { color: #0033A0; }
+        .royal-bg { background-color: #0033A0; }
+        
+        .faded-section { background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); }
+        
+        /* Win98 / WinXP Industrial Retro Theme */
+        .win-window {
+            background: #ece9d8;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+            font-family: 'MS Sans Serif', Tahoma, sans-serif;
+        }
+        .win-titlebar {
+            background: linear-gradient(90deg, #0055ea 0%, #76a5ee 100%);
+            color: white;
+            font-weight: bold;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .win-button {
+            background: #ece9d8;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 6px 14px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            color: #000;
+        }
+        .win-button:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+            padding: 7px 13px 5px 15px;
+        }
+        .win-input {
+            background: #ffffff;
+            border: 2px solid;
+            border-color: #7f9db9 #ffffff #ffffff #7f9db9;
+            padding: 6px;
+            font-family: monospace;
+            font-size: 12px;
+        }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900">
 
-<div class="container">
-    <h2>Pakisa Logistics - Manifest Converter</h2>
-    <div class="instructions">
-        <strong>Instructions:</strong> Upload a spreadsheet, take/upload a photo of a handwritten manifest sheet, or paste text below to generate your 3 Parcel Perfect CSV files.
+  <header class="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-gray-100">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="index.html">
+        <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" alt="Pakisa Logo" class="h-10">
+      </a>
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-bold uppercase tracking-wide text-slate-600">
+        <a href="index.html" class="hover:text-royal-blue transition">Home</a>
+        <a href="downloads.html" class="hover:text-royal-blue transition">Downloads</a>
+        <a href="rate-calculator.html" class="hover:text-royal-blue transition">Rates</a>
+        <a href="tracking.html" class="hover:text-royal-blue transition">Track</a>
+        <a href="careers.html" class="hover:text-royal-blue transition">Careers</a>
+        <a href="owner-drivers.html" class="hover:text-royal-blue transition">Owner Drivers</a>
+        <a href="http://www.pakisafloor.site" target="_blank" class="border-2 border-royal-blue royal-blue px-4 py-2 rounded-full hover:bg-royal-blue hover:text-white transition">Pakisa Floor</a>
+        <a href="#converter" class="royal-bg text-white px-6 py-2 rounded-full hover:bg-black transition shadow-md">Converter</a>
+      </nav>
     </div>
+  </header>
 
-    <label for="consNumber"><strong>Master Consolidation / Bag Number:</strong></label><br>
-    <input type="text" id="consNumber" value="305387078957" style="width: 300px; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"><br>
+  <main class="pt-32 pb-24">
+    <div class="container mx-auto px-6 max-w-4xl">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black royal-blue mb-4">Parcel Perfect Manifest Converter</h1>
+        <p class="text-slate-600">Upload spreadsheets or handwritten manifest photos to generate clean Parcel Perfect CSV files instantly.</p>
+      </div>
 
-    <div class="upload-grid">
-        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-            <p style="margin: 0; font-weight: bold; color: #2b6cb0;">📄 Upload Excel / CSV</p>
+      <!-- Industrial Retro WinXP Container -->
+      <div class="win-window p-6">
+        <div class="win-titlebar mb-4">
+          <span>Pakisa_Manifest_Processor.exe</span>
+          <span>[_][ ]</span>
+        </div>
+
+        <div class="bg-[#f0f0f0] p-4 border border-slate-400 mb-6 text-xs text-slate-700 leading-relaxed">
+          <strong>Instructions:</strong> Upload a spreadsheet, take or upload a photo of a handwritten manifest sheet, or paste text below to generate your 3 Parcel Perfect CSV files (`Waybill.csv`, `Content.csv`, `Track.csv`).
+        </div>
+
+        <div class="mb-4">
+          <label for="consNumber" class="block font-bold text-xs uppercase mb-1">Master Consolidation / Bag Number:</label>
+          <input type="text" id="consNumber" value="305387078957" class="win-input w-full md:w-72">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="win-window p-4 text-center bg-[#f5f5f5] cursor-pointer" onclick="document.getElementById('fileInput').click()">
+            <p class="font-bold text-xs uppercase text-blue-900 mb-1">Upload Excel / CSV File</p>
+            <p class="text-[10px] text-slate-500">Click to browse spreadsheets</p>
             <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleSpreadsheetUpload(event)">
-        </div>
-        <div class="upload-box" onclick="document.getElementById('imageInput').click()">
-            <p style="margin: 0; font-weight: bold; color: #b7791f;">📷 Upload Manifest Photo</p>
+          </div>
+          <div class="win-window p-4 text-center bg-[#f5f5f5] cursor-pointer" onclick="document.getElementById('imageInput').click()">
+            <p class="font-bold text-xs uppercase text-amber-800 mb-1">Upload Manifest Photo</p>
+            <p class="text-[10px] text-slate-500">Click to scan handwritten sheet</p>
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="rawData" class="block font-bold text-xs uppercase mb-1">Parsed Data / Manual Paste Area:</label>
+          <textarea id="rawData" class="win-input w-full h-40 text-xs" placeholder="Manifest data appears here automatically upon upload, or paste directly..."></textarea>
+        </div>
+
+        <div class="flex flex-wrap gap-3 items-center justify-between">
+          <div class="flex gap-2">
+            <button class="win-button" onclick="processManifest()">Generate & Download CSVs</button>
+            <button class="win-button" onclick="clearAll()">Clear</button>
+          </div>
+          <div id="status" class="text-xs font-bold text-emerald-700"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-16 bg-slate-50 border-t border-slate-100">
+    <div class="container mx-auto px-6 text-sm text-slate-500">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+                <img src="https://res.cloudinary.com/dwxgkbuln/image/upload/v1771237505/pakisa_logistics_express_pty_ltd_logo-removebg-preview_gr7h0r.png" class="h-8 grayscale opacity-70 mb-4">
+                <p>© 2026 Pakisa Express Logistics (Pty) Ltd.<br>Designed by Mpho Mahlaba<br>Software architecture by Mpho Mahlaba</p>
+            </div>
+            <div>
+                <h4 class="font-bold royal-blue mb-4 uppercase">Technology</h4>
+                <ul class="space-y-2">
+                    <li><a href="downloads.html" class="hover:text-gold">Downloads</a></li>
+                    <li><a href="#" class="hover:text-gold">Tracking System</a></li>
+                    <li><a href="#" class="hover:text-gold">POD System</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold royal-blue mb-4 uppercase">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="tracking.html" class="hover:text-gold">Track Waybill</a></li>
+                    <li><a href="owner-drivers.html" class="hover:text-gold">Owner Drivers</a></li>
+                    <li><a href="http://www.pakisafloor.site" target="_blank" class="hover:text-gold">Pakisa Floor</a></li>
+                    <li><a href="https://www.pakisafloor.site/scan_to_tripsheeet.html" class="hover:text-gold">Admin Dispatch</a></li>
+                    <li><a href="https://www.pakisafloor.site/driver.html" class="hover:text-gold">Driver Portal</a></li>
+                    <li><a href="manifest-converter.html" class="hover:text-gold font-semibold text-royal-blue">Manifest Converter</a></li>
+                </ul>
+            </div>
         </div>
     </div>
+  </footer>
 
-    <label for="rawData"><strong>Parsed Data / Manual Paste Area:</strong></label><br>
-    <textarea id="rawData" placeholder="Manifest data will appear here automatically when you upload a file or photo, or you can paste text directly..."></textarea>
-
-    <div class="btn-group">
-        <button onclick="processManifest()">Generate & Download CSVs</button>
-        <button class="secondary" onclick="clearAll()">Clear</button>
-    </div>
-
-    <div id="status" class="status"></div>
-</div>
-
-<script>
-function handleSpreadsheetUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const csvText = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
-        document.getElementById('rawData').value = csvText;
-        document.getElementById('status').innerText = `Spreadsheet loaded: ${file.name}`;
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    document.getElementById('status').innerText = "Scanning handwritten manifest photo with OCR... Please wait.";
-    
-    Tesseract.recognize(
-        file,
-        'eng',
-        { logger: m => console.log(m) }
-    ).then(({ data: { text } }) => {
-        document.getElementById('rawData').value = text;
-        document.getElementById('status').innerText = `Photo scanned successfully! Review or adjust text below if needed.`;
-    }).catch(err => {
-        console.error(err);
-        document.getElementById('status').innerText = "Error scanning image. Please try a clearer photo or paste text manually.";
-    });
-}
-
-function cleanPhone(val) {
-    if (!val || val === 'No Data') return '';
-    let s = val.toString().split('.')[0].trim();
-    if (s.startsWith('27')) s = '0' + s.slice(2);
-    else if (s.length === 9 && !s.startsWith('0')) s = '0' + s;
-    return s;
-}
-
-function cleanVat(val) {
-    if (!val || val === 'No Data') return '';
-    let s = val.toString().trim();
-    if (s.toUpperCase().includes('E+')) return '';
-    return s;
-}
-
-function downloadCSV(filename, csvContent) {
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-function processManifest() {
-    const rawText = document.getElementById('rawData').value.trim();
-    const consNum = document.getElementById('consNumber').value.trim() || '305387078957';
-    
-    if (!rawText) {
-        alert("Please upload a file, scan a photo, or paste manifest data first.");
-        return;
+  <script>
+    function handleSpreadsheetUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const csvText = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+            document.getElementById('rawData').value = csvText;
+            document.getElementById('status').innerText = `Spreadsheet loaded: ${file.name}`;
+        };
+        reader.readAsArrayBuffer(file);
     }
 
-    const lines = rawText.split('\n');
-    let waybillRows = [];
-    let contentRows = [];
-    let trackRows = [];
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        document.getElementById('status').innerText = "Scanning handwritten manifest photo with OCR... Please wait.";
+        
+        Tesseract.recognize(
+            file,
+            'eng',
+            { logger: m => console.log(m) }
+        ).then(({ data: { text } }) => {
+            document.getElementById('rawData').value = text;
+            document.getElementById('status').innerText = `Photo scanned successfully! Review text below.`;
+        }).catch(err => {
+            console.error(err);
+            document.getElementById('status').innerText = "Error scanning image. Please check file or paste text.";
+        });
+    }
 
-    waybillRows.push("Waybill Number,Master Tracking No,Shipper Name,Origin,Consignee Name,Destination,Pkg Count,Shipment Weight,Weight Unit,Commodity Desc,Customs Value,Currency,VAT ID / TIN,Consignee Telephone No,Origin Country Code,Destination Country Code,Destination Postal Code,Special Handling Codes");
-    contentRows.push("Waybill Number,Item Line,Commodity Description,Quantity,Unit Value,Currency");
-    trackRows.push("Waybill Number,Cons Number,Cons Type,Cons Category,Status Code,Status Description,Location");
+    function cleanPhone(val) {
+        if (!val || val === 'No Data') return '';
+        let s = val.toString().split('.')[0].trim();
+        if (s.startsWith('27')) s = '0' + s.slice(2);
+        else if (s.length === 9 && !s.startsWith('0')) s = '0' + s;
+        return s;
+    }
 
-    let count = 0;
+    function cleanVat(val) {
+        if (!val || val === 'No Data') return '';
+        let s = val.toString().trim();
+        if (s.toUpperCase().includes('E+')) return '';
+        return s;
+    }
 
-    lines.forEach(line => {
-        let cols = line.split(/,|\t/);
-        if (cols.length >= 5) {
-            let waybill = cols[0].trim().replace(/^"|"$/g, '');
-            if (/^[A-Za-z0-9]{8,15}$/.test(waybill)) {
-                let shipper = cols[1] ? cols[1].trim().replace(/^"|"$/g, '') : 'W.W.C';
-                let consignee = cols[2] ? cols[2].trim().replace(/^"|"$/g, '') : 'CLIENT';
-                let dest = cols[5] ? cols[5].trim().replace(/^"|"$/g, '') : 'JOHANNESBURG';
-                let pkgCount = cols[3] ? cols[3].trim().replace(/^"|"$/g, '') : '1';
-                let weight = cols[4] ? cols[4].trim().replace(/^"|"$/g, '') : '1.0';
-                let commodity = cols[6] ? cols[6].trim().replace(/^"|"$/g, '') : 'GENERAL CARGO';
+    function downloadCSV(filename, csvContent) {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
-                waybillRows.push(`${waybill},No Data,"${shipper}",JNB,"${consignee}",${dest},${pkgCount},${weight},K,"${commodity}",0,USD,, ,CN,ZA,1446,"02,54"`);
-                contentRows.push(`${waybill},1,"${commodity}",${pkgCount},0,USD`);
-                trackRows.push(`${waybill},${consNum},Bag,Sort,MANIFESTED,Manifested into Consolidation Bag,JNB`);
-                count++;
-            }
+    function processManifest() {
+        const rawText = document.getElementById('rawData').value.trim();
+        const consNum = document.getElementById('consNumber').value.trim() || '305387078957';
+        
+        if (!rawText) {
+            alert("Please upload a file, scan a photo, or paste manifest data first.");
+            return;
         }
-    });
 
-    if (count === 0) {
-        alert("No valid waybill rows detected. Check text format or adjust scanned text.");
-        return;
+        const lines = rawText.split('\n');
+        let waybillRows = [];
+        let contentRows = [];
+        let trackRows = [];
+
+        waybillRows.push("Waybill Number,Master Tracking No,Shipper Name,Origin,Consignee Name,Destination,Pkg Count,Shipment Weight,Weight Unit,Commodity Desc,Customs Value,Currency,VAT ID / TIN,Consignee Telephone No,Origin Country Code,Destination Country Code,Destination Postal Code,Special Handling Codes");
+        contentRows.push("Waybill Number,Item Line,Commodity Description,Quantity,Unit Value,Currency");
+        trackRows.push("Waybill Number,Cons Number,Cons Type,Cons Category,Status Code,Status Description,Location");
+
+        let count = 0;
+
+        lines.forEach(line => {
+            let cols = line.split(/,|\t/);
+            if (cols.length >= 5) {
+                let waybill = cols[0].trim().replace(/^"|"$/g, '');
+                if (/^[A-Za-z0-9]{8,15}$/.test(waybill)) {
+                    let shipper = cols[1] ? cols[1].trim().replace(/^"|"$/g, '') : 'W.W.C';
+                    let consignee = cols[2] ? cols[2].trim().replace(/^"|"$/g, '') : 'CLIENT';
+                    let dest = cols[5] ? cols[5].trim().replace(/^"|"$/g, '') : 'JOHANNESBURG';
+                    let pkgCount = cols[3] ? cols[3].trim().replace(/^"|"$/g, '') : '1';
+                    let weight = cols[4] ? cols[4].trim().replace(/^"|"$/g, '') : '1.0';
+                    let commodity = cols[6] ? cols[6].trim().replace(/^"|"$/g, '') : 'GENERAL CARGO';
+
+                    waybillRows.push(`${waybill},No Data,"${shipper}",JNB,"${consignee}",${dest},${pkgCount},${weight},K,"${commodity}",0,USD,, ,CN,ZA,1446,"02,54"`);
+                    contentRows.push(`${waybill},1,"${commodity}",${pkgCount},0,USD`);
+                    trackRows.push(`${waybill},${consNum},Bag,Sort,MANIFESTED,Manifested into Consolidation Bag,JNB`);
+                    count++;
+                }
+            }
+        });
+
+        if (count === 0) {
+            alert("No valid waybill rows detected. Check text format or adjust scanned text.");
+            return;
+        }
+
+        downloadCSV("JNB26509Waybill.csv", waybillRows.join("\n"));
+        setTimeout(() => downloadCSV("JNB26509Content.csv", contentRows.join("\n")), 300);
+        setTimeout(() => downloadCSV("JNB26509Track.csv", trackRows.join("\n")), 600);
+
+        document.getElementById('status').innerText = `Success! Generated 3 CSV files for ${count} waybills.`;
     }
 
-    downloadCSV("JNB26509Waybill.csv", waybillRows.join("\n"));
-    setTimeout(() => downloadCSV("JNB26509Content.csv", contentRows.join("\n")), 300);
-    setTimeout(() => downloadCSV("JNB26509Track.csv", trackRows.join("\n")), 600);
-
-    document.getElementById('status').innerText = `Success! Generated 3 CSV files for ${count} waybills.`;
-}
-
-function clearAll() {
-    document.getElementById('rawData').value = '';
-    document.getElementById('fileInput').value = '';
-    document.getElementById('imageInput').value = '';
-    document.getElementById('status').innerText = '';
-}
-</script>
-
+    function clearAll() {
+        document.getElementById('rawData').value = '';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('imageInput').value = '';
+        document.getElementById('status').innerText = '';
+    }
+  </script>
 </body>
 </html>
